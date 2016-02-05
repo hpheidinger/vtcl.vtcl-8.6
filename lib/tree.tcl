@@ -92,6 +92,7 @@ proc vTcl:left_click_tree {cmd i b j} {
 
     global vTcl
 
+	#puts "vTcl:left_click_tree: cmd=$cmd i=$i b=$b j=$j"
     if {$::classes([vTcl:get_class $i],ignoreLeftClk)} return
     if {$vTcl(mode) == "TEST"} return
     

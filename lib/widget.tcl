@@ -194,7 +194,11 @@ proc vTcl:active_widget {target} {
     if {$vTcl(w,widget) != "$target"} {
 
         vTcl:destroy_handles
-        ## Any custom selection command?
+        
+		#### clear options array
+		array unset vTcl w,opt,*
+		
+		## Any custom selection command?
         set class [vTcl:get_class $target]
         if {[info exists classes($class,selectCmd)] &&
             $classes($class,selectCmd) != ""} {

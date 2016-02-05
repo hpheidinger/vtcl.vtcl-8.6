@@ -40,7 +40,7 @@
 if {$tcl_version < 8.0} {
     return -code error "tkcon requires at least Tcl/Tk8"
 } else {
-    package require -exact Tk $tcl_version
+    package require Tk $tcl_version
 }
 
 # We need to load some package to get what's available, and we
@@ -577,8 +577,8 @@ proc ::tkcon::InitUI {title} {
     }
     set PRIV(base) $w
 
-    catch {font create tkconfixed -family Courier -size -12}
-    catch {font create tkconfixedbold -family Courier -size -12 -weight bold}
+    catch {font create tkconfixed -family Courier -size 12}
+    catch {font create tkconfixedbold -family Courier -size 12 -weight bold}
 
     set PRIV(statusbar) [set sbar [frame $w.fstatus]]
     set PRIV(tabframe)  [frame $sbar.tabs]

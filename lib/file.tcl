@@ -122,7 +122,8 @@ proc vTcl:source {file newprocs} {
     upvar $newprocs np
 
     foreach context [vTcl:namespace_tree] {
-
+		if {$context == "::tcl::dict"} continue
+		if {$context == "::itcl::builtin"} continue	#hph,2016-02-04
         set cop [namespace eval $context {info procs}]
 
         foreach procname $cop {
@@ -145,7 +146,9 @@ proc vTcl:source {file newprocs} {
     # kc: ignore global procs like "tixSelect"
     set np ""
     foreach context [vTcl:namespace_tree] {
-
+		if {$context == "::tcl::dict"} continue
+		if {$context == "::itcl::builtin"} continue	#hph,2016-02-04
+		
         set cop [namespace eval $context {info procs}]
 
         foreach procname $cop {

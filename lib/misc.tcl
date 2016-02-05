@@ -90,7 +90,8 @@ proc vTcl:boolean_radio {path args} {
 }
 
 proc vTcl:boolean_radio_get {var old_var args} {
-    upvar #0 $var vari
+    #puts "vTcl:boolean_radio_get: var=$var old_var=$old_var args=$args"
+	upvar #0 $var vari
     upvar #0 $old_var old_vari
     set value(1)     1
     set value(yes)   1

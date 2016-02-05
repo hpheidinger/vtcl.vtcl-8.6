@@ -262,6 +262,7 @@ proc vTcl:focus_out_cmd {} {
 
 proc vTcl:prop:config_cmd {target option variable value args} {
     global vTcl
+	#puts "vTcl:prop:config_cmd: target=$target option=$option variable=$variable value=$value args=$args"
     if {$value == ""} {
         $target configure $option [set $variable]
         vTcl:prop:save_opt $target $option $variable
@@ -287,6 +288,7 @@ proc vTcl:prop:spec_config_cmd {target option variable value args} {
 
 proc vTcl:prop:geom_config_mgr {target option variable value args} {
     global vTcl
+	#puts "vTcl:prop:geom_config_mgr: target=$target option=$option variable=$variable value=$value args=$args"
     set mgr $args
     vTcl:setup_unbind_widget $target
     if {$value == ""} {
@@ -484,7 +486,8 @@ proc vTcl:prop:color_update {w val} {
 }
 
 proc vTcl:prop:new_attr {top option variable config_cmd config_args prefix {isGeomOpt ""}} {
-    global vTcl $variable options specialOpts propmgrLabels
+	catch {global $variable}
+    global vTcl options specialOpts propmgrLabels
 
     set base $top.t${option}
 
@@ -498,23 +501,23 @@ proc vTcl:prop:new_attr {top option variable config_cmd config_args prefix {isGe
     }
 
     if {$prefix == "opt"} {
-	if {[info exists specialOpts($vTcl(w,class),$option,type)]} {
-	    set text    $specialOpts($vTcl(w,class),$option,text)
-	    set type    $specialOpts($vTcl(w,class),$option,type)
-	    set choices $specialOpts($vTcl(w,class),$option,choices)
-	} else {
-	    set text    $options($option,text)
-	    set type    $options($option,type)
-	    set choices $options($option,choices)
-	}
+		if {[info exists specialOpts($vTcl(w,class),$option,type)]} {
+			set text    $specialOpts($vTcl(w,class),$option,text)
+			set type    $specialOpts($vTcl(w,class),$option,type)
+			set choices $specialOpts($vTcl(w,class),$option,choices)
+		} else {
+			set text    $options($option,text)
+			set type    $options($option,type)
+			set choices $options($option,choices)
+		}
     } else {
     	set text    [lindex $vTcl($prefix,$option) 0]
-	set type    [lindex $vTcl($prefix,$option) 2]
-	set choices [lindex $vTcl($prefix,$option) 3]
+		set type    [lindex $vTcl($prefix,$option) 2]
+		set choices [lindex $vTcl($prefix,$option) 3]
     }
 
     if {[vTcl:streq $type "relief"]} {
-	set type    choice
+		set type    choice
     	set choices $vTcl(reliefs)
     }
 
@@ -523,7 +526,7 @@ proc vTcl:prop:new_attr {top option variable config_cmd config_args prefix {isGe
     	-relief $vTcl(pr,proprelief)
 
     set focusControl $base
-
+   	
     switch $type {
         boolean {
             frame $base
@@ -551,6 +554,10 @@ proc vTcl:prop:new_attr {top option variable config_cmd config_args prefix {isGe
             }
         }
         choice {
+            if {[trace vinfo ::$variable] != ""} {
+				set trnfo [lindex [trace vinfo ::$variable] 1]
+				trace remove variable ::$variable write $trnfo	
+			}
             ComboBox ${base} -editable 0 -width 12 -values $choices \
                 -modifycmd "vTcl:prop:choice_select ${base} $variable
 			  $config_cmd \$vTcl(w,widget) $option $variable {} $config_args"

@@ -45,7 +45,7 @@ proc vTcl:set_command {target {option -command} {variable vTcl(w,opt,-command)}}
 
     $target configure $option $cmd
 
-    global $variable
+    catch {global $variable}
     set $variable $cmd
     vTcl:prop:save_opt $target $option $variable
 }
