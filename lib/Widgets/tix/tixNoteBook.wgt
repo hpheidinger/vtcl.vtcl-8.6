@@ -1,0 +1,225 @@
+Name            tixNoteBook
+Lib             tix
+
+Class           TixNoteBook
+Icon            icon_tixNoteBook.gif
+TreeLabel       Tix NoteBook
+DumpCmd         vTcl::widgets::tix::notebook::dumpCmd
+DumpInfoCmd     vTcl::widgets::tix::notebook::dumpInfoCmd
+DumpChildren    no
+MegaWidget      yes
+DefaultValues   -background
+InsertCmd       vTcl::widgets::tix::notebook::insertCmd
+DeleteSiteCmd   vTcl::widgets::tix::notebook::deleteSiteCmd
+SelectSiteCmd   vTcl::widgets::tix::notebook::selectSiteCmd
+TreeChildrenCmd     "vTcl::widgets::tix::notebook::treeChildrenCmd \
+                     vTcl::widgets::tix::notebook::treeChildrenChildsite"
+
+## Right-click menu
+Function        "Edit Pages..."         vTcl::widgets::tix::notebook::editCmd
+
+## Tabbed notebook support
+NewOption -_tix_notebook_pages  "pages"  combobox
+ClassOption -_tix_notebook_pages
+OptionConfigCmd -_tix_notebook_pages     config     vTcl::widgets::tix::notebook::config_pages
+OptionConfigCmd -_tix_notebook_pages     update     vTcl::widgets::tix::notebook::update_pages
+OptionConfigCmd -_tix_notebook_pages     get        vTcl::widgets::tix::notebook::get_pages
+OptionConfigCmd -_tix_notebook_pages     select     vTcl::widgets::tix::notebook::select_page
+OptionConfigCmd -_tix_notebook_pages     edit       vTcl::itemEdit::edit
+OptionConfigCmd -_tix_notebook_pages     editArg    vTcl::widgets::tix::notebook::edit
+
+namespace eval vTcl::widgets::tix::notebook::edit {
+
+    proc getTitle {target} {
+        return "Edit pages for $target"
+    }
+
+    proc getLabelOption {} {
+        return -label
+    }
+
+    proc getItems {target} {
+        ## first item in the list is the current index
+        set pages [$target pages]
+        set current [lsearch -exact $pages [$target raised]]
+        set values $current
+        foreach page $pages {
+            lappend values [$target pagecget $page -label]
+        }
+        return $values
+    }
+
+    proc addItem {target} {
+        set index 0
+        set pages [$target pages]
+        ## repeat until we find an unused page number
+        while {1} {
+            incr index
+            set newpage "page$index"
+            if {[lsearch -exact $pages $newpage] == -1} break
+        }
+        $target add $newpage -label "Page $index"
+        $target raise $newpage
+        vTcl:init_wtree
+        return "Page $index"
+    }
+
+    proc removeItem {target index} {
+        error "Not implemented"
+    }
+
+    proc itemConfigure {target index args} {
+        set pages [$target pages]
+        set page [lindex $pages $index]
+        if {$args == ""} {
+            return [$target pageconfigure $page]
+        } else {
+            eval $target pageconfigure $page $args
+        }
+    }
+
+    proc moveUpOrDown {target index direction} {
+        error "Not implemented"
+    }
+}
+
+namespace eval vTcl::widgets::tix::notebook {
+
+    proc update_pages {target var} {
+        ## there is a trace on var to update the combobox
+        ## first item in the list is the current index
+        set pages [$target pages]
+        set current [lsearch -exact $pages [$target raised]]
+        set values $current
+        foreach page $pages {
+            lappend values [$target pagecget $page -label]
+        }
+
+        ## this will trigger the trace
+        set ::$var $values
+   }
+
+    proc config_pages {target var} {
+    }
+
+    proc get_pages {target} {
+    }
+
+    proc select_page {target index} {
+        set pages [$target pages]
+        $target raise [lindex $pages $index]
+    }
+
+    proc editCmd {} {
+        set target $::vTcl(w,widget)
+	::vTcl::itemEdit::edit $target vTcl::widgets::tix::notebook::edit
+    }
+
+    proc insertCmd {target} {
+        # Add three pages to start with.
+
+        $target add page1 -label {Page 1}
+        $target add page2 -label {Page 2}
+        $target add page3 -label {Page 3}
+        $target subwidget page1 configure -width 30 -height 30
+        $target subwidget page2 configure -width 30 -height 30
+        $target subwidget page3 configure -width 30 -height 30
+    }
+
+    # All right, I explain it: -1 is the number of levels
+    # in the window path between the megawidget and its
+    # pages (childsites). This is used by the widget tree
+    # to skip 1 level (otherwise it would draw 1 vertical
+    # lines)
+    proc treeChildrenCmd {target {diff \#-1}} {
+        set children ""
+        set wantsdiff [expr {$diff != ""}]
+
+        set entries [$target pages]
+        foreach page $entries {
+            set site [$target subwidget $page]
+            foreach child [vTcl:complete_widget_tree $site $wantsdiff] {
+                lappend children $child$diff
+            }
+        }
+
+        return $children
+    }
+
+    proc treeChildrenChildsite {target} {
+        set entries [$target pages]
+        set sites ""
+
+        foreach page $entries {
+            lappend sites [$target subwidget $page]
+        }
+
+        return $sites
+    }
+
+    proc deleteSiteCmd {target site} {
+        set entries [$target pages]
+
+        foreach page $entries {
+            set subwidget [$target subwidget $page]
+            if {$site == $subwidget} {
+                $target delete $page
+                $target raise [lindex [$target pages] 0]
+                return
+            }
+        }
+    }
+
+    proc selectSiteCmd {target site} {
+        set entries [$target pages]
+
+        foreach page $entries {
+            set subwidget [$target subwidget $page]
+            if {$site == $subwidget} {
+                $target raise $page
+                return
+            }
+        }
+    }
+
+    proc dumpCmd {target basename} {
+        global vTcl
+        set result [vTcl:dump_widget_opt $target $basename]
+        set entries [$target pages]
+        foreach page $entries {
+            set conf [$target pageconfigure $page]
+            set pairs [vTcl:conf_to_pairs $conf ""]
+            append result "$vTcl(tab)$basename add $page \\\n"
+            append result "[vTcl:clean_pairs $pairs]\n"
+        }
+        set index 0
+        foreach page $entries {
+            set subwidget [$target subwidget $page]
+            set sitevariable "site_[llength [split $subwidget .]]_[vTcl:rename $page]"
+            append result "$vTcl(tab)"
+            append result "set $sitevariable "
+            append result "\[$basename subwidget \[lindex \[$basename pages\] $index\]\]\n"
+            append result [vTcl:lib_tix:dump_subwidgets $subwidget \$$sitevariable]
+            incr index
+        }
+        return $result
+    }
+
+    proc dumpInfoCmd {target basename} {
+        global vTcl classes
+        set result [vTcl:dump:widget_info $target $basename]
+        set index 0
+        set entries [$target pages]
+        foreach page $entries {
+            set subwidget [$target subwidget $page]
+            set sitevariable "site_[llength [split $subwidget .]]_[vTcl:rename $page]"
+            append result "$vTcl(tab)"
+            append result "set $sitevariable "
+            append result "\[$basename subwidget \[lindex \[$basename pages\] $index\]\]\n"
+            append result [$classes(Frame,dumpInfoCmd) $subwidget \$$sitevariable]
+            incr index
+        }
+        return $result
+    }
+}
+

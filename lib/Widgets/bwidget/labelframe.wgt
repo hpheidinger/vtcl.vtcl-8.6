@@ -1,0 +1,92 @@
+##############################################################################
+#
+# Visual TCL - A cross-platform application development environment
+#
+# Copyright (C) 2002 Christian Gavin
+#
+# Description file for Bwidgets paned window
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+#
+##############################################################################
+#
+
+Class		LabelFrame
+Lib		bwidget
+
+Icon		icon_BwLabelFrame.gif
+TreeLabel	BWidget LabelFrame
+CreateCmd        LabelFrame
+DefaultOptions   -text "Label" -borderwidth 1
+MegaWidget	yes
+TreeChildrenCmd   {vTcl::widgets::bwidgets::labelframe::treeChildrenCmd
+                   vTcl::widgets::bwidgets::labelframe::treeChildrenChildsite}
+InsertCmd         vTcl::widgets::bwidgets::labelframe::insertCmd
+DumpCmd           vTcl::widgets::bwidgets::labelframe::dumpCmd
+DumpInfoCmd       vTcl::widgets::bwidgets::labelframe::dumpInfoCmd
+TagsCmd           vTcl::widgets::bwidgets::labelframe::tagsCmd
+
+namespace eval vTcl::widgets::bwidgets::labelframe {
+
+    proc insertCmd {target} {
+        ::vTcl::widgets::saveOptions [$target getframe] -background
+    }
+
+    proc treeChildrenCmd {target {diff \#0}} {
+        set children ""
+        set wantsdiff [expr {$diff != ""}]
+
+        foreach site [treeChildrenChildsite $target] {
+            foreach child [::vTcl:complete_widget_tree $site $wantsdiff] {
+                lappend children $child$diff
+            }
+        }
+
+        return $children
+    }
+
+    proc treeChildrenChildsite {target} {
+        return [$target getframe]
+    }
+
+    proc dumpCmd {target basename} {
+        set result [vTcl:dump_widget_opt $target $basename]
+        set site [$target getframe]
+        append result "$::vTcl(tab)"
+        set sitevariable "site_[llength [split $site .]]_0"
+        append result "set $sitevariable "
+        append result "\[$basename getframe\]\n"
+        append result \
+                [vTcl::widgets::bwidgets::dump_subwidgets $site \$$sitevariable]
+	return $result
+    }
+
+    proc dumpInfoCmd {target basename} {
+        global classes
+        set result [vTcl:dump:widget_info $target $basename]
+        set site [$target getframe]
+        append result "$::vTcl(tab)"
+        set sitevariable "site_[llength [split $site .]]_0"
+        append result "set $sitevariable "
+        append result "\[$basename getframe\]\n"
+        append result [$classes(Frame,dumpInfoCmd) $site \$$sitevariable]
+        return $result
+    }
+
+    proc tagsCmd {target} {
+        return [list $target BwLabelFrame [winfo toplevel $target] all]
+    }
+}
+

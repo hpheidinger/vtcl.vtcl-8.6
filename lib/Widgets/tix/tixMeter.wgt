@@ -1,0 +1,17 @@
+Name		tixMeter
+Lib		tix
+
+Class		TixMeter
+Icon		icon_tixMeter.gif
+TreeLabel	Tix Meter
+DumpCmd		vTcl:lib_tix:dump_widget_opt
+DumpChildren	no
+MegaWidget      yes
+InsertCmd	vTcl::widgets::tix::tixMeter::insertCmd
+
+namespace eval vTcl::widgets::tix::tixMeter {
+
+    proc insertCmd {target} {
+        $target configure -value .3
+    }
+}

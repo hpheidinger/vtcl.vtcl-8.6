@@ -1,0 +1,10 @@
+Class		Separator
+Lib		bwidget
+
+Icon		icon_BwSeparator.gif
+TreeLabel	BWidget Separator
+CreateCmd	Separator
+MegaWidget	yes
+IgnoreProc      ::Separator::* Separator
+
+SpecialOpt -relief	"relief"	choice	{groove ridge}

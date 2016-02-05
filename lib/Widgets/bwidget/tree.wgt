@@ -1,0 +1,9 @@
+Class		Tree
+Lib		bwidget
+
+Icon		../lib/Widgets/bwidget/tree.gif
+TreeLabel	BWidget Tree
+CreateCmd	Tree
+MegaWidget	yes
+DefaultValues -background
+IgnoreProc      ::Tree::* Tree

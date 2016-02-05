@@ -1,0 +1,6 @@
+Name		tixNoteBookFrame
+Lib		tix
+
+Class		TixNoteBookFrame
+Icon		icon_tix_unknown.gif
+TreeLabel	Tix NoteBookFrame

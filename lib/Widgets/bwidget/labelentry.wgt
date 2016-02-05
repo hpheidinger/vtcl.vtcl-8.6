@@ -1,0 +1,30 @@
+Class		LabelEntry
+Lib		bwidget
+
+Icon		icon_labelentry.gif
+TreeLabel	@::vTcl::widgets::bwidgets::labelentry::treeLabelCmd
+DefaultOptions  -label "Label"
+DefaultValues   -background -foreground -activebackground -activeforeground \
+                -highlightbackground -highlightcolor -entrybg -entryfg \
+                -selectbackground -selectforeground
+CreateCmd	LabelEntry
+MegaWidget	yes
+InsertCmd       ::vTcl::widgets::bwidgets::labelentry::insertCmd
+IgnoreProc      ::LabelEntry::* LabelEntry
+
+namespace eval ::vTcl::widgets::bwidgets::labelentry {
+
+    proc insertCmd {target} {
+        set last [lindex [split $target .] end]
+        set last [vTcl:rename $last]
+
+        $target configure -textvariable "[winfo toplevel $target]::$last"
+        $target insert end entry
+    }
+
+    proc treeLabelCmd {target} {
+    	set val [$target cget -textvariable]
+	if {[lempty $val]} { set val NONE }
+        return "BWidget LabelEntry VAR: $val"
+    }
+}

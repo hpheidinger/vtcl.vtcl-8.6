@@ -1,0 +1,24 @@
+Class		ProgressBar
+Lib		bwidget
+
+Icon		icon_BwProgressbar.gif
+TreeLabel	BWidget ProgressBar
+CreateCmd	ProgressBar
+DefaultOptions  -maximum 100 -foreground blue
+DefaultValues   -background -troughcolor
+MegaWidget	yes
+InsertCmd       vTcl::widgets::bwidgets::progressbar::insertCmd
+IgnoreProc      ::ProgressBar::* ProgressBar
+
+SpecialOpt -type	"type"	choice {normal incremental infinite}
+
+namespace eval vTcl::widgets::bwidgets::progressbar {
+
+    proc insertCmd {target} {
+        set last [lindex [split $target .] end]
+        set last [vTcl:rename $last]
+        set name ::[winfo toplevel $target]::$last
+        set $name 0
+        $target configure -variable $name
+    }
+}

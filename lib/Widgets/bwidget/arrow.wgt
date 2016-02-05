@@ -1,0 +1,9 @@
+Class		ArrowButton
+Lib		bwidget
+
+Icon		icon_arrowbutton.gif
+TreeLabel	BWidget ArrowButton
+CreateCmd	ArrowButton
+MegaWidget	yes
+
+SpecialOpt -type	"type"		choice	{button arrow}

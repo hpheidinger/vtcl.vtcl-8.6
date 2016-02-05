@@ -1,0 +1,49 @@
+# $Id: message.wgt,v 1.8 2002/03/09 21:55:30 cgavin Exp $
+
+##############################################################################
+#
+# Visual TCL - A cross-platform application development environment
+#
+# Copyright (C) 2001 Damon Courtney
+#
+# Description file for Tk Widget
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+##############################################################################
+#
+
+Class		Message
+Lib		core
+
+Icon		icon_message.gif
+DefaultOptions	-text message -width 70
+DefaultValues   -background -foreground
+DoubleClickCmd	vTcl:set_text
+TreeLabel	@vTcl::widgets::core::message::getWidgetTreeLabel
+ClassOption     -_tooltip
+
+Function	"Set Text"	vTcl::widgets::core::message::setText
+
+namespace eval vTcl::widgets::core::message {
+
+    proc setText {} {
+        vTcl:set_text $::vTcl(w,widget)
+    }
+
+    proc getWidgetTreeLabel {target} {
+        return [$target cget -text]
+    }
+}

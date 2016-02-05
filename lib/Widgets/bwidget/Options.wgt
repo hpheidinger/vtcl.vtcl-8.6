@@ -1,0 +1,71 @@
+# $Id: Options.wgt,v 1.7 2003/05/07 06:58:13 cgavin Exp $
+
+##############################################################################
+#
+# Visual TCL - A cross-platform application development environment
+#
+# Copyright (C) 2001 Damon Courtney
+#
+# Description file for Bwidgets
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+##############################################################################
+#
+
+NewOption -areaheight		"area height"		text
+NewOption -areawidth		"area width"		text
+NewOption -armcommand		"arm cmd"		command
+NewOption -arrowbd		"arrow bd"		text
+NewOption -arrowrelief		"arrow relief"		choice	{raised sunken}
+NewOption -baseline		"baseline"		choice	\
+  {top center bottom}
+NewOption -clean		"clean"			choice	{0 1 2}
+NewOption -constrainedheight	"const height"		text
+NewOption -constrainedwidth	"const width"		text
+NewOption -default		"default"		text
+NewOption -deltax             "delta x"		text
+NewOption -deltay             "delta y"		text
+NewOption -dir			"direction"		choice	\
+  {top bottom left right}
+NewOption -disarmcommand	"disarm cmd"		command
+NewOption -dragenabled		"drag enabled"		boolean	{0 1}
+NewOption -dragendcmd		"drag end cmd"		command
+NewOption -dragevent		"drag event"		choice	{1 2 3}
+NewOption -draginitcmd		"drag init cmd"		command
+NewOption -dragtype		"drag type"		text
+NewOption -dropcmd		"drop cmd"		command
+NewOption -dropenabled		"drop enabled"		boolean {0 1}
+NewOption -dropovercmd		"drop over cmd"		command
+NewOption -droptypes		"drop types"		text
+NewOption -entrybg              {Entry Bkgnd}           color {} Colors
+NewOption -entryfg              {Entry Foregnd}         color {} Colors
+NewOption -editable		"editable"		boolean {0 1}
+NewOption -fill			"fill"			color
+NewOption -helptext		"help text"		text
+NewOption -helpvar		"help var"		text
+NewOption -ipad			"ipad"			text
+NewOption -ipadx		"ipadx"			text
+NewOption -ipady		"ipady"			text
+NewOption -maximum		"maximum"		text
+NewOption -modifycmd	        "modify cmd"		command
+NewOption -pad			"pad"			text
+NewOption -separator		"separator"		choice	\
+  {none top bottom both}
+NewOption -side			"side"			choice	\
+  {top bottom left right}
+NewOption -spacing		"spacing"		text
+NewOption -type			"type"			text
+

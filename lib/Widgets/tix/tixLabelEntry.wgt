@@ -1,0 +1,10 @@
+Name		tixLabelEntry
+Lib		tix
+
+Class		TixLabelEntry
+Icon		icon_tixLabelEntry.gif
+TreeLabel	Tix LabelEntry
+DefaultOptions	-label "LabelEntry:" -options {label.anchor e}
+DumpCmd		vTcl:dump:TixLabelEntry
+DumpChildren	no
+MegaWidget   yes

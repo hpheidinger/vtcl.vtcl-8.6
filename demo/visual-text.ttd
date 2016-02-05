@@ -1,0 +1,375 @@
+# -*- tcl -*-
+#
+
+ttd.version 1.0
+
+ttd.tagdef document -font {-family Helvetica -size 10}
+ttd.tagdef body -font {-size 10} -lmargin1 20 -lmargin2 20
+ttd.tagdef header -background lightgray -borderwidth 2 -font {-weight bold} -foreground darkgreen -relief raised
+ttd.tagdef code -font {-family Courier -size 8}
+ttd.tagdef meta -font {-slant italic -size 10 -family Courier}
+ttd.tagdef required -font {-weight bold -size 10 -family Courier}
+ttd.tagdef center -justify center -relief raised
+ttd.tagdef rightjustify -justify right
+ttd.tagdef optionbody -lmargin1 40 -lmargin2 40
+ttd.tagdef email -foreground blue
+ttd.tagdef url -foreground blue
+
+ttd.imgdef image0 -data { R0lGODlhFAAUAPcAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwMDcwKbK8P/w1Pjisd/UjtHJ a8O4SL2qJcWqAK+SAJN6AGJiAEpKADIyAP/j1P/Hsf+rjv+Pa/9zSP9XJf9VANxJALk9AJYx AHMlAFAZAP/U1P+xsf+Ojv9ra/9ISP8lJf4AANwAALkAAJYAAHMAAFAAAP/U4/+xx/+Oq/9r j/9Ic/8lV/8AVdwASbkAPZYAMXMAJVAAGf/U8P+x4v+O1P9rxv9IuP8lqv8AqtwAkrkAepYA YnMASlAAMv/U//+x//+O//9r//9I//8l//4A/twA3LkAuZYAlnMAc1AAUPDU/+Kx/9SO/8Zr /7hI/6ol/6oA/5IA3HoAuWIAlkoAczIAUOPU/8ex/6uO/49r/3NI/1cl/1UA/0kA3D0AuTEA liUAcxkAUNTU/7Gx/46O/2tr/0hI/yUl/wAA/gAA3AAAuQAAlgAAcwAAUNTj/7HH/46r/2uP /0hz/yVX/wBV/wBJ3AA9uQAxlgAlcwAZUNTw/7Hi/47U/2vG/0i4/yWq/wCq/wCS3AB6uQBi lgBKcwAyUNT//7H//47//2v//0j//yX//wD+/gDc3AC5uQCWlgBzcwBQUNT/8LH/4o7/1Gv/ xkj/uCX/qgD/qgDckgC5egCWYgBzSgBQMtT/47H/x47/q2v/j0j/cyX/VwD/VQDcSQC5PQCW MQBzJQBQGdT/1LH/sY7/jmv/a0j/SCX/JQD+AADcAAC5AACWAABzAABQAOP/1Mf/sav/jo// a3P/SFf/JVX/AEncAD25ADGWACVzABlQAPD/1OL/sdT/jsb/a7j/SKr/Jar/AJLcAHq5AGKW AEpzADJQAP//1P//sf//jv//a///SP//Jf7+ANzcALm5AJaWAHNzAFBQAPLy8ubm5tra2s7O zsLCwra2tqqqqp6enpKSkoaGhnp6em5ubmJiYlZWVkpKSj4+PjIyMiYmJhoaGg4ODv/78KCg pICAgP8AAAD/AP//AAAA//8A/wD//////yH5BAEAAAEALAAAAAAUABQAAAiZAAMIHEhQoLqD CAsqFAigIQB3Dd0tNKjOXSxXrmABWBABgLqCByECuAir5EYJHimKvOgqFqxXrzZ2lBhgJUaY LV/GOpkSIqybOF3ClPlQIEShMF/lfLVzAcqPRhsKXRqTY1GCFaUy1ckTKkiRGhtapTkxa82u ExUSJZs2qtOUbQ2ujTsQ4luvbdXNpRtA712+UeEC7ou3YEAAADt= } -format gif -file {} -gamma 1.0 -height 0 -palette {} -width 0
+
+ttd.tagon document
+ttd.tagon header
+ttd.text {NAME
+}
+ttd.tagoff header
+ttd.tagon body
+ttd.text {
+}
+ttd.text {ttd - tcl/tk text dump
+}
+ttd.tagoff body
+ttd.text {
+}
+ttd.tagon header
+ttd.text {SYNOPSIS
+}
+ttd.tagoff header
+ttd.tagon body
+ttd.tagon required
+ttd.tagon code
+ttd.text {
+}
+ttd.text {package require ttd ?1.0?
+}
+ttd.tagoff required
+ttd.text {
+}
+ttd.tagon required
+ttd.text {ttd::get }
+ttd.tagoff required
+ttd.tagon meta
+ttd.text pathName
+ttd.tagoff meta
+ttd.text {
+}
+ttd.tagon required
+ttd.text {ttd::insert }
+ttd.tagoff required
+ttd.tagon meta
+ttd.text {pathName ttddata
+}
+ttd.tagoff meta
+ttd.text {
+}
+ttd.tagoff code
+ttd.tagoff body
+ttd.tagon header
+ttd.text {DESCRIPTION
+}
+ttd.tagoff header
+ttd.tagon body
+ttd.text {
+}
+ttd.text {ttd is a package for saving and restoring formatted text from a tk text widget. This package defines two commands: ttd::get and ttd::insert. ttd::get is used to get ttd-format data from a text widget; ttd::insert inserts ttd-formatted data into a text widget.
+}
+ttd.text {
+}
+ttd.tagoff body
+ttd.tagon header
+ttd.text {EXAMPLE
+}
+ttd.tagoff header
+ttd.tagon body
+ttd.text {
+}
+ttd.text {The following example shows how to save the contents of a text widget to a file:
+}
+ttd.tagon code
+ttd.text {
+}
+ttd.text {package require ttd
+}
+ttd.text {
+}
+ttd.text {pack [text .text] -side top -fill both -expand y
+}
+ttd.text {# populate .text with whatever you want...
+}
+ttd.text {
+}
+ttd.text {set ttdData [ttd::get .text]
+}
+ttd.text {set id [open tmp.ttd w]
+}
+ttd.text {puts -nonewline $id $ttdData
+}
+ttd.text {close $id
+}
+ttd.tagoff code
+ttd.text {
+}
+ttd.text {This example shows how to read in the contents of a .ttd file and display the contents in a text widget:
+}
+ttd.tagon code
+ttd.text {
+}
+ttd.text {package require ttd
+}
+ttd.text {
+}
+ttd.text {pack [text .text] -side top -fill both -expand y
+}
+ttd.text {
+}
+ttd.text {set id [open tmp.ttd]
+}
+ttd.text {set ttdData [read $id]
+}
+ttd.text {close $id
+}
+ttd.text {
+}
+ttd.text {ttd::insert .text $ttdData
+}
+ttd.tagoff code
+ttd.text {
+}
+ttd.tagoff body
+ttd.tagon header
+ttd.text {FILE FORMAT
+}
+ttd.tagoff header
+ttd.tagon body
+ttd.text {
+}
+ttd.text {The format of the ttd file is merely a sequence of special tcl commands which are similar to the keys returned by the text widget "dump" command, with additional keys added to fill the gaps left by "dump". 
+}
+ttd.text {
+}
+ttd.text {In version 1.0, the following commands are supported:
+}
+ttd.text {
+}
+ttd.tagon required
+ttd.text ttd.image
+ttd.tagoff required
+ttd.text { }
+ttd.tagon meta
+ttd.text options
+ttd.tagoff meta
+ttd.text {
+}
+ttd.tagon optionbody
+ttd.text {inserts an image at the insertion point. }
+ttd.tagon meta
+ttd.text options
+ttd.tagoff meta
+ttd.text { are any options that are valid for the text widget "image create" command.}
+ttd.tagoff optionbody
+ttd.text {
+}
+ttd.text {
+}
+ttd.tagon required
+ttd.text ttd.imgdef
+ttd.tagoff required
+ttd.text { }
+ttd.tagon meta
+ttd.text imagename
+ttd.tagoff meta
+ttd.text { }
+ttd.tagon meta
+ttd.text options
+ttd.tagoff meta
+ttd.text {
+}
+ttd.tagon optionbody
+ttd.text {creates an image that is used by a }
+ttd.tagon required
+ttd.text ttd.image
+ttd.tagoff required
+ttd.text { command. }
+ttd.tagon meta
+ttd.text options
+ttd.tagoff meta
+ttd.text { are any valid options for an image of type photo.
+}
+ttd.tagoff optionbody
+ttd.text {
+}
+ttd.tagon required
+ttd.text ttd.tagdef
+ttd.tagoff required
+ttd.text { }
+ttd.tagon meta
+ttd.text tagname
+ttd.tagoff meta
+ttd.text { }
+ttd.tagon meta
+ttd.text options
+ttd.tagoff meta
+ttd.text {
+}
+ttd.tagon optionbody
+ttd.text {defines the attributes for the named tag. }
+ttd.tagon meta
+ttd.text options
+ttd.tagoff meta
+ttd.text { are any of the options that are valid for a text widget "tag configure" command.
+}
+ttd.tagoff optionbody
+ttd.text {
+}
+ttd.tagon required
+ttd.text ttd.tagon
+ttd.tagoff required
+ttd.text { }
+ttd.tagon meta
+ttd.text tagname
+ttd.tagoff meta
+ttd.text {
+}
+ttd.tagon optionbody
+ttd.text {specifies that the named tag should be applied to all following text, up to a corresponding 
+}
+ttd.tagoff optionbody
+ttd.text {
+}
+ttd.tagon required
+ttd.text ttd.tagoff
+ttd.tagoff required
+ttd.text { }
+ttd.tagon meta
+ttd.text tagname
+ttd.tagoff meta
+ttd.text { 
+}
+ttd.tagon optionbody
+ttd.text {specifies that the named tag should no longer be applied to any text that follows.
+}
+ttd.tagoff optionbody
+ttd.text {
+}
+ttd.tagon required
+ttd.text ttd.text
+ttd.tagoff required
+ttd.text { }
+ttd.tagon meta
+ttd.text string
+ttd.tagoff meta
+ttd.text { 
+}
+ttd.tagon optionbody
+ttd.text {inserts the }
+ttd.tagon meta
+ttd.text string
+ttd.tagoff meta
+ttd.text { at the insertion point, using all tags that are currently in effect.
+}
+ttd.tagoff optionbody
+ttd.text {
+}
+ttd.tagon required
+ttd.text ttd.version
+ttd.tagoff required
+ttd.text { }
+ttd.tagon meta
+ttd.text versionNumber
+ttd.tagoff meta
+ttd.text {
+}
+ttd.tagon optionbody
+ttd.text {defines the version of ttd that this file was written in.
+}
+ttd.tagoff optionbody
+ttd.text {
+}
+ttd.tagoff body
+ttd.text {
+}
+ttd.tagon header
+ttd.text {SECURITY
+}
+ttd.tagoff header
+ttd.text {
+}
+ttd.tagon required
+ttd.tagon body
+ttd.text ttd::insert
+ttd.tagoff required
+ttd.text { uses a safe interpreter to intrepret the .tdd file; any commands that are embedded within the file that are not considerd "safe" will cause the file to not be loaded.
+}
+ttd.text {
+}
+ttd.tagoff body
+ttd.tagon header
+ttd.text {RANDOM JUNK
+}
+ttd.tagoff header
+ttd.tagon body
+ttd.text {
+}
+ttd.text {Here is an example of how the tdd format can handle embedded images: }
+ttd.tagoff body
+ttd.image -align center -padx 0 -pady 0 -image image0
+ttd.tagon body
+ttd.text {
+}
+ttd.tagoff body
+ttd.text {
+}
+ttd.tagon rightjustify
+ttd.text {this is a block of right-justified
+}
+ttd.text {text
+}
+ttd.tagoff rightjustify
+ttd.text {
+}
+ttd.tagon center
+ttd.text {This bock of text is centered}
+ttd.tagoff center
+ttd.text {
+}
+ttd.text {
+}
+ttd.text {
+}
+ttd.tagon header
+ttd.text {CAVEATS
+}
+ttd.tagoff header
+ttd.text {
+}
+ttd.tagon body
+ttd.text {This software is purely for demonstration purposes only. At present I have no plans to officially support or enhance this software. However, comments would be greatly appreciated. Let me know if you think this is useful. Also, please feel free to make suggestions on the implementation or the file format.  }
+ttd.tagoff body
+ttd.text {
+}
+ttd.text {
+}
+ttd.tagon body
+ttd.text {I may be contacted at the address below:
+}
+ttd.text {
+}
+ttd.tagon email
+ttd.text oakley@channelpoint.com
+ttd.tagoff email
+ttd.text {
+}
+ttd.text {
+}
+ttd.text {The ttd web page, such as it is, is at the following address:
+}
+ttd.text {
+}
+ttd.tagon url
+ttd.text {http://purl.oclc.org/net/oakley/tcl/ttd/index.html
+}
+ttd.tagoff url
+ttd.text {
+}
+ttd.tagoff body
+ttd.tagoff document
+

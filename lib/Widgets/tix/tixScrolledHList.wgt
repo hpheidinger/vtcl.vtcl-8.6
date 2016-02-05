@@ -1,0 +1,11 @@
+Name		tixScrolledHList
+Lib		tix
+
+Class		TixScrolledHList
+Icon		icon_tixScrolledHList.gif
+TreeLabel	Tix ScrolledHlist
+DumpCmd		vTcl:lib_tix:dump_widget_opt
+DumpChildren	no
+MegaWidget      yes
+
+AdditionalClasses  TixHList TixHListHeader

@@ -1,0 +1,73 @@
+#!/bin/sh
+
+###
+## This script will try and find the best possible wish shell to use for
+## Visual Tcl.  Once found, it will write out a start-up script for starting
+## vTcl.
+###
+
+##
+## Try to find the best possible wish.
+##
+findwish( ) {
+WISHES=" \
+	wish8.5 \
+	wish8.4 \
+	wish8.3 \
+	wish8.2 \
+	wish8.1 \
+	wish8.0 \
+	wishx	\
+	expectk \
+"
+
+DIRS=" `echo $PATH | sed -e 's/:/ /g'` \
+	/usr/local/bin	\
+	/usr/bin	\
+	/bin		\
+	/opt/local/bin	\
+	/opt/bin	\
+    /opt/tcltk/bin
+"
+
+for wish in $WISHES
+do
+  for dir in $DIRS
+  do
+    if [ -x $dir/$wish ]; then
+      WISH=$dir/$wish
+      return 1
+    fi
+  done
+done
+
+return 0
+
+}
+
+findwish
+
+echo
+if [ -z "$WISH" ]; then
+  echo "Could not find a usable WISH shell"
+else
+  echo "Using $WISH"
+fi
+echo
+
+cd `dirname $0`
+VTCL_HOME=`pwd`
+
+cat > $VTCL_HOME/vtcl << EOF
+#!/bin/sh
+
+PATH_TO_WISH=$WISH
+VTCL_HOME=$VTCL_HOME
+
+export PATH_TO_WISH
+export VTCL_HOME
+
+exec \${PATH_TO_WISH} \${VTCL_HOME}/vtcl.tcl \$*
+EOF
+
+chmod +x $VTCL_HOME/vtcl

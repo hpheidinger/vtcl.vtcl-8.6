@@ -1,0 +1,324 @@
+##############################################################################
+#
+# Visual TCL - A cross-platform application development environment
+#
+# Copyright (C) 2001 Christian Gavin
+#
+# Description file for BLT Tabset
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+##############################################################################
+
+Class		      Tabset
+Lib		      blt
+
+CreateCmd	      ::blt::tabset
+InsertCmd             vTcl::widgets::blt::tabset::insertCmd
+Icon		      icon_tabset.gif
+DefaultOptions        -relief flat -tearoff 0 -tiers 1
+DefaultValues         -background -borderwidth
+ClassOption           -_blt_tabset_pages
+MegaWidget  yes
+TreeChildrenCmd	      {vTcl::widgets::blt::tabset::treeChildrenCmd
+		       vTcl::widgets::blt::tabset::treeChildrenChildsite}
+DumpCmd               vTcl::widgets::blt::tabset::dumpCmd
+DumpInfoCmd           vTcl::widgets::blt::tabset::dumpInfoCmd
+GetImagesCmd          vTcl::widgets::blt::tabset::getImagesCmd
+GetFontsCmd           vTcl::widgets::blt::tabset::getFontsCmd
+
+## Widget specific options
+SpecialOpt -fill "fill" choice {none x y both}
+NewOption -perforationcommand "perforation cmd" command
+NewOption -gap                "gap"             type
+NewOption -pageheight         "page height"     type
+NewOption -pagewidth          "page width"      type
+NewOption -rotate             "rotate labels"   type
+NewOption -samewidth          "same width"      boolean {0 1}
+NewOption -scrollincrement    "scroll incr"     type
+NewOption -tabrelief          "tab relief"      relief
+NewOption -textside           "text side"       choice {left top right bottom}
+NewOption -tiers              "tiers"           type
+
+## Tab specific options
+NewOption -bindtags		"bind tags"	type
+NewOption -data		      "data"		type
+NewOption -shadow             "shadow"          color	{}	Colors
+NewOption -stipple            "stipple"         type
+NewOption -window             "window"          type
+NewOption -windowheight       "win height"      type
+NewOption -windowwidth        "win width"       type
+
+## Tabbed notebook support
+NewOption -_blt_tabset_pages  "pages"  combobox
+OptionConfigCmd -_blt_tabset_pages     config     vTcl::widgets::blt::tabset::config_pages
+OptionConfigCmd -_blt_tabset_pages     update     vTcl::widgets::blt::tabset::update_pages
+OptionConfigCmd -_blt_tabset_pages     get        vTcl::widgets::blt::tabset::get_pages
+OptionConfigCmd -_blt_tabset_pages     select     vTcl::widgets::blt::tabset::select_page
+OptionConfigCmd -_blt_tabset_pages     edit       vTcl::itemEdit::edit
+OptionConfigCmd -_blt_tabset_pages     editArg    vTcl::widgets::blt::tabset::edit
+
+## Right-click menu
+Function        "Edit pages..."         ::vTcl::widgets::blt::tabset::editCmd
+
+namespace eval vTcl::widgets::blt::tabset::edit {
+
+    proc getTitle {target} {
+        return "Edit pages for $target"
+    }
+
+    proc getLabelOption {} {
+        return -text
+    }
+
+    proc getItems {target} {
+        ## first item in the list is the current index
+        set size [$target size]
+        set current [$target index -index select]
+        set values $current
+        for {set i 0} {$i < $size} {incr i} {
+            lappend values [$target tab cget [$target get $i] -text]
+        }
+        return $values
+    }
+
+    proc addItem {target} {
+        set size [$target size]
+        set pages ""
+        for {set i 0} {$i < $size} {incr i} {
+            lappend pages [$target get $i]
+        }
+        set index 0
+        ## repeat until we find an unused page number
+        while {1} {
+            incr index
+            set newpage "page$index"
+            if {[lsearch -exact $pages $newpage] == -1} break
+        }
+	## repeat until we find an unused frame number
+	set findex $index
+	while {[winfo exists $target.f$findex]} {
+	    incr findex
+	}
+        frame $target.f$findex
+        vTcl:widget:register_widget $target.f$findex
+        foreach def {-background -highlightbackground -highlightcolor} {
+            vTcl:prop:default_opt $target.f$findex $def vTcl(w,opt,$def)
+        }
+        $target insert end $newpage -text "Page $index" -window $target.f$findex -fill both
+        $target select [expr [$target size] - 1]
+        vTcl:init_wtree
+        return "Page $index"
+    }
+
+    proc removeItem {target index} {
+        set innerFrame [$target tab cget [$target get $index] -window]
+        $target delete $index
+
+        ## if there is a frame, destroy it
+	if {$innerFrame != ""} {
+	    vTcl:delete "" $innerFrame
+	}
+
+	## vTcl:delete will refresh the widget tree
+    }
+
+    proc itemConfigure {target index args} {
+        set page [$target get $index]
+        if {$args == ""} {
+            set options [$target tab configure $page]
+            set result ""
+            foreach option $options {
+                ## only return valid options
+                if {[llength $option] == 5} {
+                    lappend result $option
+                }
+            }
+            return $result
+        } else {
+            set result [eval $target tab configure $page $args]
+	    ## because of a bug in BLT, select only the option we want
+	    if {[llength $args] == 1} {
+	        set option [lindex $args 0]
+		foreach conf $result {
+		    if {[lindex $conf 0] == $option} {
+		        return $conf
+		    }
+		}
+		## couldn't find it!
+		return ""
+	    } else {
+	        return $result
+	    }
+        }
+    }
+
+    proc moveUpOrDown {target index direction} {
+        set offset(up) -1
+        set offset(down) 1
+        set relative(up) before
+        set relative(down) after
+        set where $relative($direction)
+        set length [$target size]
+        set new_index [expr $index + $offset($direction)]
+        if {$new_index == -1 && $where == "before"} {
+            set where after
+            set new_index [expr $length - 1]
+        } elseif {$new_index == $length && $where == "after"} {
+            set where before
+            set new_index 0
+        }
+        $target move $index $where $new_index
+        vTcl:init_wtree
+    }
+}
+
+namespace eval vTcl::widgets::blt::tabset {
+
+    proc editCmd {} {
+        vTcl::itemEdit::edit $::vTcl(w,widget) vTcl::widgets::blt::tabset::edit
+    }
+
+    proc insertCmd {target} {
+        frame $target.f1
+        $target insert end page1 -text "Page 1" -window $target.f1 -fill both
+        frame $target.f2
+        $target insert end page2 -text "Page 2" -window $target.f2 -fill both
+        frame $target.f3
+        $target insert end page3 -text "Page 3" -window $target.f3 -fill both
+
+        foreach frame [list $target.f1 $target.f2 $target.f3] {
+            vTcl:widget:register_widget $frame
+            foreach def {-background -highlightbackground -highlightcolor} {
+                vTcl:prop:default_opt $frame $def vTcl(w,opt,$def)
+            }
+        }
+    }
+
+    proc treeChildrenCmd {target {diff \#0}} {
+        set children ""
+        set wantsdiff [expr {$diff != ""}]
+
+        foreach site [treeChildrenChildsite $target] {
+            foreach child [::vTcl:complete_widget_tree $site $wantsdiff] {
+                lappend children $child$diff
+            }
+        }
+
+        return $children
+    }
+
+    proc treeChildrenChildsite {target} {
+        set size [$target size]
+        set result ""
+        for {set i 0} {$i < $size} {incr i} {
+            lappend result [$target tab cget [$target get $i] -window]
+        }
+        return $result
+    }
+
+    proc dumpCmd {target basename} {
+        set result [vTcl:dump_widget_opt $target $basename]
+        set pages [treeChildrenChildsite $target]
+        set size [$target size]
+        for {set i 0} {$i < $size} {incr i} {
+            ## dump the frame containing the page (we have to handle that ourselves)
+            set page [lindex $pages $i]
+            set last [lindex [split $page .] end]
+            append result [vTcl:dump_widget_opt $page $basename.$last]
+
+            ## now add the tab
+            set conf [$target tab configure [$target get $i]]
+            set ::basenames($page) $basename.$last
+            set pairs [vTcl:get_subopts_special $conf $target]
+            append result "$::vTcl(tab)$basename insert end page[expr $i + 1] \\\n"
+            append result "[vTcl:clean_pairs $pairs]\n"
+            catch {unset ::basenames($page)}
+        }
+        for {set i 0} {$i < $size} {incr i} {
+            set site [lindex $pages $i]
+            append result "$::vTcl(tab)"
+            set sitevariable "site_[llength [split $site .]]_$i"
+            append result "set $sitevariable "
+            append result "\[$basename tab cget \[$basename get $i\] -window\]\n"
+            append result \
+                [vTcl::widgets::blt::dump_subwidgets $site \$$sitevariable]
+        }
+        return $result
+    }
+
+    proc dumpInfoCmd {target basename} {
+        global classes
+        set result [vTcl:dump:widget_info $target $basename]
+        set pages [treeChildrenChildsite $target]
+        set size [$target size]
+        for {set i 0} {$i < $size} {incr i} {
+            set page [lindex $pages $i]
+            set last [lindex [split $page .] end]
+            append result [$classes(Frame,dumpInfoCmd) $page $basename.$last]
+        }
+        return $result
+    }
+
+    proc update_pages {target var} {
+        ## there is a trace on var to update the combobox
+        ## first item in the list is the current index
+        set size [$target size]
+        set current [$target index -index select]
+        set values $current
+        for {set i 0} {$i < $size} {incr i} {
+            set label_opt [$target tab cget [$target get $i] -text]
+            lappend values $label_opt
+        }
+
+        ## this will trigger the trace
+        set ::$var $values
+   }
+
+    proc config_pages {target var} {
+    }
+
+    proc get_pages {target} {
+    }
+
+    proc select_page {target index} {
+        $target select $index
+    }
+
+    proc getImagesCmd {target} {
+        set result {}
+        set size [$target size]
+        for {set i 0} {$i < $size} {incr i} {
+            set image [$target tab cget [$target get $i] -image]
+            if {$image != ""} {
+                lappend result $image
+            }
+       }
+       return $result
+   }
+
+    proc getFontsCmd {target} {
+        set result {}
+        set size [$target size]
+        for {set i 0} {$i < $size} {incr i} {
+            set font [$target tab cget [$target get $i] -font]
+            if {$font != ""} {
+                lappend result $font
+            }
+       }
+       return $result
+    }
+}
+

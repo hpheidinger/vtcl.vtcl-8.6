@@ -1,0 +1,23 @@
+Name		tixPopupMenu
+Lib		tix
+
+Class		TixPopupMenu
+TreeLabel	Tix PopupMenu
+DefaultOptions	-title PopupMenu
+DumpCmd		vTcl:lib_tix:dump_widget_opt
+DumpChildren	no
+MegaWidget   yes
+InsertCmd	vTcl::widgets::tix::popupmenu::insertCmd
+
+namespace eval vTcl::widgets::tix::popupmenu {
+
+    proc insertCmd {target} {
+        $target bind [winfo toplevel $target]
+        set menu [$target subwidget menu]
+        $menu add command -label Entry1
+        $menu add command -label Entry2
+        $menu add separator
+        $menu add command -label Entry2
+    }
+}
+

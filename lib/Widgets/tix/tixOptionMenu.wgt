@@ -1,0 +1,103 @@
+Name		tixOptionMenu
+Lib		tix
+
+Class		TixOptionMenu
+Icon		icon_tixOptionMenu.gif
+TreeLabel	Tix OptionMenu
+DefaultOptions	-label "OptionMenu:" -options {label.anchor e}
+InsertCmd	vTcl::widgets::tix::optionmenu::insertCmd
+DumpCmd         vTcl::widgets::tix::optionmenu::dumpCmd
+DumpChildren	no
+MegaWidget      yes
+
+Function        "Edit Option Menu..." vTcl::widgets::tix::optionmenu::editMenu
+
+NewOption       -accelerator     "accelerator"    type
+NewOption       -columnbreak     "col break"      type
+
+namespace eval vTcl::widgets::tix::optionmenu {
+
+    proc editMenu {} {
+         set target $::vTcl(w,widget)
+        ::vTcl::itemEdit::edit $target vTcl::widgets::tix::optionmenu::edit
+    }
+
+    proc insertCmd {target} {
+        # Add two options to start with.
+
+        $target add command opt1 -label {Option 1}
+        $target add command opt2 -label {Option 2}
+    }
+
+    proc dumpCmd {target basename} {
+        global vTcl
+        set result [vTcl:lib_tix:dump_widget_opt $target $basename]
+        set entries [$target entries]
+        foreach entry $entries {
+            set conf [$target entryconfigure $entry]
+            set pairs [vTcl:get_subopts_special $conf $target]
+            append result "$vTcl(tab)$basename add "
+            if {[llength $pairs] == 0} {
+                append result "separator $entry\n"
+            } else {
+                set index [lsearch -glob $pairs -command*]
+                if {$index > -1} {
+                    set pairs [lreplace $pairs $index [expr $index+1]]
+                }
+                append result "command $entry \\\n"
+                append result "[vTcl:clean_pairs $pairs]\n"
+            }
+        }
+        return $result
+    }
+}
+
+namespace eval vTcl::widgets::tix::optionmenu::edit {
+
+    proc getTitle {target} {
+        return "Edit option menu for $target"
+    }
+
+    proc getLabelOption {} {
+        return -label
+    }
+
+    proc getItems {target} {
+        ## first item in the list is the current index
+        set values 0
+
+        set entries [$target entries]
+        foreach entry $entries {
+            set label [$target entrycget $entry -label]
+            lappend values $label
+        }
+        return $values
+    }
+
+    proc addItem {target} {
+        set last [llength [$target entries]]
+        $target add command opt[expr $last + 1] -label "New item"
+        return "New item"
+    }
+
+    proc removeItem {target index} {
+        set entries [$target entries]
+	set entry [lindex $entries $index]
+        $target delete $entry
+    }
+
+    proc itemConfigure {target index args} {
+        set entries [$target entries]
+	set entry [lindex $entries $index]
+        if {$args == ""} {
+            return [$target entryconfigure $entry]
+        } else {
+	    eval $target entryconfigure $entry $args
+        }
+    }
+
+    proc moveUpOrDown {target index direction} {
+        error "Not implemented yet!"
+    }
+}
+

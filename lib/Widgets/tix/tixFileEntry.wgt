@@ -1,0 +1,26 @@
+Name		tixFileEntry
+Lib		tix
+
+Class		TixFileEntry
+Icon		icon_tixFileEntry.gif
+TreeLabel	Tix FileEntry
+DefaultOptions	-label "FileEntry:" -options {label.anchor e}
+DumpCmd		vTcl::widgets::tix::tixFileEntry::dumpCmd
+DumpChildren	no
+MegaWidget      yes
+AdditionalClasses TixFileSelectBox TixStdButtonBox TixInputOnly
+InsertCmd	vTcl::widgets::tix::tixFileEntry::insertCmd
+
+namespace eval vTcl::widgets::tix::tixFileEntry {
+
+    proc insertCmd {target} {
+        $target subwidget frame configure -highlightthickness 2
+    }
+
+    proc dumpCmd {target basename} {
+        global vTcl
+        set output [vTcl:lib_tix:dump_widget_opt $target $basename]
+        append output "$vTcl(tab)$target subwidget frame configure -highlightthickness 2\n"
+        return $output
+    }
+}

@@ -1,0 +1,101 @@
+# $Id: scrollframe.wgt,v 1.4 2002/10/10 06:35:55 cgavin Exp $
+
+##############################################################################
+#
+# Visual TCL - A cross-platform application development environment
+#
+# Copyright (C) 2001 Christian Gavin
+#
+# Description file for Bwidgets scrollable frame
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+##############################################################################
+
+Class		ScrollableFrame
+Lib		bwidget
+
+Icon		../lib/Widgets/bwidget/scrollframe.gif
+TreeLabel	BWidget ScrollableFrame
+DefaultValues   -background
+CreateCmd	ScrollableFrame
+MegaWidget	yes
+CreateCmd   vTcl::widgets::bwidgets::scrollableframe::createCmd
+TreeChildrenCmd   {vTcl::widgets::bwidgets::scrollableframe::treeChildrenCmd
+                   vTcl::widgets::bwidgets::scrollableframe::treeChildrenChildsite}
+DumpCmd     vTcl::widgets::bwidgets::scrollableframe::dumpCmd
+DumpInfoCmd vTcl::widgets::bwidgets::scrollableframe::dumpInfoCmd
+Export      ::vTcl::widgets::bwidgets::scrollableframe::createCmd
+IgnoreProc  ::ScrollableFrame::* ScrollableFrame
+
+NewOption   -areawidth  "area width"   type
+NewOption   -areaheight "area height"  type
+
+namespace eval vTcl::widgets::bwidgets::scrollableframe {
+
+    proc createCmd {path args} {
+        ## the ScrollableFrame widget is of 'Canvas' class, so we create
+        ## a wrapper frame around it that is of class 'ScrollableFrame' then
+        ## we forward all commands to the inner pages manager widget
+
+        frame $path -class ScrollableFrame
+        eval ScrollableFrame $path.p $args
+        pack $path.p -fill both -expand yes
+        rename $path ::$path:cmd
+        proc ::$path { cmd args } "return \[eval ScrollableFrame::\$cmd $path.p \$args\]"
+        bindtags $path [list $path ScrollableFrame [winfo toplevel $path] all]
+        return $path
+    }
+
+    proc treeChildrenCmd {target {diff \#-1}} {
+        set children ""
+        set wantsdiff [expr {$diff != ""}]
+
+        foreach site [treeChildrenChildsite $target] {
+            foreach child [::vTcl:complete_widget_tree $site $wantsdiff] {
+                lappend children $child$diff
+            }
+        }
+
+        return $children
+    }
+
+    proc treeChildrenChildsite {target} {
+        return [$target getframe]
+    }
+
+    proc dumpCmd {target basename} {
+        set result [vTcl:dump_widget_opt $target $basename]
+        set site [$target getframe]
+        append result "$::vTcl(tab)"
+        set sitevariable "site_[llength [split $site .]]_0"
+        append result "set $sitevariable "
+        append result "\[$basename getframe\]\n"
+        append result \
+                [vTcl::widgets::bwidgets::dump_subwidgets $site \$$sitevariable]
+    }
+
+    proc dumpInfoCmd {target basename} {
+        global classes
+        set result [vTcl:dump:widget_info $target $basename]
+        set site [$target getframe]
+        append result "$::vTcl(tab)"
+        set sitevariable "site_[llength [split $site .]]_0"
+        append result "set $sitevariable "
+        append result "\[$basename getframe\]\n"
+        append result [$classes(Frame,dumpInfoCmd) $site \$$sitevariable]
+    }
+}
+

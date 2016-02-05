@@ -1,0 +1,240 @@
+Name            tixPanedWindow
+Lib             tix
+
+Class           TixPanedWindow
+Icon            @vTcl::widgets::tix::panedwindow::getIcon
+TreeLabel       Tix PanedWindow
+DefaultOptions  -orient vertical
+DefaultValues   -background
+DumpCmd         vTcl::widgets::tix::panedwindow::dumpCmd
+DumpInfoCmd     vTcl::widgets::tix::panedwindow::dumpInfoCmd
+DumpChildren    no
+MegaWidget      yes
+InsertCmd       vTcl::widgets::tix::panedwindow::insertCmd
+DeleteSiteCmd   vTcl::widgets::tix::panedwindow::deleteSiteCmd
+TreeChildrenCmd     "vTcl::widgets::tix::panedwindow::treeChildrenCmd \
+                     vTcl::widgets::tix::panedwindow::treeChildrenChildsite"
+
+## Right-click menu
+Function        "Edit Panes..."   vTcl::widgets::tix::panedwindow::editCmd
+
+NewOption -allowresize "allow resize" boolean
+NewOption -orientation "orientation" choice {vertical horizontal}
+
+## Special proc for setting up icons on the toolbar.
+proc vTcl:TixPanedWindow:ToolBarSetup {} {
+
+    vTcl:toolbar_add tix TixPanedWindow \
+	"vertical paned window" \
+	icon_tixPanedWindow.gif "-orientation vertical"
+
+    vTcl:toolbar_add tix TixPanedWindow \
+    	"horizontal paned window" \
+	../lib/Widgets/tix/tixPanedWindowHoriz.gif "-orientation horizontal"
+}
+
+## Panes editing support
+NewOption -_tix_panes  "panes"  combobox
+ClassOption -_tix_panes
+OptionConfigCmd -_tix_panes     config     vTcl::widgets::tix::panedwindow::config_panes
+OptionConfigCmd -_tix_panes     update     vTcl::widgets::tix::panedwindow::update_panes
+OptionConfigCmd -_tix_panes     get        vTcl::widgets::tix::panedwindow::get_panes
+OptionConfigCmd -_tix_panes     select     vTcl::widgets::tix::panedwindow::select_pane
+OptionConfigCmd -_tix_panes     edit       vTcl::itemEdit::edit
+OptionConfigCmd -_tix_panes     editArg    vTcl::widgets::tix::panedwindow::edit
+
+namespace eval vTcl::widgets::tix::panedwindow::edit {
+
+    proc getTitle {target} {
+        return "Edit panes for $target"
+    }
+
+    proc getLabelOption {} {
+        return {}
+    }
+
+    proc getItems {target} {
+        ## first item in the list is the current index
+        set panes [$target panes]
+        set current 0
+        set values $current
+        for {set i 0} {$i < [llength $panes]} {incr i} {
+            lappend values "Pane [expr $i + 1]"
+        }
+        return $values
+    }
+
+    proc addItem {target} {
+        set index 0
+        set panes [$target panes]
+        ## repeat until we find an unused pane number
+        while {1} {
+            incr index
+            set newpane "pane$index"
+            if {[lsearch -exact $panes $newpane] == -1} break
+        }
+        $target add $newpane
+        vTcl:init_wtree
+        return "Pane $index"
+    }
+
+    proc removeItem {target index} {
+        set panes [$target panes]
+        set pane [lindex $panes $index]
+        $target delete $pane
+        vTcl:init_wtree
+    }
+
+    proc itemConfigure {target index args} {
+        set panes [$target panes]
+        set pane [lindex $panes $index]
+        if {$args == ""} {
+            return [$target paneconfigure $pane]
+        } else {
+            eval $target paneconfigure $pane $args
+        }
+    }
+
+    proc moveUpOrDown {target index direction} {
+        error "Not implemented"
+    }
+}
+
+namespace eval vTcl::widgets::tix::panedwindow {
+
+    proc editCmd {} {
+        set target $::vTcl(w,widget)
+	::vTcl::itemEdit::edit $target vTcl::widgets::tix::panedwindow::edit
+    }
+
+    proc getIcon {{w ""}} {
+        if {[lempty $w]} {
+            return [list icon_tixPanedWindow.gif ../lib/Widgets/tix/tixPanedWindowHoriz.gif]
+        }
+        switch [$w cget -orientation] {
+            vertical {
+                return icon_tixPanedWindow.gif
+            }
+            horizontal {
+                return ../lib/Widgets/tix/tixPanedWindowHoriz.gif
+            }
+        }
+    }
+
+    proc update_panes {target var} {
+        ## there is a trace on var to update the combobox
+        ## first item in the list is the current index
+        set panes [$target panes]
+        set current 0
+        set values $current
+        for {set i 0} {$i < [llength $panes]} {incr i} {
+            lappend values "Pane [expr $i + 1]"
+        }
+
+        ## this will trigger the trace
+        set ::$var $values
+   }
+
+    proc config_panes {target var} {
+    }
+
+    proc get_panes {target} {
+    }
+
+    proc select_pane {target index} {
+    }
+
+    proc insertCmd {target} {
+        ## Add two pages to start with.
+        $target add pane1
+        $target add pane2
+        $target subwidget pane1 configure -width 30 -height 30
+        $target subwidget pane2 configure -width 30 -height 30
+    }
+
+    proc treeChildrenCmd {target {diff ""}} {
+        set children ""
+        set wantsdiff [expr {$diff != ""}]
+
+        set entries [$target panes]
+        foreach pane $entries {
+            set site [$target subwidget $pane]
+            foreach child [vTcl:complete_widget_tree $site $wantsdiff] {
+                lappend children $child$diff
+            }
+        }
+
+        return $children
+    }
+
+    proc treeChildrenChildsite {target} {
+        set entries [$target panes]
+        set sites ""
+
+        foreach pane $entries {
+            lappend sites [$target subwidget $pane]
+        }
+
+        return $sites
+    }
+
+    proc deleteSiteCmd {target site} {
+        set entries [$target panes]
+
+        foreach page $entries {
+            set subwidget [$target subwidget $page]
+            if {$site == $subwidget} {
+                $target delete $page
+                return
+            }
+        }
+    }
+
+    proc dumpCmd {target basename} {
+        global vTcl
+        set result [vTcl:dump_widget_opt $target $basename]
+        set entries [$target panes]
+        foreach page $entries {
+	    set validcfg ""
+            set conf [$target paneconfigure $page]
+            foreach c $conf {
+                # Filter the valid options out
+                if [regexp -- {^-(after|allow|at|before|expand|max|min|size)} $c] {
+                    lappend validcfg $c
+                }
+            }
+            set pairs [vTcl:conf_to_pairs $validcfg ""]
+            append result "$vTcl(tab)$basename add $page \\\n"
+            append result "[vTcl:clean_pairs $pairs]\n"
+        }
+        set index 0
+        foreach page $entries {
+            set subwidget [$target subwidget $page]
+            set sitevariable "site_[llength [split $subwidget .]]_[vTcl:rename $page]"
+            append result "$vTcl(tab)"
+            append result "set $sitevariable "
+            append result "\[$basename subwidget \[lindex \[$basename panes\] $index\]\]\n"
+            append result [vTcl:lib_tix:dump_subwidgets $subwidget \$$sitevariable]
+            incr index
+        }
+	return $result
+    }
+
+     proc dumpInfoCmd {target basename} {
+        global vTcl classes
+        set result [vTcl:dump:widget_info $target $basename]
+        set entries [$target panes]
+        set index 0
+        foreach page $entries {
+            set subwidget [$target subwidget $page]
+            set sitevariable "site_[llength [split $subwidget .]]_[vTcl:rename $page]"
+            append result "$vTcl(tab)"
+            append result "set $sitevariable "
+            append result "\[$basename subwidget \[lindex \[$basename panes\] $index\]\]\n"
+            append result [$classes(Frame,dumpInfoCmd) $subwidget \$$sitevariable]
+            incr index
+        }
+	return $result
+    }
+}
+

@@ -1,0 +1,31 @@
+Class		Table
+Lib		TkTable
+
+Icon		icon_table.gif
+TreeLabel	tkTable
+
+DefaultOptions	-rows 3 -cols 3
+DefaultValues   -background -foreground
+DumpChildren	no
+MegaWidget   	no
+
+NewOption -rows		 "Rows"		 longname type
+NewOption -cols		 "Cols"		 longname type
+NewOption -roworigin	 "Row Origin"  	 longname type
+NewOption -colorigin	 "Col Origin"  	 longname type
+NewOption -titlerows	 "Title Rows"  	 longname type 
+NewOption -titlecols	 "Title Cols"  	 longname type
+NewOption -borderwidth	 "Border Width"  longname type
+NewOption -flashmode	 "Flash Mode"  	 longname type
+NewOption -colwidth	 "Cols Width"  	 longname type
+NewOption -autoclear	 "Auto Clear"  	 boolean  {0 1}
+NewOption -bordercursor	 "Border Cursor" choice {top_left_arrow crosshair watch}
+NewOption -borderwidth	 "Bd Width"  	 longname type
+NewOption -browsecmd	 "Browse Cmd" 	 command
+NewOption -multiline	 "Multi Line"  	 boolean  {0 1}
+NewOption -rowtagcommand "Tag Cmd Row" 	 command
+NewOption -coltagcommand "Tag Cmd Col" 	 command
+NewOption -sparsearray   "Sparse Array"  boolean  {0 1}
+SpecialOpt -validate     "Validate"      boolean  {0 1}
+NewOption -colstretchmode "Col Stretch" choice {none unset all last}
+NewOption -rowstretchmode "Row Stretch" choice {none unset all last fill}

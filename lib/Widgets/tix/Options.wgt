@@ -1,0 +1,38 @@
+## Define all the Tix options.
+
+NewOption -activatecmd		"activate cmd"		longname command
+NewOption -after		"after"			longname type
+NewOption -allowzero		"allow zero"		boolean
+NewOption -before		"before"		longname type
+NewOption -browsecmd		"browse cmd"		command
+NewOption -buttons		"buttons"		longname type
+NewOption -createcmd		"create cmd"		command
+NewOption -dynamicgeometry	"dymanic geometry"	boolean
+NewOption -editable		"editable"		boolean
+NewOption -expand		"expand"		longname type
+NewOption -fancy		"fancy"			boolean
+NewOption -fillcolor	        "fill color"		color	{}	Colors
+NewOption -handleactivebg	"handle activebg"	color	{}	Colors
+NewOption -handlebg		"handle bgcolor"	color	{}	Colors
+NewOption -history		"history"		longname choice \
+  "false true"
+NewOption -label		"label"			longname type
+NewOption -listcmd		"list cmd"		longname command
+NewOption -listwidth		"list width"		longname type
+NewOption -max			"maxsize"		longname type
+NewOption -min			"minsize"		longname type
+NewOption -options		"options"		longname type
+NewOption -panebd		"paneborder width"	longname type
+NewOption -panerelief		"paneborder relief"	relief
+NewOption -postcmd		"post cmd"		longname command
+NewOption -prunehistory		"prune history"		longname choice \
+  "false true"
+NewOption -radio		"radio"			boolean
+NewOption -raisecmd		"raise cmd"		command
+NewOption -scrollbar		"scrollbar"		longname choice \
+  "auto both none x y"
+NewOption -separatoractivebg	"separator activebg"	color	{}	Colors
+NewOption -separatorbg		"separator bgcolor"	color	{}	Colors
+NewOption -size			"size"			longname type
+NewOption -spring		"spring"		boolean
+NewOption -validatecmd		"validate cmd"		longname command

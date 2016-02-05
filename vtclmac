@@ -1,0 +1,2 @@
+set env(VTCL_HOME) [pwd]
+source vtcl.tcl

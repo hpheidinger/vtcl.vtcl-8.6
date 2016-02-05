@@ -1,0 +1,165 @@
+##############################################################################
+# $Id: scrolledwindow.wgt,v 1.4 2003/05/03 08:13:57 cgavin Exp $
+#
+# Visual TCL - A cross-platform application development environment
+#
+# Copyright (C) 2001 Christian Gavin
+#
+# Description file for Bwidgets scrolled window
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+#
+##############################################################################
+
+Class		      ScrolledWindow
+Lib		      bwidget
+
+Icon		      ../lib/Widgets/bwidget/scrolledwindow.gif
+TreeLabel	      BWidget Scrolled Window
+DefaultValues         -background
+CreateCmd	      ScrolledWindow
+MegaWidget	      yes
+CreateCmd         vTcl::widgets::bwidgets::scrolledwindow::createCmd
+InsertCmd         vTcl::widgets::bwidgets::scrolledwindow::insertCmd
+TreeChildrenCmd   {vTcl::widgets::bwidgets::scrolledwindow::treeChildrenCmd
+                   vTcl::widgets::bwidgets::scrolledwindow::treeChildrenChildsite}
+DumpCmd           vTcl::widgets::bwidgets::scrolledwindow::dumpCmd
+DumpInfoCmd       vTcl::widgets::bwidgets::scrolledwindow::dumpInfoCmd
+IgnoreProc        ::ScrolledWindow::* ScrolledWindow
+DeleteCmd         vTcl::widgets::bwidgets::scrolledwindow::deleteCmd
+NewOption -auto     "Auto scroll"    choice   {none horizontal vertical both}
+
+Export            vTcl::widgets::bwidgets::scrolledwindow::createCmd
+
+##############################################################################
+
+AdditionalClasses ScrollChildsite
+Insertable        ScrollChildsite
+InsertChildCmd    ::vTcl::widgets::bwidgets::scrollchildsite::insertChildCmd ScrollChildsite
+Export            ::vTcl::widgets::bwidgets::scrollchildsite::widgetProc ScrollChildsite
+
+namespace eval ::vTcl::widgets::bwidgets::scrollchildsite {
+
+    proc widgetProc {w args} {
+        set command [lindex $args 0]
+        set args [lrange $args 1 end]
+        set children [winfo children $w]
+        set child [lindex $children 0]
+
+        ## we have renamed the default widgetProc _<widgetpath>
+        if {$command == "configure" && $args == ""} {
+            if {$children == ""} {
+                return [concat [uplevel _$w configure] \
+                        [list {-xscrollcommand xScrollCommand ScrollCommand {} {}}] \
+                        [list {-yscrollcommand yScrollCommand ScrollCommand {} {}}]]
+            } else {
+                return [concat [uplevel _$w configure] \
+                        [list [$child configure -xscrollcommand]] \
+                        [list [$child configure -yscrollcommand]]]
+            }
+        } elseif {$command == "configure" && [llength $args] > 1} {
+            return [uplevel $child configure $args]
+        } elseif {[string match ?view $command]} {
+            return [uplevel $child $command $args]
+        }
+
+        uplevel _$w $command $args
+    }
+
+    proc insertChildCmd {target child} {
+        set parent [winfo parent $target]
+        pack $child -fill both -expand 1 
+        ::vTcl::widgets::bwidgets::scrolledwindow::assignWidget $parent $parent.f
+    }
+}
+
+namespace eval ::vTcl::widgets::bwidgets::scrolledwindow {
+
+    proc createCmd {target args} {
+        eval ScrolledWindow $target $args
+        ## create a frame where user can insert widget to scroll
+        frame $target.f -class ScrollChildsite
+
+        ## change the widget procedure
+        rename ::$target.f ::_$target.f
+        proc ::$target.f {command args} \
+	     "eval ::vTcl::widgets::bwidgets::scrollchildsite::widgetProc $target.f \$command \$args"
+    }
+
+    proc insertCmd {target} {
+        ## note: this is done only inside vTcl to allow insertion of widget to scroll
+        ##       currently dependent on the internals of the ScrolledWindow ver 1.3.1
+        pack $target.f -fill both -expand 1
+    }
+
+    proc treeChildrenCmd {target {diff \#0}} {
+        set children ""
+        set wantsdiff [expr {$diff != ""}]
+
+        foreach site [treeChildrenChildsite $target] {
+            foreach child [::vTcl:complete_widget_tree $site $wantsdiff] {
+                lappend children $child$diff
+            }
+        }
+
+        return $children
+    }
+
+    proc assignWidget {target child} {
+        variable inserted
+        if {![info exists inserted($target)]} {
+            $target setwidget $child
+            set inserted($target) $child
+        }
+    }
+
+    proc treeChildrenChildsite {target} {
+        set site $target.f
+        return $site
+    }
+
+    proc dumpCmd {target basename} {
+        set result [vTcl:dump_widget_opt $target $basename]
+        set child [lindex [winfo children [treeChildrenChildsite $target]] 0]
+        if {$child != ""} {
+            set subbasename [vTcl:base_name $child]
+            set class [vTcl:get_class $child]
+            append result [$::classes($class,dumpCmd) $child $subbasename]
+            append result "$::vTcl(tab)pack $subbasename -fill both -expand 1\n"
+            append result "$::vTcl(tab)$basename setwidget $basename.f\n"
+        }
+        return $result
+    }
+
+    proc dumpInfoCmd {target basename} {
+        set result [vTcl:dump:widget_info $target $basename]
+        set child [lindex [winfo children [treeChildrenChildsite $target]] 0]
+        if {$child != ""} {
+            set subbasename [vTcl:base_name $child]
+            set class [vTcl:get_class $child]
+            append result [$::classes($class,dumpInfoCmd) $child $subbasename]
+        }
+        return $result
+    }
+
+    proc deleteCmd {target} {
+        variable inserted
+        if {[info exists inserted($target)]} {
+            unset inserted($target)
+        }
+        destroy $target
+    }
+}
+

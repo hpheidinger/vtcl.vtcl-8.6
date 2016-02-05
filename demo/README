@@ -1,0 +1,22 @@
+It's important to note that once a toplevel is saved as a tclet, it is
+altered by the process and cannot be reloaded back into Visual Tcl.
+
+A few examples
+--------------
+
+combo.tcl        -  a combination of all geometry managers
+draw.tcl         -  a sample drawing application (10 min)
+grid.tcl         -  a sample grid geometry layout
+simple.tcl       -  from the web page (2 min)
+ 
+tclets.html      -  browser loader file for tclets
+tclet-combo.tcl  -  tclet version of combo example
+tclet-draw.tcl   -  tclet version of draw example
+tclet-grid.tcl   -  tclet version of grid example
+tclet-simple.tcl -  tclet version of simple example
+
+ex1_cmpd.tcl     -  example user compounds containing a draw-tool compound
+
+images           -  directory of gifs required for draw demo on versions
+                    of tk before 8.0 (demo now has embedded gifs).
+

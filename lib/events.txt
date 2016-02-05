@@ -1,0 +1,25 @@
+Events
+------
+
+usage:
+
+::vTcl::notify::publish {event args}
+::vTcl::notify::subscribe {event id callback}
+::vTcl::notify::unsubscribe {event id}
+
+callback will be run with the following parameters:
+id args
+
+Event list in vTcl
+------------------
+
+event			args			meaning
+===============================================================================
+edit_mode		none			user selects edit mode
+test_mode		none			user selects test mode
+geom_config_cmd 	{target mgr opt}	a toplevel is being configured,
+						should refresh toplevel list
+delete_widget		{target}		widget is being deleted
+deleted_childsite	{target index}		childsite has been deleted,
+						should refresh megawidget editor
+closed_project		none			current project has being closed

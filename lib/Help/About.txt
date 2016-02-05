@@ -1,0 +1,56 @@
+Copyright (C) 1996-2000 Stewart Allen (stewart@neuron.com)
+
+======================================================================
+
+Originally created by:
+Stewart Allen (stewart@neuron.com)
+
+Maintained by:
+
+Christian Gavin (cgavin@dnai.com)
+Damon Courtney (damon@unreality.com)
+Luke Myers
+
+======================================================================
+
+Freewrap is Copyright (C) 1998 by Dennis LaBelle
+(dlabelle@albany.net) All Rights Reserved.
+
+======================================================================
+
+Portions of this software from the book
+
+"Effective Tcl/Tk Programming"
+  Mark Harrison, DSC Communications Corp.
+  Michael McLennan, Bell Labs Innovations for Lucent Technologies
+  Addison-Wesley Professional Computing Series
+  Copyright (c) 1996-1997 Lucent Technologies Inc. and Mark Harrison
+
+======================================================================
+
+Routines for encoding and decoding base64
+   encoding from Time Janes,
+   decoding from Pascual Alonso,
+   namespace'ing and bugs from Parand Tony Darugar
+    (tdarugar@binevolve.com)
+
+Combobox and Multicolumn listbox Copyright (c) 1999, Bryan Oakley
+Progressbar Copyright (c) 2000 Alexander Schoepe
+
+======================================================================
+
+Enhanced Tk Console, part of the VerTcl system
+
+Originally based off Brent Welch's Tcl Shell Widget
+(from "Practical Programming in Tcl and Tk")
+
+Thanks to the following (among many) for early bug reports & code ideas:
+Steven Wahl <steven@indra.com>, Jan Nijtmans <nijtmans@nici.kun.nl>
+Crimmins <markcrim@umich.edu>, Wart <wart@ugcs.caltech.edu>
+
+Copyright 1995-2000 Jeffrey Hobbs
+Initiated: Thu Aug 17 15:36:47 PDT 1995
+
+jeff.hobbs@acm.org
+
+======================================================================

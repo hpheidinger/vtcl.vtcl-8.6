@@ -1,0 +1,9 @@
+Class		ComboBox
+Lib		bwidget
+
+Icon		icon_BwCombobox.gif
+TreeLabel	BWidget Combo Box
+CreateCmd	ComboBox
+MegaWidget      yes
+DefaultValues   -background -foreground
+DefaultOptions  -entrybg white

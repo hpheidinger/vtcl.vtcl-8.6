@@ -1,0 +1,793 @@
+# -*- tcl -*-
+#
+
+ttd.version 1.0
+
+ttd.tagdef Title -background white -font {-family arial -weight bold -slant roman -size 28 -underline 0 -overstrike 0} -foreground #b83000 -justify center
+ttd.tagdef Remark -background white -font {-family {times new roman} -weight bold -slant italic -size 12 -underline 0 -overstrike 0} -foreground #000000 -justify left
+ttd.tagdef SubTitle -background #e4e0e8 -font {-family {courier new} -weight bold -slant roman -size 19 -underline 0 -overstrike 0} -foreground #0000f2 -justify center
+ttd.tagdef Copyright -background #ffffff -font {-family arial -weight bold -slant roman -size 12 -underline 0 -overstrike 0} -foreground #7e5c2e -justify left
+ttd.tagdef Body -background white -font {-family arial -weight normal -slant roman -size 10 -underline 0 -overstrike 0} -foreground #000000 -justify left
+ttd.tagdef Body_Title -background white -font {-family arial -weight bold -slant roman -size 11 -underline 0 -overstrike 0} -foreground #000000 -justify left
+ttd.tagdef LicenseText -background white -font {-family courier -weight normal -slant roman -size 12 -underline 0 -overstrike 0} -foreground #000000 -justify left
+
+
+
+ttd.tagon Title
+ttd.text {Visual Text 0.9}
+ttd.tagoff Title
+ttd.text { 
+}
+ttd.text {
+}
+ttd.text {
+}
+ttd.tagon SubTitle
+ttd.text {A simple yet powerful text editor for Tcl/Tk
+}
+ttd.tagoff SubTitle
+ttd.text {
+}
+ttd.text {
+}
+ttd.tagon Copyright
+ttd.text {Copyright (C) 2001 Christian Gavin
+}
+ttd.text {Copyright (C) 1999 Bryan Douglas Oakley for text dump/restore code
+}
+ttd.tagoff Copyright
+ttd.text {
+}
+ttd.tagon Remark
+ttd.text {This software is licensed under the GPL (GNU Public License) Version 2. Please see the license below for more information.
+}
+ttd.tagoff Remark
+ttd.text {
+}
+ttd.tagon Body
+ttd.text {This sample shows a complete application created with Visual Tcl. Its main features are:
+}
+ttd.text {
+}
+ttd.text {- SDI (Single Document Interface)
+}
+ttd.text {- Main menu bar
+}
+ttd.text {- Status bar
+}
+ttd.text {- Advanced text widget programming, use of tags to control the document appearance, how to dump/restore the contents of a text widget
+}
+ttd.text {- A vertical divider
+}
+ttd.text {- Scrolled text compound
+}
+ttd.text {- Scrolled listbox compound
+}
+ttd.text {- Aliases
+}
+ttd.text {- Widget bindings
+}
+ttd.text {
+}
+ttd.tagon Body_Title
+ttd.text {The basics}
+ttd.tagoff Body_Title
+ttd.text {
+}
+ttd.text {
+}
+ttd.text {Visual Text uses tags to control the appearance of documents. To change the text formating, select a bloc of text by clicking with the left mouse button and dragging, or by holding the Shift key pressed while using the cursor keys to mark the selection. Then, in the right hand side of the window, click on the yellowish icon. A dialog box shows up, where you can define a new tag.
+}
+ttd.text {
+}
+ttd.text {Enter the name of the new tag. This tag can be applied later on to any other portion of your document. Choose the font size, the font family, the text justification, foreground and background color. See how it looks in the sample text at the bottom of the dialog. When you are satisfied with the text style, close the dialog by pressing the "OK" button. This will apply the style to the bloc of text you have selected.
+}
+ttd.text {
+}
+ttd.tagon Body_Title
+ttd.text {Reusing a tag}
+ttd.tagoff Body_Title
+ttd.text {
+}
+ttd.text {
+}
+ttd.text {To reuse a tag you have defined earlier, select a bloc of text, then in the upper right side of the window, click on the style you want to apply. If the tag has already been applied to the text, it will be removed for that bloc of text, otherwise it will be applied.
+}
+ttd.text {
+}
+ttd.tagon Body_Title
+ttd.text {Inserting an image}
+ttd.tagoff Body_Title
+ttd.text {
+}
+ttd.text {
+}
+ttd.text {In the "Edit" menu, select "Insert image..." and choose a file in the selector dialog. Press "OK" to dismiss the dialog box. Note: inserting an image inserts a reference to the image file. If you want to transmit the text to someone else, you need to include the image file as well.
+}
+ttd.tagoff Body
+ttd.text {
+}
+ttd.text {
+}
+ttd.tagon LicenseText
+ttd.text {		    GNU GENERAL PUBLIC LICENSE
+}
+ttd.text {		       Version 2, June 1991
+}
+ttd.text {
+}
+ttd.text {Copyright (C) 1989, 1991 Free Software Foundation, Inc.
+}
+ttd.text {                 675 Mass Ave, Cambridge, MA 02139, USA
+}
+ttd.text {Everyone is permitted to copy and distribute verbatim copies
+}
+ttd.text { of this license document, but changing it is not allowed.
+}
+ttd.text {
+}
+ttd.text {			    Preamble
+}
+ttd.text {
+}
+ttd.text {  The licenses for most software are designed to take away your
+}
+ttd.text {freedom to share and change it.  By contrast, the GNU General Public
+}
+ttd.text {License is intended to guarantee your freedom to share and change free
+}
+ttd.text {software--to make sure the software is free for all its users.  This
+}
+ttd.text {General Public License applies to most of the Free Software
+}
+ttd.text {Foundations software and to any other program whose authors commit to
+}
+ttd.text {using it.  (Some other Free Software Foundation software is covered by
+}
+ttd.text {the GNU Library General Public License instead.)  You can apply it to
+}
+ttd.text {your programs, too.
+}
+ttd.text {
+}
+ttd.text {  When we speak of free software, we are referring to freedom, not
+}
+ttd.text {price.  Our General Public Licenses are designed to make sure that you
+}
+ttd.text {have the freedom to distribute copies of free software (and charge for
+}
+ttd.text {this service if you wish), that you receive source code or can get it
+}
+ttd.text {if you want it, that you can change the software or use pieces of it
+}
+ttd.text {in new free programs; and that you know you can do these things.
+}
+ttd.text {
+}
+ttd.text {  To protect your rights, we need to make restrictions that forbid
+}
+ttd.text {anyone to deny you these rights or to ask you to surrender the rights.
+}
+ttd.text {These restrictions translate to certain responsibilities for you if you
+}
+ttd.text {distribute copies of the software, or if you modify it.
+}
+ttd.text {
+}
+ttd.text {  For example, if you distribute copies of such a program, whether
+}
+ttd.text {gratis or for a fee, you must give the recipients all the rights that
+}
+ttd.text {you have.  You must make sure that they, too, receive or can get the
+}
+ttd.text {source code.  And you must show them these terms so they know their
+}
+ttd.text {rights.
+}
+ttd.text {
+}
+ttd.text {  We protect your rights with two steps: (1) copyright the software, and
+}
+ttd.text {(2) offer you this license which gives you legal permission to copy,
+}
+ttd.text {distribute and/or modify the software.
+}
+ttd.text {
+}
+ttd.text {  Also, for each authors protection and ours, we want to make certain
+}
+ttd.text {that everyone understands that there is no warranty for this free
+}
+ttd.text {software.  If the software is modified by someone else and passed on, we
+}
+ttd.text {want its recipients to know that what they have is not the original, so
+}
+ttd.text {that any problems introduced by others will not reflect on the original
+}
+ttd.text {authors reputations.
+}
+ttd.text {
+}
+ttd.text {  Finally, any free program is threatened constantly by software
+}
+ttd.text {patents.  We wish to avoid the danger that redistributors of a free
+}
+ttd.text {program will individually obtain patent licenses, in effect making the
+}
+ttd.text {program proprietary.  To prevent this, we have made it clear that any
+}
+ttd.text {patent must be licensed for everyones free use or not licensed at all.
+}
+ttd.text {
+}
+ttd.text {  The precise terms and conditions for copying, distribution and
+}
+ttd.text {modification follow.
+}
+ttd.text {
+}
+ttd.text {		    GNU GENERAL PUBLIC LICENSE
+}
+ttd.text {   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
+}
+ttd.text {
+}
+ttd.text {  0. This License applies to any program or other work which contains
+}
+ttd.text {a notice placed by the copyright holder saying it may be distributed
+}
+ttd.text {under the terms of this General Public License.  The "Program", below,
+}
+ttd.text {refers to any such program or work, and a "work based on the Program"
+}
+ttd.text {means either the Program or any derivative work under copyright law:
+}
+ttd.text {that is to say, a work containing the Program or a portion of it,
+}
+ttd.text {either verbatim or with modifications and/or translated into another
+}
+ttd.text {language.  (Hereinafter, translation is included without limitation in
+}
+ttd.text {the term "modification".)  Each licensee is addressed as "you".
+}
+ttd.text {
+}
+ttd.text {Activities other than copying, distribution and modification are not
+}
+ttd.text {covered by this License; they are outside its scope.  The act of
+}
+ttd.text {running the Program is not restricted, and the output from the Program
+}
+ttd.text {is covered only if its contents constitute a work based on the
+}
+ttd.text {Program (independent of having been made by running the Program).
+}
+ttd.text {Whether that is true depends on what the Program does.
+}
+ttd.text {
+}
+ttd.text {  1. You may copy and distribute verbatim copies of the Programs
+}
+ttd.text {source code as you receive it, in any medium, provided that you
+}
+ttd.text {conspicuously and appropriately publish on each copy an appropriate
+}
+ttd.text {copyright notice and disclaimer of warranty; keep intact all the
+}
+ttd.text {notices that refer to this License and to the absence of any warranty;
+}
+ttd.text {and give any other recipients of the Program a copy of this License
+}
+ttd.text {along with the Program.
+}
+ttd.text {
+}
+ttd.text {You may charge a fee for the physical act of transferring a copy, and
+}
+ttd.text {you may at your option offer warranty protection in exchange for a fee.
+}
+ttd.text {
+}
+ttd.text {  2. You may modify your copy or copies of the Program or any portion
+}
+ttd.text {of it, thus forming a work based on the Program, and copy and
+}
+ttd.text {distribute such modifications or work under the terms of Section 1
+}
+ttd.text {above, provided that you also meet all of these conditions:
+}
+ttd.text {
+}
+ttd.text {    a) You must cause the modified files to carry prominent notices
+}
+ttd.text {    stating that you changed the files and the date of any change.
+}
+ttd.text {
+}
+ttd.text {    b) You must cause any work that you distribute or publish, that in
+}
+ttd.text {    whole or in part contains or is derived from the Program or any
+}
+ttd.text {    part thereof, to be licensed as a whole at no charge to all third
+}
+ttd.text {    parties under the terms of this License.
+}
+ttd.text {
+}
+ttd.text {    c) If the modified program normally reads commands interactively
+}
+ttd.text {    when run, you must cause it, when started running for such
+}
+ttd.text {    interactive use in the most ordinary way, to print or display an
+}
+ttd.text {    announcement including an appropriate copyright notice and a
+}
+ttd.text {    notice that there is no warranty (or else, saying that you provide
+}
+ttd.text {    a warranty) and that users may redistribute the program under
+}
+ttd.text {    these conditions, and telling the user how to view a copy of this
+}
+ttd.text {    License.  (Exception: if the Program itself is interactive but
+}
+ttd.text {    does not normally print such an announcement, your work based on
+}
+ttd.text {    the Program is not required to print an announcement.)
+}
+ttd.text {
+}
+ttd.text {These requirements apply to the modified work as a whole.  If
+}
+ttd.text {identifiable sections of that work are not derived from the Program,
+}
+ttd.text {and can be reasonably considered independent and separate works in
+}
+ttd.text {themselves, then this License, and its terms, do not apply to those
+}
+ttd.text {sections when you distribute them as separate works.  But when you
+}
+ttd.text {distribute the same sections as part of a whole which is a work based
+}
+ttd.text {on the Program, the distribution of the whole must be on the terms of
+}
+ttd.text {this License, whose permissions for other licensees extend to the
+}
+ttd.text {entire whole, and thus to each and every part regardless of who wrote it.
+}
+ttd.text {
+}
+ttd.text {Thus, it is not the intent of this section to claim rights or contest
+}
+ttd.text {your rights to work written entirely by you; rather, the intent is to
+}
+ttd.text {exercise the right to control the distribution of derivative or
+}
+ttd.text {collective works based on the Program.
+}
+ttd.text {
+}
+ttd.text {In addition, mere aggregation of another work not based on the Program
+}
+ttd.text {with the Program (or with a work based on the Program) on a volume of
+}
+ttd.text {a storage or distribution medium does not bring the other work under
+}
+ttd.text {the scope of this License.
+}
+ttd.text {
+}
+ttd.text {  3. You may copy and distribute the Program (or a work based on it,
+}
+ttd.text {under Section 2) in object code or executable form under the terms of
+}
+ttd.text {Sections 1 and 2 above provided that you also do one of the following:
+}
+ttd.text {
+}
+ttd.text {    a) Accompany it with the complete corresponding machine-readable
+}
+ttd.text {    source code, which must be distributed under the terms of Sections
+}
+ttd.text {    1 and 2 above on a medium customarily used for software interchange; or,
+}
+ttd.text {
+}
+ttd.text {    b) Accompany it with a written offer, valid for at least three
+}
+ttd.text {    years, to give any third party, for a charge no more than your
+}
+ttd.text {    cost of physically performing source distribution, a complete
+}
+ttd.text {    machine-readable copy of the corresponding source code, to be
+}
+ttd.text {    distributed under the terms of Sections 1 and 2 above on a medium
+}
+ttd.text {    customarily used for software interchange; or,
+}
+ttd.text {
+}
+ttd.text {    c) Accompany it with the information you received as to the offer
+}
+ttd.text {    to distribute corresponding source code.  (This alternative is
+}
+ttd.text {    allowed only for noncommercial distribution and only if you
+}
+ttd.text {    received the program in object code or executable form with such
+}
+ttd.text {    an offer, in accord with Subsection b above.)
+}
+ttd.text {
+}
+ttd.text {The source code for a work means the preferred form of the work for
+}
+ttd.text {making modifications to it.  For an executable work, complete source
+}
+ttd.text {code means all the source code for all modules it contains, plus any
+}
+ttd.text {associated interface definition files, plus the scripts used to
+}
+ttd.text {control compilation and installation of the executable.  However, as a
+}
+ttd.text {special exception, the source code distributed need not include
+}
+ttd.text {anything that is normally distributed (in either source or binary
+}
+ttd.text {form) with the major components (compiler, kernel, and so on) of the
+}
+ttd.text {operating system on which the executable runs, unless that component
+}
+ttd.text {itself accompanies the executable.
+}
+ttd.text {
+}
+ttd.text {If distribution of executable or object code is made by offering
+}
+ttd.text {access to copy from a designated place, then offering equivalent
+}
+ttd.text {access to copy the source code from the same place counts as
+}
+ttd.text {distribution of the source code, even though third parties are not
+}
+ttd.text {compelled to copy the source along with the object code.
+}
+ttd.text {
+}
+ttd.text {  4. You may not copy, modify, sublicense, or distribute the Program
+}
+ttd.text {except as expressly provided under this License.  Any attempt
+}
+ttd.text {otherwise to copy, modify, sublicense or distribute the Program is
+}
+ttd.text {void, and will automatically terminate your rights under this License.
+}
+ttd.text {However, parties who have received copies, or rights, from you under
+}
+ttd.text {this License will not have their licenses terminated so long as such
+}
+ttd.text {parties remain in full compliance.
+}
+ttd.text {
+}
+ttd.text {  5. You are not required to accept this License, since you have not
+}
+ttd.text {signed it.  However, nothing else grants you permission to modify or
+}
+ttd.text {distribute the Program or its derivative works.  These actions are
+}
+ttd.text {prohibited by law if you do not accept this License.  Therefore, by
+}
+ttd.text {modifying or distributing the Program (or any work based on the
+}
+ttd.text {Program), you indicate your acceptance of this License to do so, and
+}
+ttd.text {all its terms and conditions for copying, distributing or modifying
+}
+ttd.text {the Program or works based on it.
+}
+ttd.text {
+}
+ttd.text {  6. Each time you redistribute the Program (or any work based on the
+}
+ttd.text {Program), the recipient automatically receives a license from the
+}
+ttd.text {original licensor to copy, distribute or modify the Program subject to
+}
+ttd.text {these terms and conditions.  You may not impose any further
+}
+ttd.text {restrictions on the recipients exercise of the rights granted herein.
+}
+ttd.text {You are not responsible for enforcing compliance by third parties to
+}
+ttd.text {this License.
+}
+ttd.text {
+}
+ttd.text {  7. If, as a consequence of a court judgment or allegation of patent
+}
+ttd.text {infringement or for any other reason (not limited to patent issues),
+}
+ttd.text {conditions are imposed on you (whether by court order, agreement or
+}
+ttd.text {otherwise) that contradict the conditions of this License, they do not
+}
+ttd.text {excuse you from the conditions of this License.  If you cannot
+}
+ttd.text {distribute so as to satisfy simultaneously your obligations under this
+}
+ttd.text {License and any other pertinent obligations, then as a consequence you
+}
+ttd.text {may not distribute the Program at all.  For example, if a patent
+}
+ttd.text {license would not permit royalty-free redistribution of the Program by
+}
+ttd.text {all those who receive copies directly or indirectly through you, then
+}
+ttd.text {the only way you could satisfy both it and this License would be to
+}
+ttd.text {refrain entirely from distribution of the Program.
+}
+ttd.text {
+}
+ttd.text {If any portion of this section is held invalid or unenforceable under
+}
+ttd.text {any particular circumstance, the balance of the section is intended to
+}
+ttd.text {apply and the section as a whole is intended to apply in other
+}
+ttd.text {circumstances.
+}
+ttd.text {
+}
+ttd.text {It is not the purpose of this section to induce you to infringe any
+}
+ttd.text {patents or other property right claims or to contest validity of any
+}
+ttd.text {such claims; this section has the sole purpose of protecting the
+}
+ttd.text {integrity of the free software distribution system, which is
+}
+ttd.text {implemented by public license practices.  Many people have made
+}
+ttd.text {generous contributions to the wide range of software distributed
+}
+ttd.text {through that system in reliance on consistent application of that
+}
+ttd.text {system; it is up to the author/donor to decide if he or she is willing
+}
+ttd.text {to distribute software through any other system and a licensee cannot
+}
+ttd.text {impose that choice.
+}
+ttd.text {
+}
+ttd.text {This section is intended to make thoroughly clear what is believed to
+}
+ttd.text {be a consequence of the rest of this License.
+}
+ttd.text {
+}
+ttd.text {  8. If the distribution and/or use of the Program is restricted in
+}
+ttd.text {certain countries either by patents or by copyrighted interfaces, the
+}
+ttd.text {original copyright holder who places the Program under this License
+}
+ttd.text {may add an explicit geographical distribution limitation excluding
+}
+ttd.text {those countries, so that distribution is permitted only in or among
+}
+ttd.text {countries not thus excluded.  In such case, this License incorporates
+}
+ttd.text {the limitation as if written in the body of this License.
+}
+ttd.text {
+}
+ttd.text {  9. The Free Software Foundation may publish revised and/or new versions
+}
+ttd.text {of the General Public License from time to time.  Such new versions will
+}
+ttd.text {be similar in spirit to the present version, but may differ in detail to
+}
+ttd.text {address new problems or concerns.
+}
+ttd.text {
+}
+ttd.text {Each version is given a distinguishing version number.  If the Program
+}
+ttd.text {specifies a version number of this License which applies to it and "any
+}
+ttd.text {later version", you have the option of following the terms and conditions
+}
+ttd.text {either of that version or of any later version published by the Free
+}
+ttd.text {Software Foundation.  If the Program does not specify a version number of
+}
+ttd.text {this License, you may choose any version ever published by the Free Software
+}
+ttd.text {Foundation.
+}
+ttd.text {
+}
+ttd.text {  10. If you wish to incorporate parts of the Program into other free
+}
+ttd.text {programs whose distribution conditions are different, write to the author
+}
+ttd.text {to ask for permission.  For software which is copyrighted by the Free
+}
+ttd.text {Software Foundation, write to the Free Software Foundation; we sometimes
+}
+ttd.text {make exceptions for this.  Our decision will be guided by the two goals
+}
+ttd.text {of preserving the free status of all derivatives of our free software and
+}
+ttd.text {of promoting the sharing and reuse of software generally.
+}
+ttd.text {
+}
+ttd.text {			    NO WARRANTY
+}
+ttd.text {
+}
+ttd.text {  11. BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY
+}
+ttd.text {FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW.  EXCEPT WHEN
+}
+ttd.text {OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES
+}
+ttd.text {PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED
+}
+ttd.text {OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+}
+ttd.text {MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  THE ENTIRE RISK AS
+}
+ttd.text {TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU.  SHOULD THE
+}
+ttd.text {PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING,
+}
+ttd.text {REPAIR OR CORRECTION.
+}
+ttd.text {
+}
+ttd.text {  12. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
+}
+ttd.text {WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
+}
+ttd.text {REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES,
+}
+ttd.text {INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING
+}
+ttd.text {OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED
+}
+ttd.text {TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY
+}
+ttd.text {YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER
+}
+ttd.text {PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE
+}
+ttd.text {POSSIBILITY OF SUCH DAMAGES.
+}
+ttd.text {
+}
+ttd.text {		     END OF TERMS AND CONDITIONS
+}
+ttd.text {
+}
+ttd.text {	Appendix: How to Apply These Terms to Your New Programs
+}
+ttd.text {
+}
+ttd.text {  If you develop a new program, and you want it to be of the greatest
+}
+ttd.text {possible use to the public, the best way to achieve this is to make it
+}
+ttd.text {free software which everyone can redistribute and change under these terms.
+}
+ttd.text {
+}
+ttd.text {  To do so, attach the following notices to the program.  It is safest
+}
+ttd.text {to attach them to the start of each source file to most effectively
+}
+ttd.text {convey the exclusion of warranty; and each file should have at least
+}
+ttd.text {the "copyright" line and a pointer to where the full notice is found.
+}
+ttd.text {
+}
+ttd.text {    <one line to give the programs name and a brief idea of what it does.>
+}
+ttd.text {    Copyright (C) 19yy  <name of author>
+}
+ttd.text {
+}
+ttd.text {    This program is free software; you can redistribute it and/or modify
+}
+ttd.text {    it under the terms of the GNU General Public License as published by
+}
+ttd.text {    the Free Software Foundation; either version 2 of the License, or
+}
+ttd.text {    (at your option) any later version.
+}
+ttd.text {
+}
+ttd.text {    This program is distributed in the hope that it will be useful,
+}
+ttd.text {    but WITHOUT ANY WARRANTY; without even the implied warranty of
+}
+ttd.text {    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+}
+ttd.text {    GNU General Public License for more details.
+}
+ttd.text {
+}
+ttd.text {    You should have received a copy of the GNU General Public License
+}
+ttd.text {    along with this program; if not, write to the Free Software
+}
+ttd.text {    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+}
+ttd.text {
+}
+ttd.text {Also add information on how to contact you by electronic and paper mail.
+}
+ttd.text {
+}
+ttd.text {If the program is interactive, make it output a short notice like this
+}
+ttd.text {when it starts in an interactive mode:
+}
+ttd.text {
+}
+ttd.text {    Gnomovision version 69, Copyright (C) 19yy name of author
+}
+ttd.text {    Gnomovision comes with ABSOLUTELY NO WARRANTY; for details type `show w.
+}
+ttd.text {    This is free software, and you are welcome to redistribute it
+}
+ttd.text {    under certain conditions; type `show c for details.
+}
+ttd.text {
+}
+ttd.text {The hypothetical commands `show w and `show c should show the appropriate
+}
+ttd.text {parts of the General Public License.  Of course, the commands you use may
+}
+ttd.text {be called something other than `show w and `show c; they could even be
+}
+ttd.text {mouse-clicks or menu items--whatever suits your program.
+}
+ttd.text {
+}
+ttd.text {You should also get your employer (if you work as a programmer) or your
+}
+ttd.text {school, if any, to sign a "copyright disclaimer" for the program, if
+}
+ttd.text {necessary.  Here is a sample; alter the names:
+}
+ttd.text {
+}
+ttd.text {  Yoyodyne, Inc., hereby disclaims all copyright interest in the program
+}
+ttd.text {  `Gnomovision (which makes passes at compilers) written by James Hacker.
+}
+ttd.text {
+}
+ttd.text {  <signature of Ty Coon>, 1 April 1989
+}
+ttd.text {  Ty Coon, President of Vice
+}
+ttd.text {
+}
+ttd.text {This General Public License does not permit incorporating your program into
+}
+ttd.text {proprietary programs.  If your program is a subroutine library, you may
+}
+ttd.text {consider it more useful to permit linking proprietary applications with the
+}
+ttd.text {library.  If this is what you want to do, use the GNU Library General
+}
+ttd.text {Public License instead of this License.
+}
+ttd.tagoff LicenseText
+ttd.text {
+}

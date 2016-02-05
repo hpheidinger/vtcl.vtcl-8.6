@@ -1,0 +1,58 @@
+Name                tixLabelFrame
+Lib                 tix
+
+Class               TixLabelFrame
+Icon                icon_tixLabelFrame.gif
+TreeLabel           Tix LabelFrame
+DefaultOptions      -label "Label"
+DumpCmd             ::vTcl::widgets::tix::tixLabelFrame::dumpCmd
+DumpInfoCmd         ::vTcl::widgets::tix::tixLabelFrame::dumpInfoCmd
+DumpChildren        no
+MegaWidget          yes
+InsertCmd           ::vTcl::widgets::tix::tixLabelFrame::insertCmd
+TreeChildrenCmd     "::vTcl::widgets::tix::tixLabelFrame::treeChildrenCmd \
+                     ::vTcl::widgets::tix::tixLabelFrame::treeChildrenChildsite"
+
+namespace eval ::vTcl::widgets::tix::tixLabelFrame {
+
+    proc insertCmd {target} {
+        $target subwidget frame configure -width 30 -height 20
+    }
+
+    proc treeChildrenCmd {target {diff \#-1}} {
+        set children ""
+        set wantsdiff [expr {$diff != ""}]
+
+        foreach child [vTcl:complete_widget_tree [$target subwidget frame] $wantsdiff] {
+            lappend children $child$diff
+        }
+
+        return $children
+    }
+
+    proc treeChildrenChildsite {target} {
+        return [$target subwidget frame]
+    }
+
+    proc dumpCmd {target basename} {
+        global vTcl
+        set result [vTcl:dump_widget_opt $target $basename]
+        set page   [$target subwidget frame]
+        set sitevariable "site_[llength [split $page .]]_0"
+        append result "$vTcl(tab)set $sitevariable "
+        append result "\[$basename subwidget frame\]\n"
+        append result [vTcl:lib_tix:dump_subwidgets $page \$$sitevariable]
+    }
+
+    proc dumpInfoCmd {target basename} {
+        global vTcl classes
+        set result [vTcl:dump:widget_info $target $basename]
+        set page   [$target subwidget frame]
+        set sitevariable "site_[llength [split $page .]]_0"
+        append result "$vTcl(tab)set $sitevariable "
+        append result "\[$basename subwidget frame\]\n"
+        append result [$classes(Frame,dumpInfoCmd) $page \$$sitevariable]
+
+        return $result
+    }
+}

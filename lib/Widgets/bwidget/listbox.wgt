@@ -1,0 +1,13 @@
+Class		ListBox
+Lib		bwidget
+
+Icon		../lib/Widgets/bwidget/listbox.gif
+TreeLabel	BWidget List Box
+CreateCmd	ListBox
+MegaWidget      yes
+DefaultValues   -foreground
+DefaultOptions  -background white
+
+IgnoreProc "::ListBox::*"
+IgnoreProc ListBox
+

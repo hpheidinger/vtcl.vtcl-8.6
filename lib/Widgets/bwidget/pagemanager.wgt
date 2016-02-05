@@ -1,0 +1,114 @@
+Class		    PagesManager
+Lib		    bwidget
+
+Icon		    ../lib/Widgets/bwidget/pagesmanager.gif
+TreeLabel	    BWidget PagesManager
+CreateCmd	    ::vTcl::widgets::bwidgets::pagesmanager::createCmd
+MegaWidget	    yes
+InsertCmd       ::vTcl::widgets::bwidgets::pagesmanager::insertCmd
+DumpCmd         ::vTcl::widgets::bwidgets::pagesmanager::dumpCmd
+DumpInfoCmd     ::vTcl::widgets::bwidgets::pagesmanager::dumpInfoCmd
+Export          ::vTcl::widgets::bwidgets::pagesmanager::createCmd
+TreeChildrenCmd	{vTcl::widgets::bwidgets::pagesmanager::treeChildrenCmd
+		       vTcl::widgets::bwidgets::pagesmanager::treeChildrenChildsite}
+SelectSiteCmd   vTcl::widgets::bwidgets::pagesmanager::selectSiteCmd
+DeleteSiteCmd   vTcl::widgets::bwidgets::pagesmanager::deleteSiteCmd
+IgnoreProc      ::PagesManager::* PagesManager
+Function        "Add Page" ::vTcl::widgets::bwidgets::pagesmanager::addItem
+
+namespace eval ::vTcl::widgets::bwidgets::pagesmanager {
+
+    proc createCmd {path args} {
+        ## the PagesManager widget is of 'Canvas' class, so we create
+        ## a wrapper frame around it that is of class 'PagesManager' then
+        ## we forward all commands to the inner pages manager widget
+
+        frame $path -class PagesManager
+        eval PagesManager $path.p $args
+        pack $path.p -fill both -expand yes
+        rename $path ::$path:cmd
+        proc ::$path { cmd args } "return \[eval PagesManager::\$cmd $path.p \$args\]"
+        bindtags $path [list $path PagesManager [winfo toplevel $path] all]
+        return $path
+    }
+
+    proc insertCmd {target} {
+        $target add page1
+        $target add page2
+        $target add page3
+        $target raise page1
+    }
+
+    ## there is one more level between the childsites and the widget because
+    ## of the extra frame we introduced (see createCmd above)
+    proc treeChildrenCmd {target {diff \#-1}} {
+        return [::vTcl::widgets::bwidgets::notebook::treeChildrenCmd $target $diff]
+    }
+
+    proc treeChildrenChildsite {target} {
+        return [::vTcl::widgets::bwidgets::notebook::treeChildrenChildsite $target]
+    }
+
+    proc selectSiteCmd {target site} {
+        return [::vTcl::widgets::bwidgets::notebook::selectSiteCmd $target $site]
+    }
+
+    proc deleteSiteCmd {target site} {
+        return [::vTcl::widgets::bwidgets::notebook::deleteSiteCmd $target $site]
+    }
+
+    proc dumpCmd {target basename} {
+        set result [vTcl:dump_widget_opt $target $basename]
+        set pages [$target pages]
+        foreach page $pages {
+            append result "$::vTcl(tab)$basename add $page\n"
+        }
+        set size  [llength $pages]
+        for {set i 0} {$i < $size} {incr i} {
+            set site [$target getframe [lindex $pages $i]]
+            append result "$::vTcl(tab)"
+            set sitevariable "site_[llength [split $site .]]_$i"
+            append result "set $sitevariable "
+            append result "\[$basename getframe [lindex $pages $i]\]\n"
+            append result \
+                [vTcl::widgets::bwidgets::dump_subwidgets $site \$$sitevariable]
+        }
+        append result "$::vTcl(tab)$basename raise [lindex $pages 0]\n"
+        return $result
+    }
+
+    proc dumpInfoCmd {target basename} {
+        global classes
+        set result [vTcl:dump:widget_info $target $basename]
+        set pages [$target pages]
+        set size  [llength $pages]
+        for {set i 0} {$i < $size} {incr i} {
+            set site [$target getframe [lindex $pages $i]]
+            append result "$::vTcl(tab)"
+            set sitevariable "site_[llength [split $site .]]_$i"
+            append result "set $sitevariable "
+            append result "\[$basename getframe [lindex $pages $i]\]\n"
+            append result [$classes(Frame,dumpInfoCmd) $site \$$sitevariable]
+        }
+        return $result
+    }
+
+    proc addItem {{target ""}} {
+        if {$target == ""} {
+            set target $::vTcl(w,widget)
+        }
+        set pages [$target pages]
+        set index 0
+        ## repeat until we find an unused page number
+        while {1} {
+            incr index
+            set newpage "page$index"
+            if {[lsearch -exact $pages $newpage] == -1} break
+        }
+        $target add $newpage
+        $target raise $newpage
+        vTcl:setup_bind_tree $target
+        vTcl:init_wtree
+    }
+}
+

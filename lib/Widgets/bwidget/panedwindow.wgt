@@ -1,0 +1,126 @@
+# $Id: panedwindow.wgt,v 1.7 2005/12/05 07:00:25 kenparkerjr Exp $
+
+##############################################################################
+#
+# Visual TCL - A cross-platform application development environment
+#
+# Copyright (C) 2001 Christian Gavin
+#
+# Description file for Bwidgets paned window
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+##############################################################################
+#
+
+Class           PanedWindow
+Lib             bwidget
+
+Icon            @vTcl::widgets::bwidgets::panedwindow::getIcon
+TreeLabel       BWidget Paned Window
+CreateCmd       PanedWindow
+MegaWidget      yes
+DefaultValues   -background
+InsertCmd       vTcl::widgets::bwidgets::panedwindow::insertCmd
+TreeChildrenCmd	{vTcl::widgets::bwidgets::panedwindow::treeChildrenCmd
+		 vTcl::widgets::bwidgets::panedwindow::treeChildrenChildsite}
+DumpCmd         vTcl::widgets::bwidgets::panedwindow::dumpCmd
+DumpInfoCmd     vTcl::widgets::bwidgets::panedwindow::dumpInfoCmd
+
+## Special proc for setting up icons on the toolbar.
+proc vTcl:PanedWindow:ToolBarSetup {} {
+
+    vTcl:toolbar_add bwidgets PanedWindow \
+	"vertical paned window" \
+	icon_BwPanedWindow.gif "-side left"
+
+    vTcl:toolbar_add bwidgets PanedWindow \
+    	"horizontal paned window" \
+	icon_BwPanedWindowHoriz.gif "-side top"
+}
+
+namespace eval vTcl::widgets::bwidgets::panedwindow {
+
+    proc getIcon {{w ""}} {
+        if {[lempty $w]} {
+            return [list icon_BwPanedWindow.gif icon_BwPanedWindowHoriz.gif]
+        }
+        switch [$w cget -side] {
+            top - bottom {
+                return icon_BwPanedWindowHoriz.gif
+            }
+            left - right {
+                return icon_BwPanedWindow.gif
+            }
+        }
+    }
+
+    proc insertCmd {target} {
+        $target add
+        $target add
+    }
+
+    proc treeChildrenCmd {target {diff \#-1}} {
+        set children ""
+        set wantsdiff [expr {$diff != ""}]
+
+        foreach site [treeChildrenChildsite $target] {
+            foreach child [::vTcl:complete_widget_tree $site $wantsdiff] {
+                lappend children $child$diff
+            }
+        }
+
+        return $children
+    }
+
+    proc treeChildrenChildsite {target} {
+        foreach page {0 1} {
+            lappend sites [$target getframe $page]
+        }
+        return $sites
+    }
+
+    proc dumpCmd {target basename} {
+        set result [vTcl:dump_widget_opt $target $basename]
+        foreach page {0 1} {
+            append result "$::vTcl(tab)$basename add\n"
+        }
+        for {set i 0} {$i < 2} {incr i} {
+            set site [$target getframe $i]
+            append result "$::vTcl(tab)"
+            set sitevariable "site_[llength [split $site .]]_$i"
+            append result "set $sitevariable "
+            append result "\[$basename getframe $i\]\n"
+            append result \
+                [vTcl::widgets::bwidgets::dump_subwidgets $site \$$sitevariable]
+        }
+        return $result
+    }
+
+    proc dumpInfoCmd {target basename} {
+        global classes
+        set result [vTcl:dump:widget_info $target $basename]
+        for {set i 0} {$i < 2} {incr i} {
+            set site [$target getframe $i]
+            append result "$::vTcl(tab)"
+            set sitevariable "site_[llength [split $site .]]_$i"
+            append result "set $sitevariable "
+            append result "\[$basename getframe $i\]\n"
+            append result [$classes(Frame,dumpInfoCmd) $site \$$sitevariable]
+        }
+        return $result
+    }
+}
+

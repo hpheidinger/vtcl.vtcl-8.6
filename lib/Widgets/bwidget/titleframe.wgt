@@ -1,0 +1,19 @@
+Class		TitleFrame
+Lib		bwidget
+
+Icon		../lib/Widgets/bwidget/titleframe.gif
+TreeLabel	BWidget TitleFrame
+CreateCmd	TitleFrame
+MegaWidget	yes
+DefaultOptions   -text "Title"
+SpecialOpt -side	"side"		choice	{left center right}
+
+## titleframe and labelframe widgets have the same methods to access
+## childsites, so they can share the same code to dump/copy widgets
+
+TreeChildrenCmd   {vTcl::widgets::bwidgets::labelframe::treeChildrenCmd
+                   vTcl::widgets::bwidgets::labelframe::treeChildrenChildsite}
+DumpCmd         vTcl::widgets::bwidgets::labelframe::dumpCmd
+DumpInfoCmd     vTcl::widgets::bwidgets::labelframe::dumpInfoCmd
+IgnoreProc      ::TitleFrame::* TitleFrame
+

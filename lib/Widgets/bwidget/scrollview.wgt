@@ -1,0 +1,7 @@
+Class		ScrollView
+Lib		bwidget
+
+Icon		unknown.gif
+TreeLabel	BWidget ScrollView
+CreateCmd	ScrollView
+MegaWidget	yes

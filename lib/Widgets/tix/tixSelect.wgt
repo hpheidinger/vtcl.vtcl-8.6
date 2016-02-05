@@ -1,0 +1,23 @@
+Name		tixSelect
+Lib		tix
+
+Class		TixSelect
+Icon		icon_tixSelect.gif
+TreeLabel	Tix Select
+DefaultOptions	-radio 1
+DumpCmd		vTcl:dump:TixSelect
+InsertCmd	vTcl::widgets::tix::select::insertCmd
+MegaWidget   yes
+
+namespace eval vTcl::widgets::tix::select {
+
+    proc insertCmd {target} {
+        # Add two buttons to start with.  Unfortunately, additional options have
+        # to be added manually by the user, and the project re-read into vtcl.
+
+        $target add but1 -bitmap warning
+        $target add but2 -bitmap error
+        $target add but3 -bitmap info
+    }
+}
+

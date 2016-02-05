@@ -1,0 +1,9 @@
+Name		tixScrolledListBox
+Lib		tix
+
+Class		TixScrolledListBox
+Icon		icon_tixScrolledListBox.gif
+TreeLabel	Tix ScrolledListBox
+DumpCmd		vTcl:lib_tix:dump_widget_opt
+DumpChildren	no
+MegaWidget   yes
