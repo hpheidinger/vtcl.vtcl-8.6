@@ -577,8 +577,8 @@ proc ::tkcon::InitUI {title} {
     }
     set PRIV(base) $w
 
-    catch {font create tkconfixed -family Courier -size 12}
-    catch {font create tkconfixedbold -family Courier -size 12 -weight bold}
+    catch {font create tkconfixed -family Helvetica -size 14}
+    catch {font create tkconfixedbold -family Helvetica -size 14 -weight bold}
 
     set PRIV(statusbar) [set sbar [frame $w.fstatus]]
     set PRIV(tabframe)  [frame $sbar.tabs]
