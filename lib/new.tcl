@@ -103,7 +103,8 @@ proc vTclWindow.vTcl.newProjectWizard {args} {
     toplevel $base
     wm transient $base .vTcl
     wm withdraw  $base
-    wm geometry  $base 500x400
+    #hph#wm geometry  $base 500x400
+    wm geometry  $base 800x400
     wm title     $base "New Project Wizard"
     wm protocol  $base WM_DELETE_WINDOW "Window hide $base"
     wm resizable $base 0 0

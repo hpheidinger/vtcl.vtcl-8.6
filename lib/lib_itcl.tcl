@@ -36,9 +36,9 @@ proc vTcl:lib_itcl:init {} {
     global vTcl
 
     if {[catch {
-        package require Itcl
-        package require Itk
-        package require Iwidgets
+        package require itcl
+        package require itk
+        package require iwidgets
     } errorText]} {
         vTcl:log $errorText
         lappend vTcl(libNames) \
@@ -57,13 +57,13 @@ proc vTcl:widget:lib:lib_itcl {args} {
 
     append vTcl(head,itcl,importheader) {
     # Needs Itcl
-    package require Itcl
+    package require itcl
 
     # Needs Itk
-    package require Itk
+    package require itk
 
     # Needs Iwidgets
-    package require Iwidgets
+    package require iwidgets
 
     switch $tcl_platform(platform) {
 	windows {

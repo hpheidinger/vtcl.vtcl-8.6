@@ -76,10 +76,15 @@ proc vTcl:is_vtcl_prj {file} {
     set found 0
     set vmajor ""
     set vminor ""
+    # hph #
+    set patchl ""
 
+    #
+    # Don't be too picky here .. or you mess the hole thing
+    #
     foreach line [split $contents \n] {
-	if [regexp {# Visual Tcl v(.?)\.(.?.?) Project} $line \
-	    matchAll vmajor vminor] {
+	if [regexp {# Visual Tcl [vV](.?.?)\.(.?.?)\.(.?.?) Project} $line \
+	    matchAll vmajor vminor patchl] {
 	    set found 1
 	}
     }

@@ -411,7 +411,8 @@ proc vTclWindow.vTcl.newbind {base} {
     vTcl:toplevel $base -class Toplevel
     wm focusmodel $base passive
     wm withdraw $base
-    wm geometry $base 500x400+418+226
+#    wm geometry $base 500x400+418+226	# hph # too small height hides buttons
+    wm geometry $base 500x500+418+226
     update
     wm maxsize $base 1284 1010
     wm minsize $base 100 1
@@ -598,7 +599,8 @@ proc vTclWindow.vTcl.newtag {base} {
     ###################
     toplevel $base -class Toplevel
     wm focusmodel $base passive
-    wm geometry $base 340x319+149+138
+#    wm geometry $base 340x319+149+138	# hph # to small height hides buttons
+    wm geometry $base 340x400+149+138
     wm withdraw $base
     wm maxsize $base 1009 738
     wm minsize $base 1 1
@@ -632,7 +634,7 @@ proc vTclWindow.vTcl.newtag {base} {
     label $base.fra24.lab25 \
         -text {Select an existing tag:}
 
-    ScrolledWindow $base.fra24.cpd26
+    ScrolledWindow $base.fra24.cpd26 
     listbox $base.fra24.cpd26.01
     $base.fra24.cpd26 setwidget $base.fra24.cpd26.01
 
@@ -640,6 +642,7 @@ proc vTclWindow.vTcl.newtag {base} {
         -text {Or name a new tag:}
     entry $base.fra24.ent28 \
         -textvariable NewBindingTagName -bg white
+
     bind $base.fra24.ent28 <KeyRelease> {
         if {$NewBindingTagName == ""} {
             NewBindingTagOK configure -state disabled

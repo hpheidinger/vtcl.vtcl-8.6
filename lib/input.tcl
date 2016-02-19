@@ -51,9 +51,11 @@ proc vTcl:string_window {title base {value ""}} {
     toplevel $base
     wm transient $base .vTcl
     wm focusmodel $base passive
-    wm geometry $base 225x49+[expr $vTcl(mouse,X)-120]+[expr $vTcl(mouse,Y)-20]
+    #hph#wm geometry $base 225x49+[expr $vTcl(mouse,X)-120]+[expr $vTcl(mouse,Y)-20]
+    wm geometry $base 300x60+[expr $vTcl(mouse,X)-120]+[expr $vTcl(mouse,Y)-20]
     wm maxsize $base 500 870
-    wm minsize $base 225 1
+    #hph#wm minsize $base 225 1
+    wm minsize $base 300 1
     wm overrideredirect $base 0
     wm resizable $base 1 0
     wm deiconify $base
