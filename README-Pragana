@@ -1,0 +1,37 @@
+(Taken from Rildo Praganas Website  http://ww1.pragana.net/)
+
+March 10, 2010 -- More Visual Tcl patches
+------------------------------------------
+If you liked the previous patches I've made to Visual Tcl,
+you certainly will like this new release. Now it includes 
+a command to copy both regular attributes and geometry
+options to other widgets. You should first select a widget,
+right-click and choose "Copy/Paste attributes" form the
+popup menu. Then you choose which attributes to copy from
+the two listboxes (use Control-click or Shift-click to
+multiple select), and click "ok".
+
+From now on, each clicked widget will have the attributes 
+pasted, until you right-click again and choose the
+"Stop Paste attributes" menu item.
+
+Be careful not to place several widgets (with place manager)
+one above the other! Also, the geometry management paste only
+holds if the destination widget have the same geometry manager
+as the source widget. Unfortunatelly, there is not yet any way
+to undo the operations, so use carefully! 
+
+
+February 8, 2010 -- Visual Tcl patched
+------------------------------------------
+Visual Tcl is a nice GUI builder, but lacks a couple of useful
+features, for instance, a way to change the order of widgets.
+Well, no more, here is a patched package, with some other fixes
+as well. To reorder widgets inside a container (toplevel, frame,
+labelframe, etc), select any of the children widgets or its
+parent container, right-click and select "Tab order".
+The you may choose a widget with the arrow keys, or change
+its order up/down with the PgUp/PgDown (Prior/Next) keys.
+If a container is inside another, its order may be important
+too. Don't overlook it! 
+

@@ -1,0 +1,12 @@
+Bug #1:
+-------
+This is an ugly one ...
+If a file is closed vTcl does obviously not clean up properly.
+The next 'open' after a 'close' will crash with weird error 
+messages and vTcl reports a mangled file.
+By quiting vTcl and open the file in a newly started session
+everything is fine again.
+
+--------------
+2016-02-19/hph
+

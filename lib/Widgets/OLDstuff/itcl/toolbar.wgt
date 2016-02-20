@@ -1,0 +1,227 @@
+# $Id: toolbar.wgt,v 1.10 2002/10/14 03:01:56 cgavin Exp $
+
+##############################################################################
+#
+# Visual TCL - A cross-platform application development environment
+#
+# Copyright (C) 2001 Christian Gavin
+#
+# Description file for [Incr Widgets]
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+##############################################################################
+#
+
+Class		Toolbar
+Lib		itcl
+
+CreateCmd	::iwidgets::toolbar
+Icon		icon_toolbar.gif
+DumpChildren	no
+MegaWidget	yes
+TagsCmd         vTcl:lib_itcl:tagscmd
+InsertCmd       vTcl::widgets::iwidgets::toolbar::insertCmd
+DumpCmd         vTcl::widgets::iwidgets::toolbar::dumpCmd
+GetImagesCmd    vTcl::widgets::iwidgets::toolbar::getImagesCmd
+GetFontsCmd     vTcl::widgets::iwidgets::toolbar::getFontsCmd
+Function        "Edit Toolbar..." vTcl::widgets::iwidgets::toolbar::editToolbar
+
+NewOption -helpstr     "help str"    type
+NewOption -balloonstr  "balloon str" type
+
+namespace eval vTcl::widgets::iwidgets::toolbar {
+
+    proc insertCmd {target} {
+        global env
+
+        $target add button open \
+                -balloonstr "Open" \
+                -image [vTcl:image:get_image $env(VTCL_HOME)/images/edit/open.gif] \
+                -command {tk_messageBox -message {TODO: Open Command handler here!}}
+        $target add button save \
+                -balloonstr "Save" \
+                -image [vTcl:image:get_image $env(VTCL_HOME)/images/edit/save.gif] \
+                -command {tk_messageBox -message {TODO: Save Command handler here!}}
+    }
+
+    proc getSortedComponents {target} {
+        set components [$target component]
+        if {[lempty $components]} {return ""}
+        foreach component $components {
+            if {$component == "hull"} {continue}
+            set path [$target component $component]
+            if {![winfo exists $path]} {continue}
+            set x [winfo x $path]
+            set sorted($x) $component
+        }
+        set result ""
+        foreach index [lsort -integer [array names sorted]] {
+            lappend result $sorted($index)
+        }
+        return $result
+    }
+
+    proc dumpCmd {target basename} {
+        set result [vTcl:dump_widget_opt $target $basename]
+
+        foreach component [getSortedComponents $target] {
+            set path [$target component $component]
+            set class [vTcl:get_class $path]
+
+            set conf [$target itemconfigure $component]
+            set pairs [vTcl:get_subopts_special $conf $target]
+
+            append result "$::vTcl(tab)$basename add [string tolower $class]"
+            append result " $component \\\n"
+            append result "[vTcl:clean_pairs $pairs]\n"
+        }
+        return $result
+    }
+
+    proc getOptionsCmd {target option} {
+        set result ""
+        foreach component [getSortedComponents $target] {
+            if {$component == "hull"} {continue}
+            set value ""
+            catch {set value [$target itemcget $component $option]}
+            if {$value != ""} {
+                lappend result $value
+            }
+        }
+        return $result
+    }
+
+    proc getImagesCmd {target} {
+        return [getOptionsCmd $target -image]
+    }
+
+    proc getFontsCmd {target} {
+        return [getOptionsCmd $target -font]
+    }
+
+    proc editToolbar {} {
+        set target $::vTcl(w,widget)
+        ::vTcl::itemEdit::edit $target vTcl::widgets::iwidgets::toolbar::edit
+    }
+
+    namespace export getSortedComponents
+}
+
+namespace eval vTcl::widgets::iwidgets::toolbar::edit {
+
+    namespace import ::vTcl::widgets::iwidgets::toolbar::getSortedComponents
+
+    proc getTitle {target} {
+        return "Edit toolbar for $target"
+    }
+
+    proc getMinimumOptions {} {
+        set result ""
+        foreach class {Button Radiobutton Checkbutton Frame Label} {
+            $::classes($class,createCmd) .tmp__001
+            set options [.tmp__001 configure]
+            foreach option $options {
+                if {[llength $option] != 5} {continue}
+                lappend result [lindex $option 0]
+            }
+            destroy .tmp__001
+        }
+        lappend result -helpstr -balloonstr
+        set result [vTcl:lrmdups $result]
+        return [lsort $result]
+    }
+
+    proc getLabelOption {} {
+        return ""
+    }
+
+    proc getItems {target} {
+        ## first item in the list is the current index
+        set values 0
+        set index 0
+        foreach component [getSortedComponents $target] {
+            set value "item $index"
+            set path [$target component $component]
+            set class [vTcl:get_class $path]
+            lappend values "$value ($class)"
+            incr index
+        }
+        return $values
+    }
+
+    proc addItem {target} {
+        ## ask the user for type of item to insert
+        set class [::vTcl::input::listboxSelect::select \
+            {Button Radiobutton Checkbutton Frame Label} "Choose Item Class"]
+        if {$class == ""} return ""
+
+        ## find unique component name
+        set index 0
+        set components [getSortedComponents $target]
+        set component item$index
+        while {[lsearch -exact $components $component] != -1} {
+            incr index
+            set component item$index
+        }
+
+        ## add an item of given class
+        set options {}
+        switch $class {
+            Button      {set options "-text Button"}
+            Radiobutton {set options "-text Radio"}
+            Checkbutton {set options "-text Check"}
+            Frame       {set options "-width 10 -relief flat"}
+            Label       {set options "-text Label"}
+        }
+        $target add $::classes($class,createCmd) $component
+        eval $target itemconfigure $component $options
+
+        if {$::vTcl(w,widget) == $target} {
+            vTcl:place_handles $target
+        }
+        set last [$target index end]
+        return "item $last ($class)"
+    }
+
+    proc removeItem {target index} {
+        $target delete $index
+        if {$::vTcl(w,widget) == $target} {
+            vTcl:place_handles $target
+        }
+    }
+
+    proc itemConfigure {target index args} {
+        if {$args == ""} {
+            set options [$target itemconfigure $index]
+            set result ""
+            foreach option $options {
+                ## only return valid options
+                if {[llength $option] == 5} {
+                    lappend result $option
+                }
+            }
+            return $result
+        } else {
+            eval $target itemconfigure $index $args
+        }
+    }
+
+    proc moveUpOrDown {target index direction} {
+        error "Not implemented yet!"
+    }
+}
+
+

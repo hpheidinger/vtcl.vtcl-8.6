@@ -1,0 +1,53 @@
+# $Id: scrolledtext.wgt,v 1.5 2002/02/06 03:15:44 cgavin Exp $
+
+##############################################################################
+#
+# Visual TCL - A cross-platform application development environment
+#
+# Copyright (C) 2001 Christian Gavin
+#
+# Description file for [Incr Widgets]
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+##############################################################################
+#
+
+Class		Scrolledtext
+Lib		itcl
+
+CreateCmd	::iwidgets::scrolledtext
+TagsCmd         vTcl:lib_itcl:tagscmd
+Icon		icon_scrolledtext.gif
+DumpChildren	no
+MegaWidget	yes
+DontSaveOptions -sbwidth
+GetFontsCmd     vTcl::widgets::iwidgets::scrolledtext::getFontsCmd
+
+namespace eval vTcl::widgets::iwidgets::scrolledtext {
+
+    proc getFontsCmd {target} {
+        set result ""
+	set labelfont [$target cget -labelfont]
+	set textfont  [$target cget -textfont]
+	if {$labelfont != ""} {
+	    lappend result $labelfont
+	}
+	if {$textfont != ""} {
+	    lappend result $textfont
+	}
+	return $result
+    }
+}

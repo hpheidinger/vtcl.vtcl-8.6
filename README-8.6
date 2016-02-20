@@ -1,0 +1,89 @@
+This is a brushup of the last Vtcl-release 1.6.1a1
+
+=====================================================
+From now on I lifted the vTcl version to vTcl-8.6
+to keep it in sync with the underlying TCL/TK release.
+=====================================================
+
+Some fixes of Rildo Pragana to make Vtcl work with
+TCL/TK-8.5 are worked in - along with the enhancements
+'copyAttr' and 'taborder' that Rildo Pragana supplied
+with these fixes in march 2010.
+See README-Pragana for some doc on the 'copyattr' and
+'taborder' features.
+
+
+With TCL/TK-8.6 vTcl groked again and I fixed this.
+
+Starting with these fixes I found that a couple of
+other things did not work anymore.
+
+---------
+mclistbox
+... was mourning '...have no option "-state" ..."
+Fixed that, but later replaced it the latest mclistbox
+code from GitHub, that had fixed this as well and introduced
+a few other features like drag & drop.
+==> Take this as working
+
+---------
+tablelist
+... did not work at all with vTcl under TCL/TK-8.6.
+I found that it was working with ActiveTcl-8.6 or
+when the tablelist libraries were droped in to
+the stock TCL/TK libraries - but both I found insufficient
+due to the dependecies.
+Thus I dropped in the recent release tablelist-5.15 by
+Csaba Nehmeti (http://www.csaba-nehmeti.de) below the
+Vtcl 'lib' tree so that tablelists gets loaded from here.
+==> Take this as 'beta' until it prooves as working properly
+
+
+--------
+iwidgets
+... do not work, since itcl was integrated into TCL-8.6
+with TCLoo as its foundation. I did not find out why
+this cannot work. But I am working on that.
+
+
+--------------
+newer BWidgets (e.g. 1.9.x) fail badly, this needs indepth
+investigations
+So for now I stick with the original BWidgets 1.3.1 
+integrated with vTcl ... oldie but goldie
+
+[- The nasty error message with recent BWidgets 1.9.9: -]
+---------------------------------------------------------
+Error in startup script: cannot use geometry manager
+ pack inside .vTcl.ae.sw which already has slaves
+ managed by grid
+    while executing
+"pack $c"
+    (procedure "vTclWindow.vTcl.ae" line 28)
+    invoked from within
+"vTclWindow.vTcl.ae .vTcl.ae "
+    ("eval" body line 1)
+    invoked from within
+"eval "vTclWindow$name $newname $rest""
+    (procedure "Window" line 19)
+    invoked from within
+"Window show $i"
+    (procedure "vTcl:setup_gui" line 72)
+    invoked from within
+"vTcl:setup_gui"
+    (procedure "vTcl:setup" line 79)
+    invoked from within
+"vTcl:setup"
+    (procedure "vTcl:main" line 39)
+    invoked from within
+"vTcl:main $argc $argv"
+    (file "./vtcl.tcl" line 737)
+-----------------------------------------------------
+
+
+
+
+
+--------------
+2016-02-14/hph
+

@@ -1,0 +1,39 @@
+--------------
+2016-02-04/hph	Fixed the whoppers that made Vtcl crahing with TCL/TK 8.6
+		in lib/file.tcl (line numbers after fix)
+
+			124  foreach context [vTcl:namespace_tree] {
+			125              if {$context == "::tcl::dict"} continue
+			126              if {$context == "::itcl::builtin"} continue     #hph,2016-02-04
+
+			148  foreach context [vTcl:namespace_tree] {
+			149              if {$context == "::tcl::dict"} continue
+			150              if {$context == "::itcl::builtin"} continue     #hph,2016-02-04
+
+--------------
+2016-02-12/hph	Fixed a quirk that arose from underlying TK-8.6 that requested a '-state' from
+		Mclistbox. I dropped in one into the Mclistbox widget option definitions.
+		(see 'lib/Widgets/vtcl/mclistbox.wgt')
+				
+			368     array set widgetOptions [list \
+			369             -background          {background          Background} \
+			370             -bd                  -borderwidth \
+			.
+			.	
+			408             -xscrollcommand      {xScrollCommand      ScrollCommand} \
+			409             -yscrollcommand      {yScrollCommand      ScrollCommand} \
+			410             -state               {state               State} \
+			411             ]
+					
+--------------					
+2016-02-14/hph	Replaced MClistbox completely with the latest version from GitHub provided by Jeffrey Hobbs
+		since it had the missing '-state' option defined and introduced some new features as well
+
+
+--------------
+2016-02-19/hph	Integrated recent tablelist widget by Csaba Nehmeti, since this is supported software.
+		Sooner or later this will be a fine replacement for Mclistbox.
+		MClistbox is kept for compatibility and historcal reasons. It is slick and fast.
+
+--------------
+2016-02-19/hph
