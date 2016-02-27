@@ -1,0 +1,76 @@
+#
+# INSTALL-Freewrap
+#
+# ---------------
+# 2016-02-26/hph
+
+In order to have the Freewrap facility working, you need to install
+Freewrap on your system.
+
+What does Freewrap do at all?
+Freewrap takes your TCL/TK program and makes a bundle of your
+- TCL/TK application file(s)
+- system facilities
+- optional files (e.g. TCL/TK libraries, Icons, etc.)
+and turns all of it into a binary executable file (*.exe on Windows)
+
+Commandline example:
+--------------------
+
+freewrap myTCLapp.tcl -o myapp Icons/*
+
+
+
+--------------------------
+Installation on Unix/Linux
+--------------------------
+Find a directory where to hook it; in this example I chose
+/usr/local and call it <hook>.
+
+Be careful, since Freewrap has no sub directory in the archive.
+So we have to make one; e.g. 'Freewrap'
+
+	# cd <hook>; mkdir Freewrap
+	# cd Freewrap
+
+That gets us a warm place to unpack the archive:
+
+	# zcat freewrap.<version>.tar.gz | tar xvf -
+
+Now the provisions are made.	
+
+To make the freewrap command available we need to place a sym link
+somewhere along the program search path ($PATH). Since I chose
+/usr/local/... for the example I stick with this and drop the sym link
+into /usr/local/bin.
+
+	# cd /usr/local/bin
+	# ln -s /usr/local/Freewrap/linux64/freewrap freewrap
+		... or for a 32bit system ...
+	# ln -s /usr/local/Freewrap/linux32/freewrap freewrap
+
+That's it ... freewrap is ready to be used.
+
+The words of wisdom ...
+You maybe have noticed, that I used an _absolute_path_ to the freewrap
+executable. It is VERY IMPORTANT here that a ABSOLUTE PATH will be used.
+Freewrap has a mechanism to determine it's own start path after it started.
+Freewrap then takes its own code to wrap the bundle and therefore it has to
+know where it is positioned in the filesystem.
+
+	THIS WILL FAIL!!!
+	-----------------
+	|
+	|	# cd /usr/local/bin
+	|	# ln -s ../Freewrap/linux64/freewrap freewrap
+	|
+	DON'T USE RELATIVE SYM LINKS TO THE Freewrap EXECUTABLE
+
+
+
+-----------------------
+Installation in Windows
+-----------------------
+(--- This needs contribution by a Windows user ---)
+
+

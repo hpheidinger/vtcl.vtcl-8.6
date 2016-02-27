@@ -1,0 +1,34 @@
+This message announces the availability of freeWrap version 6.64. FreeWrap 6.64 is based on TCL/TK 8.6.3
+
+freeWrap is a program that allows creation of stand-alone TCL/TK executables without needing a compiler.
+
+Versions are free and available for the Windows and Linux operating systems.
+
+Instructions and source code for building freeWrap are also available.
+
+
+FreeWrap distributions also include freewrapTCLSH which can be used to build console-only applications that use only TCL.
+
+
+Visit the freeWrap home page at:
+
+          http://freewrap.sourceforge.net
+
+
+Changes implemented in version 6.64
+-----------------------------------
+   1. FreeWrap 6.64 is based on TCL/TK 8.6.3
+   2. The 64-bit Windows version has tcllib1.16 included (instead of tcllib1.15).
+   3. FreeWrap 6.64 now returns the correct time stamp for a file contained within a wrapped application or within a ZIP archive.
+   4. The following additional ttk themes are now installed into freeWrap.
+	- aquablue
+	- aquativo
+	- black
+	- blue
+	- clearlooks
+	- keramik
+	- keramik_alt
+	- plastik
+	- radiance
+	- winxpblue
+

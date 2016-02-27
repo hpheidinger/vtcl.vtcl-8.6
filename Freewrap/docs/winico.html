@@ -1,0 +1,256 @@
+<html><head>
+<title>winico - winico </title>
+</head>
+<! -- Generated from file 'winico.man' by tcllib/doctools with format 'html'
+   -->
+<! -- Copyright &copy; 1997-1998, Brueckner&amp;Jarosch
+   -->
+<! -- CVS: $Id$ winico.n
+   -->
+
+<body>
+<h1> winico(n) 0.6 winico &quot;winico&quot;</h1>
+<h2><a name="name">NAME</a></h2>
+<p>
+<p> winico - Windows Icon extension for Tcl/Tk
+
+
+
+
+
+<h2><a name="table_of_contents">TABLE OF CONTENTS</a></h2>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#table_of_contents">TABLE OF CONTENTS</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#synopsis">SYNOPSIS</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#description">DESCRIPTION</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#commands">COMMANDS</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#callback_events">CALLBACK EVENTS</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#examples">EXAMPLES</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#authors">AUTHORS</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#keywords">KEYWORDS</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#copyright">COPYRIGHT</a><br>
+<h2><a name="synopsis">SYNOPSIS</a></h2>
+<p>
+package require <b>Tcl 8.4</b><br>
+package require <b>winico ?0.6?</b><br>
+<br><table border=1 width=100% cellspacing=0 cellpadding=0><tr            bgcolor=lightyellow><td bgcolor=lightyellow><table 0 width=100% cellspacing=0 cellpadding=0><tr valign=top ><td ><a href="#1"><b class='cmd'>winico createfrom</b> <i class='arg'>filename</i></a></td></tr>
+<tr valign=top ><td ><a href="#2"><b class='cmd'>winico load</b> <i class='arg'>resourcename</i> ?<i class='arg'>filename</i>?</a></td></tr>
+<tr valign=top ><td ><a href="#3"><b class='cmd'>winico info</b> ?<i class='arg'>id</i>?</a></td></tr>
+<tr valign=top ><td ><a href="#4"><b class='cmd'>winico setwindow</b> <i class='arg'>windowid</i> <i class='arg'>id</i> ?<i class='arg'>big|small</i>? ?<i class='arg'>pos</i>?</a></td></tr>
+<tr valign=top ><td ><a href="#5"><b class='cmd'>winico delete</b> <i class='arg'>id</i></a></td></tr>
+<tr valign=top ><td ><a href="#6"><b class='cmd'>winico taskbar</b> <i class='arg'>add|modify|delete</i> <i class='arg'>id</i> ?<i class='arg'>-callback procname</i>? ?<i class='arg'>-pos num</i>? ?<i class='arg'>-text tooltiptext</i>?</a></td></tr>
+</table></td></tr></table>
+<h2><a name="description">DESCRIPTION</a></h2>
+<p>
+<p>
+
+The Winico extension is an extension that provides enhanced
+handling of icons for Tk applications under Window. This includes
+loading icons from icon files and from executable resources and also
+provides Taskbar icon management.
+
+<h2><a name="commands">COMMANDS</a></h2>
+<p>
+
+<dl>
+
+<dt><a name="1"><b class='cmd'>winico createfrom</b> <i class='arg'>filename</i></a><dd>
+
+
+Load icons from a .ico file. If successful this command returns an
+identifier that should be used to access this resource with other 
+<b class='cmd'>winico</b> commands.  Icon files often contain several icons for
+different color depths of the screen and may contain different sizes
+(e.g. 16x16 and 32x32 icons) To obtain information on what has been
+loaded, see the <b class='cmd'>info</b> subcommand.
+
+<br><br>
+<dt><a name="2"><b class='cmd'>winico load</b> <i class='arg'>resourcename</i> ?<i class='arg'>filename</i>?</a><dd>
+
+
+Load icons from the resource section of an executable file (.exe or .dll).
+Only icons for the current colordepth are loaded (unlike the <b class='cmd'>createfrom</b>
+subcommand). <i class='arg'>resourcename</i> may be a string identifier or a number
+that identifies the item in the resource file. If no <i class='arg'>filename</i> is
+given then you may load some standard windows icons (defined for the
+LoadIcon Win32 API function). The following names are recognised:
+&quot;application&quot;, &quot;asterisk&quot;, &quot;error&quot;, &quot;exclamation&quot;, &quot;hand&quot;, &quot;question&quot;,
+&quot;information&quot;, &quot;warning&quot;, and &quot;winlogo&quot;.
+
+<br><br>
+<dt><a name="3"><b class='cmd'>winico info</b> ?<i class='arg'>id</i>?</a><dd>
+
+
+Returns information about icon resources managed by this extension. If
+<i class='arg'>id</i> is ommitted then the command returns a list of all the
+current icon ids. If an icon <i class='arg'>id</i> is specified then the result is
+a list option value pairs for each icon in the icon resource For
+identifiers created via <b class='cmd'>winico load</b> the values given are not
+relevant.
+
+<br><br>
+<dl>
+<dt><strong>-pos</strong><dd>
+   position inside the iconresource (beginning from 0)
+<br><br>
+<dt><strong>-width</strong><dd>
+   width of the icon in pixels
+<br><br>
+<dt><strong>-height</strong><dd>
+  height of the icon in pixels
+<br><br>
+<dt><strong>-geometry</strong><dd>
+  widthxheight in pixels (for convenience)
+<br><br>
+<dt><strong>-bpp</strong><dd>
+      color depth in bits per pixel (4 means 16 colors)
+<br><br>
+<dt><strong>-hicon</strong><dd>
+    windows icon handle for this icon (in the actual version
+    all hicons of a resource will be immediately created after 
+    reading from disk, in later versions this may occur on demand , 
+    to economize system load )
+<br><br>
+<dt><strong>-ptr</strong><dd>
+      C-pointer of the internal struct, only interesting for hackers :-)
+</dl>
+
+<dt><a name="4"><b class='cmd'>winico setwindow</b> <i class='arg'>windowid</i> <i class='arg'>id</i> ?<i class='arg'>big|small</i>? ?<i class='arg'>pos</i>?</a><dd>
+
+
+Set the icon for the toplevel window given by <i class='arg'>windowid</i> which may
+be either the Tk pathname for the window, or a valid Windows HWND
+value (for use with non-Tk windows).
+<br><br>
+NOTE: the window MUST BE MAPPED. If not then this may fail or crash.
+<br><br>
+<dl>
+<dt><strong>big|small</strong><dd>
+   If ?big|small? is &quot;big&quot; (default) the taskbar icon AND the caption icon 
+   are set under Win95/WinNT, if it's &quot;small&quot; only the small caption icon
+   is set (via WM_SETICON).
+   <br><br>
+   Under Win32s ?big|small? is ignored (setting done via SetClassLong())
+   (for setting individual toplevels different Windows-classnames per toplevel
+   would be required , TkToplevel0, TkToplevel1 and so on)
+
+<br><br>
+<dt><strong>pos</strong><dd>
+   If <i class='arg'>pos</i> is set, the icon with that -pos number is used for setting
+   the toplevel icon, otherwise winico chooses the first 32x32 16color icon
+   (this could be improved)
+   <br><br>
+   This option only has an effect on icons created with the &quot;createfrom&quot;
+   subcommand (FIX ME: check this)
+</dl>
+
+<dt><a name="5"><b class='cmd'>winico delete</b> <i class='arg'>id</i></a><dd>
+
+
+Free the resource identified by <i class='arg'>id</i>. This command is
+always successful, even in <i class='arg'>id</i> is invalid.
+
+<br><br>
+<dt><a name="6"><b class='cmd'>winico taskbar</b> <i class='arg'>add|modify|delete</i> <i class='arg'>id</i> ?<i class='arg'>-callback procname</i>? ?<i class='arg'>-pos num</i>? ?<i class='arg'>-text tooltiptext</i>?</a><dd>
+
+
+   Modify an icon registration with the Windows taskbar. To add and
+   icon to the system tray you use the <i class='arg'>add</i> command and provide a
+   suitable winico <i class='arg'>id</i>. You should probably also provide a 
+   <i class='arg'>-text</i> argument otherwise the icon id will be used for the
+   text too (Windows displays the text as a tooltip).
+   <br><br>
+   To modify the text or the icon displayed in the taskbar status area,
+   use the <i class='arg'>-pos</i> and <i class='arg'>-text</i> options to change the current
+   settings.
+   <br><br>
+   The remove an icon from the status area use the <i class='arg'>delete</i> and
+   give the <i class='arg'>id</i> provided to the <i class='arg'>add</i> command.
+   <br><br>
+   The optional <i class='arg'>-callback</i> is for specifying a Tcl procedure to
+   be called when events occur on the icon. This includes mouse motion
+   and button click events.
+   In the callback there are bind-like abbreviations possible :
+<br><br>
+<dl>
+<dt><strong>%m</strong><dd> the windows message specifier (see CALLBACK EVENTS)
+<br><br>
+<dt><strong>%i</strong><dd> the icon identifier           (ico#1, ico#2 a.s.o)
+<br><br>
+<dt><strong>%x</strong><dd> current xposition of the cursor 
+<br><br>
+<dt><strong>%y</strong><dd> current yposition of the cursor 
+<br><br>
+<dt><strong>%X</strong><dd> xposition of the cursor when the last windows-message was processed
+<br><br>
+<dt><strong>%Y</strong><dd> yposition of the cursor when the last windows-message was processed
+        (%X,%Y may differ from %x,%y however the difference is marginal )
+<br><br>
+<dt><strong>%t</strong><dd> current tickcount of the system
+<br><br>
+<dt><strong>%w</strong><dd> wParam of the internal callback message (the integer part of %i)
+<br><br>
+<dt><strong>%l</strong><dd> lParam of the internal callback message (integer value of %m)
+<br><br>
+<dt><strong>%%</strong><dd> a %-sign
+</dl>
+
+</dl>
+
+<h2><a name="callback_events">CALLBACK EVENTS</a></h2>
+<p>
+<p>
+The following Windows events will generate calls to a callback
+procedure registered by the <b class='cmd'>winico taskbar</b> command. The
+following lists all the possible values of %m in the callback
+substitution. Typically WM_RBUTTONUP is bound to a context menu.
+<dl>
+<dt><strong>WM_MOUSEMOVE</strong><dd>
+<dt><strong>WM_LBUTTONDOWN</strong><dd>
+<dt><strong>WM_LBUTTONUP</strong><dd>
+<dt><strong>WM_LBUTTONDBLCLK</strong><dd>
+<dt><strong>WM_RBUTTONDOWN</strong><dd>
+<dt><strong>WM_RBUTTONUP</strong><dd>
+<dt><strong>WM_RBUTTONDBLCLK</strong><dd>
+<dt><strong>WM_MBUTTONDOWN</strong><dd>
+<dt><strong>WM_MBUTTONUP</strong><dd>
+<dt><strong>WM_MBUTTONDBLCLK</strong><dd>
+</dl>
+
+<h2><a name="examples">EXAMPLES</a></h2>
+<p>
+
+<p>
+<p><table><tr><td bgcolor=black>&nbsp;</td><td><pre class='sample'>
+% winico createfrom icons/smiley.ico
+ico#5
+% winico info ico#5
+{-pos 0 -width 32 -height 32 -geometry 32x32 -bpp 4 -hicon 0x670081 -ptr 0xf99884} {-pos 1 -width 16 -height 16 -geometry 16x16 -bpp 4 -hicon 0xad01b4 -ptr 0xf99884}
+</pre></td></tr></table></p>
+
+<p>
+<p><table><tr><td bgcolor=black>&nbsp;</td><td><pre class='sample'>
+set contextmenu [menu .popup -tearoff 0]
+...
+winico taskbar add ico#1 -pos 1 -text &quot;big tcp server&quot;  -callback &quot;mytclproc $contextmenu %m %i %X %Y&quot;
+...
+proc mytclproc {contextmenu msg ico x y } {
+  if { $msg==&quot;WM_RBUTTONUP&quot; } {
+    $contextmenu post $x $y
+  }
+}
+</pre></td></tr></table></p>
+   
+<h2><a name="authors">AUTHORS</a></h2>
+<p>
+Leo Schubert, Brueckner&amp;Jarosch Ing.-GmbH
+<p>
+Modifications by Pat Thoyts.
+
+
+<h2><a name="keywords">KEYWORDS</a></h2>
+<p>
+icons, system tray, taskbar
+<h2><a name="copyright">COPYRIGHT</a></h2>
+<p>
+Copyright &copy; 1997-1998, Brueckner&amp;Jarosch<br>
+</body></html>

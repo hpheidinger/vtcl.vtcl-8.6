@@ -1,0 +1,237 @@
+This version of freeWrap includes release 0.6 of the Winico extension by Leo Schubert.
+
+The following information is excerpted from the Winico documentation. It provides
+details for using the new Winico commands. These new commands can be used to set the icon
+for TK toplevel windows.
+
+*****************************************************************************************
+Initial release 0.1 16.02.1998
+        release 0.2 17.06.1998
+        release 0.3 08.12.1998
+        release 0.3 binary contributions 26.09.1999
+        release 0.4 12.10.1999
+        release 0.5 04.21.2004
+        release 0.6 09.27.2005
+
+Winico-Extension for Tcl/Tk on Windows
+--------------------------------------
+
+The Winico extension is a small helper extension-dll for the Tcl/Tk 8.0(p2)
+programming system from Scriptics Corporation.
+With this Tcl/Tk version (and earlier versions) it's not possible to set
+Icons for Tk-Toplevels via the "wm iconbitmap"-command.
+That's why I played with the IconPro-Sample from the Win32-SDK and
+found some possibilities to set the Icon of a Tk-Toplevel dynamically.
+The Winico extension introduces one new command called "winico" to
+load .ico-Files from the harddisk or Icon-Resources from the system and to set
+the Taskbar-Icon (when hitting Alt-Tab) and the Icon in the Caption of a 
+Tk-Toplevel.
+Under Win95/NT it's possible to set the icons for each toplevel independently,
+under Win32s it's only possible to set 1 Taskbar-icon for all toplevels
+of the application (a solution similar to Win95 would require patching the core)
+New since version 0.2 is the ability to place an icon in the
+win95/winnt4.0 taskbar status area
+
+Winico is available at <http://ftp.bj-ig.de/pub/tcltk/>
+(winicoxx.zip)
+
+What is Winico ?
+--------------------------------------
+
+"winico" manages icon-resources.
+One icon resource can contain one ore more icons, each of them can have
+different color depth and sizes.
+An icon-resource is identified by a ico#xx -identifier ,comparable
+to the file#xx identifiers of the "file" command and the  after#xx identifiers
+of the "after" command.
+
+Description of the "winico"-subcommands
+---------------------------------------
+
+createfrom <iconfilename>
+  try's to read a .ico-File and to create an icon-resource.
+  If successful, it returns an identifier that
+  can be used to access this icon-resource with additional "winico"-subcommands.
+  (first identifier is ico#1)
+  A .ico-file usually contains several icons for the different color depth's
+  on the screen and may contain different sizes (e.g. 16x16 and 23x32 icons)
+  To see, how much icons inside the file , use "winico info <icon-identifier>"
+  (example: winico info ico#1)
+
+load <iconresourcename> ?dllname?
+  try's to load the icon from the executable, this is useful if one has a custom
+  wish with several icons inside. The advantage is that the LoadIcon()-API
+  loads automagically the icon with the right colordepth, this work
+  must be done by the programmer if one uses the "createfrom" subcommand.
+  <iconresourcename> can be a string (from the .rc-file) or a number.
+  predefined resources (should be ever loaded successfully):
+  "application" "asterisk" "exclamation" "hand" "question"
+  return value is also an icon-identifier as in the "createfrom" subcommand.
+NEW NEW NEW for version 0.3 is the optional argument ?dllname?, this
+  allows to load iconresources from a DLL.
+  If the DLL cannot be loaded (LoadLibrary fails), an error is returned.
+  This enables the ability to pack all needed icons for an application
+  into a dummy dll (for this is a Windows Compiler needed) and to "load"
+  them as needed.
+  Again: "load" has the advantage, that it always chooses the right icon from an
+  icon resource. So if you have the ability to compile your Icons into a DLL,
+  this is the preferrable way.
+  On the other hand , if you don't own a compiler , you will be happy about
+  the "createfrom" possibility.
+
+info ?icon-identifier?
+  if ?icon-identifier? is omitted, "winico info" returns a list of all
+  currently created icon-resources 
+  (created by "load" or "createfrom" subcommands)
+  if an existing icon-identifier is used as argument to "info" the return
+  value is a list of configure-style info's for each icon in the icon-resource
+  identified by <icon-identifier> . For identifiers created via "load",
+  this is an artificial list (the values aren't correct).
+  example:
+    %winico createfrom icons/smiley.ico
+    ico#5
+    %winico info ico#5
+    {-pos 0 -width 32 -height 32 -geometry 32x32 -bpp 4 -hicon 0x670081 -ptr 0xf99884} {-pos 1 -width 16 -height 16 -geometry 16x16 -bpp 4 -hicon 0xad01b4 -ptr 0xf99884}
+   in this example the icon-resource ico#5 contains 2 icons.
+   The several configure options mean:
+   
+   -pos      position inside the iconresource (beginning from 0)
+   -width    width of the icon in pixels
+   -height   height of the icon in pixels
+   -geometry widthxheight in pixels (for convenience)
+   -bpp      color depth in bits per pixel (4 means 16 colors)
+   -hicon    windows icon handle for this icon (in the actual version
+             all hicons of a resource will be immediately created after 
+             reading from disk, in later versions this may occur on demand ,
+             to economize system load )
+   -ptr      C-pointer of the internal struct, only interesting for hackers :-)
+
+setwindow <windowid> <icon-identifier> ?big/small? ?pos?
+   very wichtig
+   this subcommand is used to set the icon of a (Tk)Toplevel.
+
+   <windowid>
+   <windowid> can be a valid window name of a "toplevel" widget. The
+   toplevel widget must be mapped, otherwise "setwindow" fails or even
+   crash your application!
+   (Internally winico calls "wm frame <toplevel>" to get the right window
+    handle )
+   <windowid> can also be a valid Windows-windowhandle(integer number) ,
+   usable for non-Tk windows and for Tk4.x users
+   (I don't know exactly how one can retrieve the window id for a toplevel
+   under Tk4.x under windows, it was likely "winfo id" )
+
+   ?big/small?
+   If ?big/small? is "big"(default) the taskbar icon AND the caption icon
+   are set under Win95/WinNT, if it's "small" only the small caption icon
+   is set (via WM_SETICON).
+   Under Win32s ?big/small? is ignored (setting done via SetClassLong())
+   (for setting individual toplevels different Windows-classnames per toplevel
+    would be required , TkToplevel0, TkToplevel1 and so on)
+
+   ?pos?
+   If ?pos? is set , the icon with that -pos number is used for setting
+   the toplevel icon, otherwise winico chooses the first  32x32 16color icon
+   (could be improved a little bit)
+   This option only has an effect on icons, created with the "createfrom"
+   subcommand
+
+delete <icon-identifier>
+   frees the icon-resource identified by icon-identifier.
+   doesn't raise an error if this resource doesn't exists
+   (always return TCL_OK)
+
+NEW NEW NEW for version 0.2
+
+taskbar <add/modify/delete> <icon-identifier> \
+      ?-callback tclcallback? ?-pos <iconposition>? ?-text <tooltiptext>?
+   adds , modifies or deletes an icon to or from  the taskbar status area
+   if you want to add an icon the 1st time to the taskbar status area, use "add"
+   and the current "hicon" is used to be displayed in the
+   taskbar.
+   To modify the text or the icon displayed in the taskbar status area,
+   use "-pos" and "-text" options to change the current settings and then
+   call the "modify" subcommand. (in the most cases "add" is enough I think)
+   "-pos" only has effect on icons created with "createfrom".
+   The remove an icon from the status area, use the "winico taskbar delete <id>"
+   or simply call "winico delete <id>"
+   The optional callback (set with -callback) is for specifying a tcl-callback,
+   if the user moves or clicks with the mouse over the icon in the status area.
+   In the callback there are bind-like abbreviations possible :
+        (tkbind was my friend:-)
+   %m - the windows message specifier (WM_LBUTTONDOWN,WM_MOUSEMOVE a.s.o)
+   %i - the icon identifier           (ico#1, ico#2 a.s.o)
+   %x - current xposition of the cursor
+   %x - current yposition of the cursor 
+   %X - xposition of the cursor when the last windows-message was processed
+   %Y - yposition of the cursor when the last windows-message was processed
+        (%X,%Y may differ from %x,%y however the difference is marginal )
+   %t - current tickcount of the system
+   %w - wParam of the internal callback message (the integer part of %i)
+   %l - lParam of the internal callback message (integer value of %m)
+   %% - a %-sign
+
+   Example :
+     winico taskbar add ico#1 -pos 1 -text "big tcp server" \
+                              -callback "mytclproc %m %i %X %Y"
+     ...
+     proc mytclproc { msg ico x y } {
+       if { $msg=="WM_RBUTTONDOWN" } {
+         create_context_menu $ico $x $y
+       }
+     }
+
+
+
+all other subcommands which may be additionally reported by calling "winico"
+are subject to change and are not documented here.
+
+
+Notes for contributors
+----------------------
+If someone want's to help me in continue developing winico, he/she is
+very welcome.
+Very important for me is the remaining of the WTK define inside the C-Sources,
+we (Brueckner&Jarosch) use "winico" in our commercial software inside a
+very specialized Tk3.6-port.
+What I would like to have is a Tk-widget, which is able to display the icons
+(to enable icon browsing).
+If one has created a nice icon and want to give it royalty free to others,
+email it to me and I include it in the winico-dll.
+
+Known bugs
+----------
+
+After creating an icon-resource with "create" and freeing with "delete"
+there are some bytes left(10-20).
+"winico setwindow <windowhandle>" may crash, if <windowhandle> is not a mapped
+Tk8.0 toplevel or a valid Windows-handle.
+
+Release Notes
+-------------
+0.1 initial release
+
+0.2 adds taskbar support
+
+0.3 incorporates a little patch from Jan Nijtmans to load icons also
+    from a extension dll loaded with "load"
+    for 3.0 there are 2 binary compiles for
+        Tk8.2 in the bin directory
+
+0.4 (Scriptics) merged pseudo 0.2-Scriptics code base with 0.3. Only
+    changes that were required were to rename the 0.3 makefile to
+    "makefile.vc" and add configure.in and Makefile.in for TEA-compliance.
+
+
+Todo-list
+---------
+-creation of a Tk-widget, which can display the iconresources in the
+ client-area (C-code-sniffers , search for ICO_DRAW in the source :-)
+-improving the default handling of setting the icon of a toplevel
+-support for more "winico load" resources under Win95/WinNT
+
+Have fun with winico
+Leo
+
+Leo Schubert, Brueckner&Jarosch Ing.-GmbH Erfurt, Germany 99084
+EMAIL leo@bj-ig.de

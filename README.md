@@ -11,7 +11,7 @@ It needs nothing but TCL/TK ... which follows the "Pure TCL" idea perfectly ...
 TK was used by some other languages like PERL & Python through the TKinter module that provided
 these 'graphics-less' environments with graphical components from TK.
 
-For detail on TCL/TK see: http://tcl.tk/
+For details on TCL/TK see: http://tcl.tk/
 
 The still 'official' vTcl pages can be found at: http://vtcl.sourceforge.net/
 The supplied release 1.6.1a1 only works up to TCL/TK-8.4
