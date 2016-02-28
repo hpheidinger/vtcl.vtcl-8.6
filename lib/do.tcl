@@ -42,13 +42,13 @@ proc vTcl:pop_action {} {
     global vTcl
     incr vTcl(change) -1
     if { $vTcl(action_index) >= 0 } {
-        vTcl:destroy_handles
-        eval $vTcl(action,$vTcl(action_index),undo)
-        incr vTcl(action_index) -1
-        vTcl:setup_bind_widget .
+	vTcl:destroy_handles
+	eval $vTcl(action,$vTcl(action_index),undo)
+	incr vTcl(action_index) -1
+	vTcl:setup_bind_widget .
     } else {
-        ::vTcl::MessageBox -icon error -parent .vTcl -title "No undo!" \
-            -message "Nothing to undo!" -type ok
+	::vTcl::MessageBox -icon error -parent .vTcl -title "No undo!" \
+	    -message "Nothing to undo!" -type ok
     }
 }
 
@@ -57,15 +57,12 @@ proc vTcl:redo_action {} {
     ::vTcl::change;	# update the title bar
     incr vTcl(change) 1
     if { $vTcl(action_index) < $vTcl(action_limit) } {
-        vTcl:destroy_handles
-        incr vTcl(action_index) 1
-        eval $vTcl(action,$vTcl(action_index),do)
-        vTcl:setup_bind_widget .
+	vTcl:destroy_handles
+	incr vTcl(action_index) 1
+	eval $vTcl(action,$vTcl(action_index),do)
+	vTcl:setup_bind_widget .
     } else {
-        ::vTcl::MessageBox -icon error -parent .vTcl -title "No redo!" \
-            -message "Nothing to redo!" -type ok
+	::vTcl::MessageBox -icon error -parent .vTcl -title "No redo!" \
+	    -message "Nothing to redo!" -type ok
     }
 }
-
-
-

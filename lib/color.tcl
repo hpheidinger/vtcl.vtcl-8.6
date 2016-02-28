@@ -27,8 +27,8 @@ proc vTcl:get_color {color w} {
     # apparently Iwidgets 3.0 returns screwed up colors
     #
     # tk_chooseColor accepts the following:
-    # #RGB           (4 chars)
-    # #RRGGBB        (7 chars)
+    # #RGB	   (4 chars)
+    # #RRGGBB	(7 chars)
     # #RRRGGGBBB     (10 chars)
     # #RRRRGGGGBBBB  (13 chars)
 
@@ -54,14 +54,14 @@ proc vTcl:get_color {color w} {
     set oldcolor $color
 
     if {$color == ""} {
-        set color white
+	set color white
     }
     set newcolor [SelectColor::menu [winfo toplevel $w].color [list below $w] -color $color]
 
     if {$newcolor != ""} {
-        return $newcolor
+	return $newcolor
     } else {
-        return $oldcolor
+	return $oldcolor
     }
 }
 
@@ -72,13 +72,13 @@ global vTcl
     set vTcl(color,variable) $variable
     set color [vTcl:at $variable]
     if {$color == ""} {
-        set color "#000000"
+	set color "#000000"
     } elseif {[string range $color 0 0] != "#" } {
-        set clist [winfo rgb . $color]
-        set r [lindex $clist 0]
-        set g [lindex $clist 1]
-        set b [lindex $clist 2]
-        set color "#[vTcl:hex $r][vTcl:hex $g][vTcl:hex $b]"
+	set clist [winfo rgb . $color]
+	set r [lindex $clist 0]
+	set g [lindex $clist 1]
+	set b [lindex $clist 2]
+	set color "#[vTcl:hex $r][vTcl:hex $g][vTcl:hex $b]"
     }
     set vTcl(color) [vTcl:get_color $color $w]
     set $vTcl(color,variable) $vTcl(color)

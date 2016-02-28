@@ -28,17 +28,17 @@ proc vTcl:widget:lib:lib_tix {args} {
     vTcl:lib_tix:setup
 
     set order {
-        TixNoteBook
-        TixLabelFrame
-        TixComboBox
-        TixMeter
-        TixFileEntry
-        TixLabelEntry
-        TixScrolledHList
-        TixScrolledListBox
-        TixSelect
-        TixPanedWindow
-        TixOptionMenu
+	TixNoteBook
+	TixLabelFrame
+	TixComboBox
+	TixMeter
+	TixFileEntry
+	TixLabelEntry
+	TixScrolledHList
+	TixScrolledListBox
+	TixSelect
+	TixPanedWindow
+	TixOptionMenu
     }
 
     vTcl:lib:add_widgets_to_toolbar $order tix "Tix Widgets"
@@ -58,15 +58,15 @@ proc vTcl:widget:lib:lib_tix {args} {
 proc vTcl:lib_tix:ignore_option {cmd args} {
 
     if {"$cmd" != "add"} {
-        return [eval _option $cmd $args]
+	return [eval _option $cmd $args]
     }
 
     set pattern  [lindex $args 0]
 
     # only add Tix options
     if [string match *Tix* $pattern] {
-        # puts "option $cmd $args"
-        return [eval _option $cmd $args]
+	# puts "option $cmd $args"
+	return [eval _option $cmd $args]
     }
 }
 
@@ -87,7 +87,7 @@ proc vTcl:lib_tix:monitor_option {cmd args} {
 
     #puts "lib_tix:monitor_option:$cmd $args:"
     if {"$cmd" != "add"} {
-        return [eval _option $cmd $args]
+	return [eval _option $cmd $args]
     }
 
     #puts "option $cmd $args"
@@ -101,15 +101,15 @@ proc vTcl:lib_tix:monitor_option {cmd args} {
     #puts "pattern:$pattern:"
 
     if {[string match {\*Tix*} $pattern]} {
-        #puts "\twas: $pattern"
-        regsub {(.)\*} $pattern {\1.} pattern
-        #puts "\tis:  $pattern"
+	#puts "\twas: $pattern"
+	regsub {(.)\*} $pattern {\1.} pattern
+	#puts "\tis:  $pattern"
     }
 
     if {"$priority" == ""} {
-        _option add $pattern $value
+	_option add $pattern $value
     } else {
-        _option add $pattern $value $priority
+	_option add $pattern $value $priority
     }
 }
 
@@ -123,11 +123,11 @@ proc vTcl:lib_tix:init {} {
     rename vTcl:lib_tix:ignore_option option
 
     if {[catch {package require Tix} erg]} {
-        lappend vTcl(libNames) {(not detected) Tix Widget Support Library}
+	lappend vTcl(libNames) {(not detected) Tix Widget Support Library}
 	puts $erg
-        rename option vTcl:lib_tix:ignore_option
-        rename _option option
-        return 0
+	rename option vTcl:lib_tix:ignore_option
+	rename _option option
+	return 0
     }
 
     rename option vTcl:lib_tix:ignore_option
@@ -149,9 +149,9 @@ proc vTcl:lib_tix:setup {} {
 
     ## Add to procedure, var, bind regular expressions
     if {[lempty $vTcl(bind,ignore)]} {
-        append vTcl(bind,ignore) "tix"
+	append vTcl(bind,ignore) "tix"
     } else {
-        append vTcl(bind,ignore) "|tix"
+	append vTcl(bind,ignore) "|tix"
     }
 
     lappend vTcl(proc,ignore) "tix*"
@@ -168,20 +168,20 @@ proc vTcl:dump:TixSelect {target basename} {
     global vTcl
     set result [vTcl:lib_tix:dump_widget_opt $target $basename]
     foreach button [$target subwidgets -class Button] {
-        set conf [list \
-                [$button configure -bitmap] \
-                [$button configure -image]]
-        set pairs [vTcl:conf_to_pairs $conf ""]
-        set button_name [string range $button \
-                [expr 1 + [string last . $button]] end]
-        append result "$vTcl(tab)$basename add $button_name \\\n"
-        append result "[vTcl:clean_pairs $pairs]\n"
+	set conf [list \
+		[$button configure -bitmap] \
+		[$button configure -image]]
+	set pairs [vTcl:conf_to_pairs $conf ""]
+	set button_name [string range $button \
+		[expr 1 + [string last . $button]] end]
+	append result "$vTcl(tab)$basename add $button_name \\\n"
+	append result "[vTcl:clean_pairs $pairs]\n"
     }
     # Destroy unused label subwidget, but not while running in vTcl.
     if {"[$target cget -label]" == ""} {
-        append result "$vTcl(tab)# destroy unused label subwidget\n"
-        append result "$vTcl(tab)global vTcl\n"
-        append result "$vTcl(tab)if \{!\[info exists vTcl\]\} \{destroy \[$basename subwidget label\]\}\n"
+	append result "$vTcl(tab)# destroy unused label subwidget\n"
+	append result "$vTcl(tab)global vTcl\n"
+	append result "$vTcl(tab)if \{!\[info exists vTcl\]\} \{destroy \[$basename subwidget label\]\}\n"
     }
     return $result
 }
@@ -200,16 +200,16 @@ proc vTcl:lib_tix:dump_subwidgets {subwidget {sitebasename {}}} {
 
     foreach i $widget_tree {
 
-        set basename [vTcl:base_name $i]
+	set basename [vTcl:base_name $i]
 
-        # don't try to dump subwidget itself
-        if {"$i" != "$subwidget"} {
-            set basenames($i) $basename
-            set class [vTcl:get_class $i]
-            append output [$classes($class,dumpCmd) $i $basename]
-            catch {unset basenames($i)}
-        }
-        append output [vTcl:dump_widget_geom $i $basename]
+	# don't try to dump subwidget itself
+	if {"$i" != "$subwidget"} {
+	    set basenames($i) $basename
+	    set class [vTcl:get_class $i]
+	    append output [$classes($class,dumpCmd) $i $basename]
+	    catch {unset basenames($i)}
+	}
+	append output [vTcl:dump_widget_geom $i $basename]
     }
 
     catch {unset basenames($subwidget)}
@@ -227,14 +227,14 @@ proc vTcl:lib_tix:save_option {opt} {
     # never save -bitmap options on tix widgets; they are always
     # hard-coded to the tix library directory
     if [string match *${tix_library}* $opt] {
-        #puts "kc:save_option:ignoring $opt"
-        return 0
+	#puts "kc:save_option:ignoring $opt"
+	return 0
     } elseif {$vTcl(tixPref,dump_colors) == 0 \
-            && [regexp -- {^-(.*background|.*foreground|.*color|font) } $opt]} {
-        #puts "kc:save_option:ignoring $opt"
-        return 0
+	    && [regexp -- {^-(.*background|.*foreground|.*color|font) } $opt]} {
+	#puts "kc:save_option:ignoring $opt"
+	return 0
     } else {
-        return 1
+	return 1
     }
 }
 
@@ -249,15 +249,15 @@ proc vTcl:lib_tix:dump_widget_opt {target basename} {
     set opt [$target conf]
     set keep_opt ""
     foreach e $opt {
-        if [vTcl:lib_tix:save_option $e] {
-            lappend keep_opt $e
-        }
+	if [vTcl:lib_tix:save_option $e] {
+	    lappend keep_opt $e
+	}
     }
     set p [vTcl:get_opts $keep_opt]
     if {$p != ""} {
-        append result " \\\n[vTcl:clean_pairs $p]\n"
+	append result " \\\n[vTcl:clean_pairs $p]\n"
     } else {
-        append result "\n"
+	append result "\n"
     }
     append result [vTcl:dump_widget_bind $target $basename]
     return $result

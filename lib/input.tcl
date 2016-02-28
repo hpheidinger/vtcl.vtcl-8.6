@@ -61,26 +61,26 @@ proc vTcl:string_window {title base {value ""}} {
     wm deiconify $base
     wm title $base "$title"
     frame $base.fra19 \
-        -borderwidth 1 -height 30 -relief sunken -width 30
+	-borderwidth 1 -height 30 -relief sunken -width 30
     pack $base.fra19 \
-        -in $base -anchor center -expand 1 -fill both -ipadx 0 -ipady 0 \
-        -padx 0 -pady 0 -side top
+	-in $base -anchor center -expand 1 -fill both -ipadx 0 -ipady 0 \
+	-padx 0 -pady 0 -side top
     ::vTcl::CancelButton $base.fra19.but21 -command "
 	$base.ent18 delete 0 end
 	vTcl:set_string \{$base\} \"\"
     "
     pack $base.fra19.but21 \
-        -in $base.fra19 -anchor center -expand 0 -fill none -ipadx 0 \
-        -ipady 0 -padx 0 -pady 0 -side right
+	-in $base.fra19 -anchor center -expand 0 -fill none -ipadx 0 \
+	-ipady 0 -padx 0 -pady 0 -side right
     ::vTcl::OkButton $base.fra19.but20 -command "vTcl:snarf_string \{$base\}"
     pack $base.fra19.but20 \
-        -in $base.fra19 -anchor center -expand 0 -fill none -ipadx 0 \
-        -ipady 0 -padx 0 -pady 0 -side right
+	-in $base.fra19 -anchor center -expand 0 -fill none -ipadx 0 \
+	-ipady 0 -padx 0 -pady 0 -side right
     vTcl:entry $base.ent18 \
-        -cursor {} -background white
+	-cursor {} -background white
     pack $base.ent18 \
-        -in $base -anchor center -expand 0 -fill x -ipadx 0 -ipady 0 \
-        -padx 0 -pady 0 -side top
+	-in $base -anchor center -expand 0 -fill x -ipadx 0 -ipady 0 \
+	-padx 0 -pady 0 -side top
     bind $base <Key-Return> "vTcl:snarf_string \{$base\}; break"
     bind $base <Key-Escape> "$base.fra19.but21 invoke"
     $base.ent18 insert end $value
@@ -93,11 +93,11 @@ proc vTcl:set_label {t} {
     global vTcl
     if {$t == ""} {return}
     if [catch {set txt [$t cget -text]}] {
-        return
+	return
     }
     set label [vTcl:get_string "Setting label for $t" $t $txt]
     if {$label == ""} {
-        return
+	return
     }
     $t conf -text $label
     vTcl:place_handles $t
@@ -203,43 +203,43 @@ proc getLine {title description legend args} {
     set ::${top}::status ""
 
     label $top.lab80 \
-        -anchor w -textvariable "$top\::description" -justify left
+	-anchor w -textvariable "$top\::description" -justify left
     frame $top.fra81 \
-        -borderwidth 2 -height 75 -width 125 
+	-borderwidth 2 -height 75 -width 125 
     set site_3_0 $top.fra81
     entry $site_3_0.ent83 \
-        -background white -textvariable "$top\::entry" 
+	-background white -textvariable "$top\::entry" 
     vTcl:DefineAlias "$site_3_0.ent83" "LineEntry" vTcl:WidgetProc "$top" 1
     label $site_3_0.lab82 \
-        -anchor w -textvariable "$top\::legend" -justify left
+	-anchor w -textvariable "$top\::legend" -justify left
     pack $site_3_0.ent83 \
-        -in $site_3_0 -anchor center -expand 1 -fill x -padx 5 -pady 5 \
-        -side right 
+	-in $site_3_0 -anchor center -expand 1 -fill x -padx 5 -pady 5 \
+	-side right 
     pack $site_3_0.lab82 \
-        -in $site_3_0 -anchor center -expand 0 -fill none -padx 5 -pady 5 \
-        -side left 
+	-in $site_3_0 -anchor center -expand 0 -fill none -padx 5 -pady 5 \
+	-side left 
     frame $top.fra84 \
-        -borderwidth 2 -height 75 -width 125 
+	-borderwidth 2 -height 75 -width 125 
     set site_3_0 $top.fra84
     button $site_3_0.but85 -command "set ::${top}::status ok" \
-        -pady 0 -text OK -width 8 
+	-pady 0 -text OK -width 8 
     button $site_3_0.but86 -command "set ::${top}::status cancel" \
-        -pady 0 -text Cancel -width 8 
+	-pady 0 -text Cancel -width 8 
     pack $site_3_0.but85 \
-        -in $site_3_0 -anchor center -expand 0 -fill none -padx 5 -pady 5 \
-        -side left 
+	-in $site_3_0 -anchor center -expand 0 -fill none -padx 5 -pady 5 \
+	-side left 
     pack $site_3_0.but86 \
-        -in $site_3_0 -anchor center -expand 0 -fill none -padx 5 -pady 5 \
-        -side right 
+	-in $site_3_0 -anchor center -expand 0 -fill none -padx 5 -pady 5 \
+	-side right 
     ###################
     # SETTING GEOMETRY
     ###################
     pack $top.lab80 \
-        -in $top -anchor center -expand 0 -fill x -padx 5 -pady 5 -side top 
+	-in $top -anchor center -expand 0 -fill x -padx 5 -pady 5 -side top 
     pack $top.fra81 \
-        -in $top -anchor center -expand 0 -fill x -side top 
+	-in $top -anchor center -expand 0 -fill x -side top 
     pack $top.fra84 \
-        -in $top -anchor center -expand 0 -fill none -side top 
+	-in $top -anchor center -expand 0 -fill none -side top 
 
     vTcl:FireEvent $base <<Ready>>
     wm deiconify $top
@@ -249,8 +249,8 @@ proc getLine {title description legend args} {
     vwait ::${top}::status
     grab release $base
     if {[set ::${top}::status] == "cancel"} {
-        destroy $base
-        return ""
+	destroy $base
+	return ""
     }
 
     destroy $base
@@ -267,20 +267,20 @@ proc updateSelection {top} {
     set selectedItems ""
 
     foreach index $selected {
-        lappend selectedItems [$top.SelectListbox get $index]
+	lappend selectedItems [$top.SelectListbox get $index]
     }
 
     if {[lempty $selectedItems]} {
-        $top.SelectOK configure -state disabled
+	$top.SelectOK configure -state disabled
     } else {
-        $top.SelectOK configure -state normal
+	$top.SelectOK configure -state normal
     }
 }
 
 proc select {contents title {selectMode single} args} {
     set base .vTcl.listboxSelect
     if {[winfo exists $base]} {
-        wm deiconify $base; return
+	wm deiconify $base; return
     }
     set top $base
 
@@ -309,84 +309,84 @@ proc select {contents title {selectMode single} args} {
     set ::${top}::selectedItems ""
 
     frame $top.fra87 \
-        -borderwidth 2
+	-borderwidth 2
     set site_3_0 $top.fra87
     label $site_3_0.lab88 \
-        -text {Select item:} -justify left -anchor w
+	-text {Select item:} -justify left -anchor w
     vTcl:DefineAlias "$site_3_0.lab88" "SelectLabel" vTcl:WidgetProc "$top" 1
     pack $site_3_0.lab88 \
-        -in $site_3_0 -anchor center -expand 0 -fill none -side left
+	-in $site_3_0 -anchor center -expand 0 -fill none -side left
     ScrolledWindow $top.fra82 \
-        -borderwidth 2 -auto horizontal
+	-borderwidth 2 -auto horizontal
     set site_3_0 $top.fra82
     listbox $site_3_0.lis83 \
-        -background white -listvariable "::${top}::listContents" \
-        -selectmode $selectMode -height 2
+	-background white -listvariable "::${top}::listContents" \
+	-selectmode $selectMode -height 2
     vTcl:DefineAlias "$site_3_0.lis83" "SelectListbox" vTcl:WidgetProc "$top" 1
     $top.fra82 setwidget $site_3_0.lis83
     bind $site_3_0.lis83 <<ListboxSelect>> {
-        ::vTcl::input::listboxSelect::updateSelection [winfo toplevel %W]
+	::vTcl::input::listboxSelect::updateSelection [winfo toplevel %W]
     }
     frame $top.fra84 \
-        -borderwidth 2
+	-borderwidth 2
     set site_3_0 $top.fra84
     button $site_3_0.but85 -state disabled \
-        -pady 0 -text OK -width 8 -command "set ::${top}::status ok" 
+	-pady 0 -text OK -width 8 -command "set ::${top}::status ok" 
     vTcl:DefineAlias "$site_3_0.but85" "SelectOK" vTcl:WidgetProc "$top" 1
     button $site_3_0.but86 \
-        -pady 0 -text Cancel -width 8 -command "set ::${top}::status cancel"
+	-pady 0 -text Cancel -width 8 -command "set ::${top}::status cancel"
     vTcl:DefineAlias "$site_3_0.but86" "SelectCancel" vTcl:WidgetProc "$top" 1
     pack $site_3_0.but85 \
-        -in $site_3_0 -anchor center -expand 0 -fill none -padx 5 -pady 5 \
-        -side left 
+	-in $site_3_0 -anchor center -expand 0 -fill none -padx 5 -pady 5 \
+	-side left 
     pack $site_3_0.but86 \
-        -in $site_3_0 -anchor center -expand 0 -fill none -padx 5 -pady 5 \
-        -side right 
+	-in $site_3_0 -anchor center -expand 0 -fill none -padx 5 -pady 5 \
+	-side right 
     ###################
     # SETTING GEOMETRY
     ###################
     pack $top.fra87 \
-        -in $top -anchor center -expand 0 -fill x -padx 2 -side top 
+	-in $top -anchor center -expand 0 -fill x -padx 2 -side top 
     pack $top.fra82 \
-        -in $top -anchor center -expand 1 -fill both -side top
+	-in $top -anchor center -expand 1 -fill both -side top
     pack $top.fra84 \
-        -in $top -anchor center -expand 0 -fill none -side top 
+	-in $top -anchor center -expand 0 -fill none -side top 
 
     vTcl:FireEvent $base <<Ready>>
     vTcl:center $base 339 247
     wm deiconify $base
 
     foreach {option value} $args {
-        switch -- $option {
-            -oktext {
-                 $top.SelectOK configure -text $value
-            }
-            -canceltext {
-                 $top.SelectCancel configure -text $value
-            }
-            -headertext {
-                 $top.SelectLabel configure -text $value
-            }
-            -selecteditems {
-                 set index 0
-                 foreach item $contents {
-                     set found [lsearch -exact $value $item]
-                     if {$found != -1} {
-                         $top.SelectListbox selection set $index
-                     }
-                     incr index
-                 }
-                 ::vTcl::input::listboxSelect::updateSelection $top
-            }
-        }
+	switch -- $option {
+	    -oktext {
+		 $top.SelectOK configure -text $value
+	    }
+	    -canceltext {
+		 $top.SelectCancel configure -text $value
+	    }
+	    -headertext {
+		 $top.SelectLabel configure -text $value
+	    }
+	    -selecteditems {
+		 set index 0
+		 foreach item $contents {
+		     set found [lsearch -exact $value $item]
+		     if {$found != -1} {
+			 $top.SelectListbox selection set $index
+		     }
+		     incr index
+		 }
+		 ::vTcl::input::listboxSelect::updateSelection $top
+	    }
+	}
     }
 
     grab set $base
     vwait ::${top}::status
     grab release $base
     if {[vTcl:at ::${top}::status] == "cancel"} {
-        destroy $base
-        return ""
+	destroy $base
+	return ""
     }
 
     destroy $base

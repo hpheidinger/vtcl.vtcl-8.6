@@ -36,7 +36,7 @@ proc vTcl:grid:height {parent {col 0}} {
     set h 0
     set s [grid slaves $parent -column $col]
     foreach i $s {
-        incr h [winfo height $i]
+	incr h [winfo height $i]
     }
     return $h
 }
@@ -46,7 +46,7 @@ proc vTcl:grid:width {parent {row 0}} {
     set w 0
     set s [grid slaves $parent -row $row]
     foreach i $s {
-        incr w [winfo width $i]
+	incr w [winfo width $i]
     }
     return $w
 }
@@ -55,33 +55,33 @@ proc vTcl:prop:set_visible {which {on ""}} {
     global vTcl
     set var ${which}_on
     switch $which {
-        info {
-            set f $vTcl(gui,ae,canvas).f1
-            set name "Widget"
-        }
-        attr {
-            set f $vTcl(gui,ae,canvas).f2
-            set name "Attributes"
-        }
-        geom {
-            set f $vTcl(gui,ae,canvas).f3
-            set name "Geometry"
-        }
-        default {
-            return
-        }
+	info {
+	    set f $vTcl(gui,ae,canvas).f1
+	    set name "Widget"
+	}
+	attr {
+	    set f $vTcl(gui,ae,canvas).f2
+	    set name "Attributes"
+	}
+	geom {
+	    set f $vTcl(gui,ae,canvas).f3
+	    set name "Geometry"
+	}
+	default {
+	    return
+	}
     }
     if {$on == ""} {
-        set on [expr - $vTcl(pr,$var)]
+	set on [expr - $vTcl(pr,$var)]
     }
     if {$on == 1} {
-        pack $f.f -side top -expand 1 -fill both
-        $f.l conf -text "$name (-)"
-        set vTcl(pr,$var) 1
+	pack $f.f -side top -expand 1 -fill both
+	$f.l conf -text "$name (-)"
+	set vTcl(pr,$var) 1
     } else {
-        pack forget $f.f
-        $f.l conf -text "$name (+)"
-        set vTcl(pr,$var) -1
+	pack forget $f.f
+	$f.l conf -text "$name (+)"
+	set vTcl(pr,$var) -1
     }
     update idletasks
     vTcl:prop:recalc_canvas
@@ -119,21 +119,21 @@ proc vTclWindow.vTcl.ae {args} {
     $ae.sw setwidget $c
 
     set f1 $c.f1; frame $f1       ; # Widget Info
-        $c create window 0 0 -window $f1 -anchor nw -tag info
+	$c create window 0 0 -window $f1 -anchor nw -tag info
     set f2 $c.f2; frame $f2       ; # Widget Attributes
-        $c create window 0 0 -window $f2 -anchor nw -tag attr
+	$c create window 0 0 -window $f2 -anchor nw -tag attr
     set f3 $c.f3; frame $f3       ; # Widget Geometry
-        $c create window 0 0 -window $f3 -anchor nw -tag geom
+	$c create window 0 0 -window $f3 -anchor nw -tag geom
 
     label $f1.l -text "Widget"     -relief raised -bg #aaaaaa -bd 1 -width 30 \
     	-anchor center
-        pack $f1.l -side top -fill x
+	pack $f1.l -side top -fill x
     label $f2.l -text "Attributes" -relief raised -bg #aaaaaa -bd 1 -width 30 \
     	-anchor center
-        pack $f2.l -side top -fill x
+	pack $f2.l -side top -fill x
     label $f3.l -text "Geometry"   -relief raised -bg #aaaaaa -bd 1 -width 30 \
     	-anchor center
-        pack $f3.l -side top -fill x
+	pack $f3.l -side top -fill x
 
     bind $f1.l <ButtonPress> {vTcl:prop:set_visible info}
     bind $f2.l <ButtonPress> {vTcl:prop:set_visible attr}
@@ -143,24 +143,24 @@ proc vTclWindow.vTcl.ae {args} {
     frame $w; pack $w -side top -expand 1 -fill both
 
     label $w.ln -text "Widget" -width 11 -anchor w
-        vTcl:entry $w.en -width 12 -textvariable vTcl(w,widget) \
-        -relief sunken   -state disabled
+	vTcl:entry $w.en -width 12 -textvariable vTcl(w,widget) \
+	-relief sunken   -state disabled
     label $w.lc -text "Class"  -width 11 -anchor w
-        vTcl:entry $w.ec -width 12 -textvariable vTcl(w,class) \
-        -relief sunken   -state disabled
+	vTcl:entry $w.ec -width 12 -textvariable vTcl(w,class) \
+	-relief sunken   -state disabled
     label $w.lm -text "Manager" -width 11 -anchor w
-        vTcl:entry $w.em -width 12 -textvariable vTcl(w,manager) \
-        -relief sunken   -state disabled
+	vTcl:entry $w.em -width 12 -textvariable vTcl(w,manager) \
+	-relief sunken   -state disabled
     label $w.la -text "Alias"  -width 11 -anchor w
     vTcl:entry $w.ea -width 12 -textvariable vTcl(w,alias) \
-        -relief sunken
+	-relief sunken
     bind $w.ea <KeyRelease-Return> "
-        ::vTcl::properties::setAlias \$::vTcl(w,widget) ::vTcl(w,alias) $w.ea"
+	::vTcl::properties::setAlias \$::vTcl(w,widget) ::vTcl(w,alias) $w.ea"
     bind $w.ea <FocusOut> "
-        ::vTcl::properties::setAlias \$::vTcl(w,widget) ::vTcl(w,alias) $w.ea"
+	::vTcl::properties::setAlias \$::vTcl(w,widget) ::vTcl(w,alias) $w.ea"
     label $w.li -text "Insert Point" -width 11 -anchor w
-        vTcl:entry $w.ei -width 12 -textvariable vTcl(w,insert) \
-        -relief sunken   -state disabled
+	vTcl:entry $w.ei -width 12 -textvariable vTcl(w,insert) \
+	-relief sunken   -state disabled
 
     grid columnconf $w 1 -weight 1
 
@@ -181,12 +181,12 @@ proc vTclWindow.vTcl.ae {args} {
     vTcl:prop:set_visible geom $vTcl(pr,geom_on)
 
     if { $vTcl(w,widget) != "" } {
-        vTcl:prop:update_attr
+	vTcl:prop:update_attr
     }
     vTcl:setup_vTcl:bind $vTcl(gui,ae)
     if {$tcl_platform(platform) == "macintosh"} {
-        set w [expr [winfo vrootwidth .] - 206]
-        wm geometry $vTcl(gui,ae) 200x300+$w+20
+	set w [expr [winfo vrootwidth .] - 206]
+	wm geometry $vTcl(gui,ae) 200x300+$w+20
     }
     catch {wm geometry .vTcl.ae $vTcl(geometry,.vTcl.ae)}
     update idletasks
@@ -204,19 +204,19 @@ proc vTcl:prop:recalc_canvas {} {
     set c  $vTcl(gui,ae,canvas)
     if {![winfo exists $ae]} { return }
 
-    set f1 $c.f1                              ; # Widget Info Frame
-    set f2 $c.f2                              ; # Widget Attribute Frame
-    set f3 $c.f3                              ; # Widget Geometry Frame
+    set f1 $c.f1			      ; # Widget Info Frame
+    set f2 $c.f2			      ; # Widget Attribute Frame
+    set f3 $c.f3			      ; # Widget Geometry Frame
 
     $c coords attr 0 [winfo height $f1]
     $c coords geom 0 [expr [winfo height $f1] + [winfo height $f2]]
 
     set w [vTcl:util:greatest_of "[winfo width $f1] \
-                                  [winfo width $f2] \
-                                  [winfo width $f3]" ]
+				  [winfo width $f2] \
+				  [winfo width $f3]" ]
     set h [expr [winfo height $f1] + \
-                [winfo height $f2] + \
-                [winfo height $f3] ]
+		[winfo height $f2] + \
+		[winfo height $f3] ]
     $c configure -scrollregion "0 0 $w $h"
     wm minsize .vTcl.ae $w 200
 
@@ -232,13 +232,13 @@ proc vTcl:key_release_cmd {k config_cmd target option variable args} {
 
     ## Don't change if the user presses a directional key.
     if {$k < 37 || $k > 40} {
-        set value [set $variable]
-        set ::vTcl::config($target) [list $config_cmd $target $option $variable $value $args]
+	set value [set $variable]
+	set ::vTcl::config($target) [list $config_cmd $target $option $variable $value $args]
 
-        ## Geometry options do not have checkboxes to save/not save
-        if {$config_cmd != "vTcl:prop:geom_config_mgr"} {
-            vTcl:prop:save_opt $target $option $variable
-        }
+	## Geometry options do not have checkboxes to save/not save
+	if {$config_cmd != "vTcl:prop:geom_config_mgr"} {
+	    vTcl:prop:save_opt $target $option $variable
+	}
     }
 }
 
@@ -247,14 +247,14 @@ proc vTcl:focus_out_cmd {} {
 
     set names [array names ::vTcl::config]
     foreach w $names {
-        if {![winfo exists $w]} {
-            continue
-        }
-        catch {
-            lassign $::vTcl::config($w) config_cmd target option variable value args
-            $config_cmd $target $option $variable $value $args
-        }
-        unset ::vTcl::config($w)
+	if {![winfo exists $w]} {
+	    continue
+	}
+	catch {
+	    lassign $::vTcl::config($w) config_cmd target option variable value args
+	    $config_cmd $target $option $variable $value $args
+	}
+	unset ::vTcl::config($w)
     }
 
     vTcl:place_handles $::vTcl(w,widget)
@@ -264,12 +264,12 @@ proc vTcl:prop:config_cmd {target option variable value args} {
     global vTcl
 	#puts "vTcl:prop:config_cmd: target=$target option=$option variable=$variable value=$value args=$args"
     if {$value == ""} {
-        $target configure $option [set $variable]
-        vTcl:prop:save_opt $target $option $variable
-        vTcl:place_handles $target
+	$target configure $option [set $variable]
+	vTcl:prop:save_opt $target $option $variable
+	vTcl:place_handles $target
     } else {
-        $target configure $option $value
-        vTcl:prop:save_opt_value $target $option $value
+	$target configure $option $value
+	vTcl:prop:save_opt_value $target $option $value
     }
 }
 
@@ -277,12 +277,12 @@ proc vTcl:prop:spec_config_cmd {target option variable value args} {
     global vTcl
     set cmd $args
     if {$value == ""} {
-        $cmd $target [set $variable]
-        vTcl:prop:save_opt $target $option $variable
-        vTcl:place_handles $target
+	$cmd $target [set $variable]
+	vTcl:prop:save_opt $target $option $variable
+	vTcl:place_handles $target
     } else {
-        $cmd $target $value
-        vTcl:prop:save_opt_value $target $option $value
+	$cmd $target $value
+	vTcl:prop:save_opt_value $target $option $value
     }
 }
 
@@ -292,10 +292,10 @@ proc vTcl:prop:geom_config_mgr {target option variable value args} {
     set mgr $args
     vTcl:setup_unbind_widget $target
     if {$value == ""} {
-        $mgr configure $target $option [set $variable]
-        vTcl:place_handles $target
+	$mgr configure $target $option [set $variable]
+	vTcl:place_handles $target
     } else {
-        $mgr configure $target $option $value
+	$mgr configure $target $option $value
     }
     vTcl:setup_bind_widget $target
     ::vTcl::notify::publish geom_config_mgr $target $mgr $option
@@ -306,10 +306,10 @@ proc vTcl:prop:geom_config_cmd {target option variable value args} {
     set cmd $args
     vTcl:setup_unbind_widget $target
     if {$value == ""} {
-        $cmd $target $option [set $variable]
-        vTcl:place_handles $target
+	$cmd $target $option [set $variable]
+	vTcl:place_handles $target
     } else {
-        $cmd $target $option $value
+	$cmd $target $option $value
     }
     vTcl:setup_bind_widget $target
     ::vTcl::notify::publish geom_config_cmd $target $cmd $option
@@ -321,7 +321,7 @@ proc vTcl:prop:update_attr {} {
     if {![winfo exists $ae]} {return}
 
     if {$vTcl(var_update) == "no"} {
-        return
+	return
     }
     if {[vTcl:streq $vTcl(w,widget) "."]} {
     	vTcl:prop:clear
@@ -335,66 +335,66 @@ proc vTcl:prop:update_attr {} {
     set top $fr._$vTcl(w,class)
     update idletasks
     if {[winfo exists $top]} {
-        if {$vTcl(w,class) != $vTcl(w,last_class)} {
-            catch {pack forget $fr._$vTcl(w,last_class)}
+	if {$vTcl(w,class) != $vTcl(w,last_class)} {
+	    catch {pack forget $fr._$vTcl(w,last_class)}
 	    update
-            pack $top -side left -fill both -expand 1
-        }
-        foreach i $vTcl(options) {
+	    pack $top -side left -fill both -expand 1
+	}
+	foreach i $vTcl(options) {
 	    set type $options($i,type)
 	    if {[info exists specialOpts($vTcl(w,class),$i,type)]} {
 	    	set type $specialOpts($vTcl(w,class),$i,type)
 	    }
 	    if {$type == "synonym"} { continue }
-            if {[lsearch $vTcl(w,optlist) $i] >= 0} {
+	    if {[lsearch $vTcl(w,optlist) $i] >= 0} {
 		if {$type == "color"} {
 		    set val $vTcl(w,opt,$i)
 		    if {$val == ""} {
-		        ## if empty color use default background
-                        set val [lindex [$top.t${i}.f configure -bg] 3]
+			## if empty color use default background
+			set val [lindex [$top.t${i}.f configure -bg] 3]
 		    }
-                    $top.t${i}.f configure -bg $val
-                }
-            }
-        }
+		    $top.t${i}.f configure -bg $val
+		}
+	    }
+	}
     } elseif [winfo exists $fr] {
-        catch {pack forget $fr._$vTcl(w,last_class)}
-        frame $top
-        pack $top -side top -expand 1 -fill both
-        grid columnconf $top 1 -weight 1
-        set type ""
-        foreach i $vTcl(options) {
+	catch {pack forget $fr._$vTcl(w,last_class)}
+	frame $top
+	pack $top -side top -expand 1 -fill both
+	grid columnconf $top 1 -weight 1
+	set type ""
+	foreach i $vTcl(options) {
 	    if {$options($i,type) == "synonym"} { continue }
 	    set newtype $options($i,title)
-            if {$type != $newtype} {
-                set type $newtype
-            }
-            if {[lsearch $vTcl(w,optlist) $i] < 0} { continue }
+	    if {$type != $newtype} {
+		set type $newtype
+	    }
+	    if {[lsearch $vTcl(w,optlist) $i] < 0} { continue }
 	    set variable "vTcl(w,opt,$i)"
 
 	    vTcl:prop:new_attr $top $i $variable vTcl:prop:config_cmd "" opt
-        }
+	}
 
 	## special stuff to edit menu items (cascaded items)
 	if {$vTcl(w,class) == "Menu"} {
-        global dummy
-        set dummy ""
+	global dummy
+	set dummy ""
 	    vTcl:prop:new_attr $top -menuspecial dummy "" "" opt ""
 	}
 
-        ## special options support
-        if {[info exist ::classoption($vTcl(w,class))]} {
-            foreach spec_opt $::classoption($vTcl(w,class)) {
-                vTcl:prop:new_attr $top $spec_opt vTcl(w,opt,$spec_opt) \
-                    vTcl:prop:spec_config_cmd $::configcmd($spec_opt,config) opt
-            }
-        }
+	## special options support
+	if {[info exist ::classoption($vTcl(w,class))]} {
+	    foreach spec_opt $::classoption($vTcl(w,class)) {
+		vTcl:prop:new_attr $top $spec_opt vTcl(w,opt,$spec_opt) \
+		    vTcl:prop:spec_config_cmd $::configcmd($spec_opt,config) opt
+	    }
+	}
     }
 
     if {$vTcl(w,manager) == ""} {
-        update idletasks
-        vTcl:prop:recalc_canvas
-        return
+	update idletasks
+	vTcl:prop:recalc_canvas
+	return
     }
 
     #
@@ -405,15 +405,15 @@ proc vTcl:prop:update_attr {} {
     set mgr $vTcl(w,manager)
     update idletasks
     if {[winfo exists $top]} {
-        if {$vTcl(w,manager) != $vTcl(w,last_manager)} {
-            catch {pack forget $fr._$vTcl(w,last_manager)}
-            pack $top -side left -fill both -expand 1
-        }
+	if {$vTcl(w,manager) != $vTcl(w,last_manager)} {
+	    catch {pack forget $fr._$vTcl(w,last_manager)}
+	    pack $top -side left -fill both -expand 1
+	}
     } elseif [winfo exists $fr] {
-        catch {pack forget $fr._$vTcl(w,last_manager)}
-        frame $top
-        pack $top -side top -expand 1 -fill both
-        grid columnconf $top 1 -weight 1
+	catch {pack forget $fr._$vTcl(w,last_manager)}
+	frame $top
+	pack $top -side top -expand 1 -fill both
+	grid columnconf $top 1 -weight 1
 
 	catch {
 	    foreach i "$vTcl(m,$mgr,list) $vTcl(m,$mgr,extlist)" {
@@ -421,17 +421,17 @@ proc vTcl:prop:update_attr {} {
 		set cmd [lindex $vTcl(m,$mgr,$i) 4]
 
 		if {$cmd == ""} {
-                vTcl:prop:new_attr $top $i $variable vTcl:prop:geom_config_mgr $mgr m,$mgr -geomOpt
+		vTcl:prop:new_attr $top $i $variable vTcl:prop:geom_config_mgr $mgr m,$mgr -geomOpt
 		} else {
-                vTcl:prop:new_attr $top $i $variable vTcl:prop:geom_config_cmd $cmd m,$mgr -geomOpt
-            }
+		vTcl:prop:new_attr $top $i $variable vTcl:prop:geom_config_cmd $cmd m,$mgr -geomOpt
+	    }
 	    }
 	}
     }
 
     if {$vTcl(w,manager) == "wm"} {
-        # enable/disable position/size values depending on settings
-        vTcl:wm:enable_geom
+	# enable/disable position/size values depending on settings
+	vTcl:wm:enable_geom
     }
 
     update idletasks
@@ -441,12 +441,12 @@ proc vTcl:prop:update_attr {} {
 
 proc vTcl:prop:combo_update {w var args} {
     if {[winfo exists $w]} {
-        set values [set ::$var]
-        set index [lindex $values 0]
-        $w configure -values [lrange $values 1 end]
-        if {$index != -1} {
-            $w setvalue @$index
-        }
+	set values [set ::$var]
+	set index [lindex $values 0]
+	$w configure -values [lrange $values 1 end]
+	if {$index != -1} {
+	    $w setvalue @$index
+	}
     }
 }
 
@@ -460,12 +460,12 @@ proc vTcl:prop:combo_edit {w option} {
 
 proc vTcl:prop:choice_update {w var args} {
     if {[winfo exists $w]} {
-        set values [$w cget -values]
-        set value  [set ::$var]
-        set index [lsearch -exact $values $value]
-        if {$index != -1} {
-            $w setvalue @$index
-        }
+	set values [$w cget -values]
+	set value  [set ::$var]
+	set index [lsearch -exact $values $value]
+	if {$index != -1} {
+	    $w setvalue @$index
+	}
     }
 }
 
@@ -473,14 +473,14 @@ proc vTcl:prop:choice_select {w var} {
     set index [$w getvalue]
     set values [$w cget -values]
     if {$index != -1} {
-        set ::$var [lindex $values $index]
+	set ::$var [lindex $values $index]
     }
 }
 
 proc vTcl:prop:color_update {w val} {
     if {$val == ""} {
-        ## if empty color use default background
-        set val [lindex [$w configure -bg] 3]
+	## if empty color use default background
+	set val [lindex [$w configure -bg] 3]
     }
     $w configure -bg $val
 }
@@ -528,141 +528,141 @@ proc vTcl:prop:new_attr {top option variable config_cmd config_args prefix {isGe
     set focusControl $base
    	
     switch $type {
-        boolean {
-            frame $base
-            vTcl:boolean_radio ${base}.y \
-                -variable $variable -value 1 -text "Yes" -relief sunken  \
-                -command "$config_cmd \$vTcl(w,widget) $option $variable {} $config_args" -padx 0 -pady 1
-            vTcl:boolean_radio ${base}.n \
-                -variable $variable -value 0 -text "No" -relief sunken  \
-                -command "$config_cmd \$vTcl(w,widget) $option $variable {} $config_args" -padx 0 -pady 1
-            pack ${base}.y ${base}.n -side left -expand 1 -fill both
-        }
-        combobox {
-            frame $base
-            ComboBox ${base}.c -width 8 -editable 0 \
-                -modifycmd "vTcl:prop:combo_select ${base}.c $option"
-            button ${base}.b -image ellipses -width 12 -padx 0 -pady 1 \
-                -command "vTcl:prop:combo_edit ${base}.c $option"
-            pack ${base}.c -side left -fill x -expand 1
-            pack ${base}.b -side right -fill none -expand 0
+	boolean {
+	    frame $base
+	    vTcl:boolean_radio ${base}.y \
+		-variable $variable -value 1 -text "Yes" -relief sunken  \
+		-command "$config_cmd \$vTcl(w,widget) $option $variable {} $config_args" -padx 0 -pady 1
+	    vTcl:boolean_radio ${base}.n \
+		-variable $variable -value 0 -text "No" -relief sunken  \
+		-command "$config_cmd \$vTcl(w,widget) $option $variable {} $config_args" -padx 0 -pady 1
+	    pack ${base}.y ${base}.n -side left -expand 1 -fill both
+	}
+	combobox {
+	    frame $base
+	    ComboBox ${base}.c -width 8 -editable 0 \
+		-modifycmd "vTcl:prop:combo_select ${base}.c $option"
+	    button ${base}.b -image ellipses -width 12 -padx 0 -pady 1 \
+		-command "vTcl:prop:combo_edit ${base}.c $option"
+	    pack ${base}.c -side left -fill x -expand 1
+	    pack ${base}.b -side right -fill none -expand 0
 	    set focusControl ${base}.c
-            if {[trace vinfo ::$variable] == ""} {
-                trace variable ::$variable w "vTcl:prop:combo_update ${base}.c $variable"
-            } else {
-                vTcl:prop:combo_update ${base}.c $variable
-            }
-        }
-        choice {
-            if {[trace vinfo ::$variable] != ""} {
+	    if {[trace vinfo ::$variable] == ""} {
+		trace variable ::$variable w "vTcl:prop:combo_update ${base}.c $variable"
+	    } else {
+		vTcl:prop:combo_update ${base}.c $variable
+	    }
+	}
+	choice {
+	    if {[trace vinfo ::$variable] != ""} {
 				set trnfo [lindex [trace vinfo ::$variable] 1]
 				trace remove variable ::$variable write $trnfo	
 			}
-            ComboBox ${base} -editable 0 -width 12 -values $choices \
-                -modifycmd "vTcl:prop:choice_select ${base} $variable
+	    ComboBox ${base} -editable 0 -width 12 -values $choices \
+		-modifycmd "vTcl:prop:choice_select ${base} $variable
 			  $config_cmd \$vTcl(w,widget) $option $variable {} $config_args"
-            trace variable ::$variable w "vTcl:prop:choice_update ${base} $variable"
-            vTcl:prop:choice_update ${base} $variable
-        }
-        menu {
-            button $base \
-                -text "<click to edit>" -relief sunken  -width 12 \
-                -highlightthickness 1 -fg black -padx 0 -pady 1 \
-                -command "
+	    trace variable ::$variable w "vTcl:prop:choice_update ${base} $variable"
+	    vTcl:prop:choice_update ${base} $variable
+	}
+	menu {
+	    button $base \
+		-text "<click to edit>" -relief sunken  -width 12 \
+		-highlightthickness 1 -fg black -padx 0 -pady 1 \
+		-command "
 		    focus $base
 		    vTcl:propmgr:select_attr $top $option
-                    set current \$vTcl(w,widget)
-                    vTcl:edit_target_menu \$current
-                    set $variable \[\$current cget -menu\]
-                    vTcl:prop:save_opt \$current $option $variable
-                " -anchor w
-        }
-	menuspecial {
-            button $base \
-                -text "<click to edit>" -relief sunken  -width 12 \
-                -highlightthickness 1 -fg black -padx 0 -pady 1 \
-                -command "
-		    vTcl:propmgr:select_attr $top $option
-                    set current \$vTcl(w,widget)
-                    vTcl:edit_menu \$current
-                    vTcl:prop:save_opt \$current $option $variable
-                " -anchor w
+		    set current \$vTcl(w,widget)
+		    vTcl:edit_target_menu \$current
+		    set $variable \[\$current cget -menu\]
+		    vTcl:prop:save_opt \$current $option $variable
+		" -anchor w
 	}
-        color {
-            frame $base
-            vTcl:entry ${base}.l -relief sunken  \
-                -textvariable $variable -width 8 \
-                -highlightthickness 1 -fg black
-            bind ${base}.l <KeyRelease-Return> \
-                "$config_cmd \$vTcl(w,widget) $option $variable {} $config_args
-                 ${base}.f conf -bg \$$variable"
-            button ${base}.f \
-                -image ellipses  -width 12 \
-                -highlightthickness 1 -fg black -padx 0 -pady 1 \
-                -command "
+	menuspecial {
+	    button $base \
+		-text "<click to edit>" -relief sunken  -width 12 \
+		-highlightthickness 1 -fg black -padx 0 -pady 1 \
+		-command "
+		    vTcl:propmgr:select_attr $top $option
+		    set current \$vTcl(w,widget)
+		    vTcl:edit_menu \$current
+		    vTcl:prop:save_opt \$current $option $variable
+		" -anchor w
+	}
+	color {
+	    frame $base
+	    vTcl:entry ${base}.l -relief sunken  \
+		-textvariable $variable -width 8 \
+		-highlightthickness 1 -fg black
+	    bind ${base}.l <KeyRelease-Return> \
+		"$config_cmd \$vTcl(w,widget) $option $variable {} $config_args
+		 ${base}.f conf -bg \$$variable"
+	    button ${base}.f \
+		-image ellipses  -width 12 \
+		-highlightthickness 1 -fg black -padx 0 -pady 1 \
+		-command "
 		    vTcl:propmgr:select_attr $top $option
 		    vTcl:show_color $top.t${option}.f $option $variable ${base}.f
 		    vTcl:prop:save_opt \$vTcl(w,widget) $option $variable
 		"
 	    vTcl:prop:color_update ${base}.f [set $variable]
-            pack ${base}.l -side left -expand 1 -fill x
-            pack ${base}.f -side right -fill y -pady 1 -padx 1
+	    pack ${base}.l -side left -expand 1 -fill x
+	    pack ${base}.f -side right -fill y -pady 1 -padx 1
 	    set focusControl ${base}.l
-        }
-        command {
-            frame $base
-            vTcl:entry ${base}.l -relief sunken  \
-                -textvariable $variable -width 8 \
-                -highlightthickness 1 -fg black
-            button ${base}.f \
-                -image ellipses  -width 12 \
-                -highlightthickness 1 -fg black -padx 0 -pady 1 \
-                -command "
+	}
+	command {
+	    frame $base
+	    vTcl:entry ${base}.l -relief sunken  \
+		-textvariable $variable -width 8 \
+		-highlightthickness 1 -fg black
+	    button ${base}.f \
+		-image ellipses  -width 12 \
+		-highlightthickness 1 -fg black -padx 0 -pady 1 \
+		-command "
 		    vTcl:propmgr:select_attr $top $option
 		    vTcl:set_command \$vTcl(w,widget) $option $variable
 		"
-            pack ${base}.l -side left -expand 1 -fill x
-            pack ${base}.f -side right -fill y -pady 1 -padx 1
+	    pack ${base}.l -side left -expand 1 -fill x
+	    pack ${base}.f -side right -fill y -pady 1 -padx 1
 	    set focusControl ${base}.l
-        }
-        font {
-            frame $base
-            vTcl:entry ${base}.l -relief sunken  \
-                -textvariable $variable -width 8 \
-                -highlightthickness 1 -fg black
-            button ${base}.f \
-                -image ellipses  -width 12 \
-                -highlightthickness 1 -fg black -padx 0 -pady 1 \
-                -command "
+	}
+	font {
+	    frame $base
+	    vTcl:entry ${base}.l -relief sunken  \
+		-textvariable $variable -width 8 \
+		-highlightthickness 1 -fg black
+	    button ${base}.f \
+		-image ellipses  -width 12 \
+		-highlightthickness 1 -fg black -padx 0 -pady 1 \
+		-command "
 		vTcl:propmgr:select_attr $top $option
 		vTcl:font:prompt_user_font \$vTcl(w,widget) $option
 		vTcl:prop:save_opt \$vTcl(w,widget) $option $variable
 		"
-            pack ${base}.l -side left -expand 1 -fill x
-            pack ${base}.f -side right -fill y -pady 1 -padx 1
+	    pack ${base}.l -side left -expand 1 -fill x
+	    pack ${base}.f -side right -fill y -pady 1 -padx 1
 	    set focusControl ${base}.l
-        }
-        image {
-            frame $base
-            vTcl:entry ${base}.l -relief sunken  \
-                -textvariable $variable -width 8 \
-                -highlightthickness 1 -fg black
-            button ${base}.f \
-                -image ellipses  -width 12 \
-                -highlightthickness 1 -fg black -padx 0 -pady 1 \
-                -command "
+	}
+	image {
+	    frame $base
+	    vTcl:entry ${base}.l -relief sunken  \
+		-textvariable $variable -width 8 \
+		-highlightthickness 1 -fg black
+	    button ${base}.f \
+		-image ellipses  -width 12 \
+		-highlightthickness 1 -fg black -padx 0 -pady 1 \
+		-command "
 		vTcl:propmgr:select_attr $top $option
 		vTcl:prompt_user_image \$vTcl(w,widget) $option
 		vTcl:prop:save_opt \$vTcl(w,widget) $option $variable
 		"
-            pack ${base}.l -side left -expand 1 -fill x
-            pack ${base}.f -side right -fill y -pady 1 -padx 1
+	    pack ${base}.l -side left -expand 1 -fill x
+	    pack ${base}.f -side right -fill y -pady 1 -padx 1
 	    set focusControl ${base}.l
-        }
-        default {
-            vTcl:entry $base \
-                -textvariable $variable -width 12 -highlightthickness 1
-        }
+	}
+	default {
+	    vTcl:entry $base \
+		-textvariable $variable -width 12 -highlightthickness 1
+	}
     }
 
     ## Append the label to the list for this widget and add the focusControl
@@ -693,24 +693,24 @@ proc vTcl:prop:new_attr {top option variable config_cmd config_args prefix {isGe
     ## If they right-click the label, show the context menu. No right-click for
     ## geometry options is currently provided.
     if {!$isGeomOpt} {
-        bind $label <ButtonRelease-3> \
+	bind $label <ButtonRelease-3> \
 	    "vTcl:propmgr:show_rightclick_menu $vTcl(gui,ae) $option $variable %X %Y"
     }
 
     bind after_$focusControl <FocusIn>    \
-        "vTcl:propmgr:select_attr $top $option"
+	"vTcl:propmgr:select_attr $top $option"
     bind after_$focusControl <FocusOut>   \
-        vTcl:focus_out_cmd
+	vTcl:focus_out_cmd
     bind $focusControl <MouseWheel> \
-        "vTcl:propmgr:scrollWheelMouse %D $label"
+	"vTcl:propmgr:scrollWheelMouse %D $label"
     bind after_$focusControl <KeyRelease> \
-        "vTcl:key_release_cmd %k $config_cmd \$vTcl(w,widget) $option $variable $config_args"
+	"vTcl:key_release_cmd %k $config_cmd \$vTcl(w,widget) $option $variable $config_args"
     bind after_$focusControl <KeyRelease-Return> \
-        "$config_cmd \$vTcl(w,widget) $option $variable {} $config_args"
+	"$config_cmd \$vTcl(w,widget) $option $variable {} $config_args"
     bind after_$focusControl <Key-Up> \
-        "vTcl:propmgr:focusPrev $label"
+	"vTcl:propmgr:focusPrev $label"
     bind after_$focusControl <Key-Down> \
-        "vTcl:propmgr:focusNext $label"
+	"vTcl:propmgr:focusNext $label"
     bindtags $focusControl "[bindtags $focusControl] after_$focusControl"
 
     if {[vTcl:streq $prefix "opt"]} {
@@ -742,7 +742,7 @@ proc vTcl:prop:enable_manager_entry {option state} {
 
     ## makes sure the property entry does exist
     if {[winfo exists $base]} {
-        $base configure -state $state -bg $background($state)
+	$base configure -state $state -bg $background($state)
     }
 }
 
@@ -754,15 +754,15 @@ proc vTcl:prop:clear {} {
     vTcl:propmgr:deselect_attr
 
     if {![winfo exists $vTcl(gui,ae,canvas)]} {
-        frame $vTcl(gui,ae,canvas)
-        pack $vTcl(gui,ae,canvas)
+	frame $vTcl(gui,ae,canvas)
+	pack $vTcl(gui,ae,canvas)
     }
     foreach fr {f2 f3} {
-        set fr $vTcl(gui,ae,canvas).$fr
-        if {![winfo exists $fr]} {
-            frame $fr
-            pack $fr -side top -expand 1 -fill both
-        }
+	set fr $vTcl(gui,ae,canvas).$fr
+	if {![winfo exists $fr]} {
+	    frame $fr
+	    pack $fr -side top -expand 1 -fill both
+	}
     }
 
     ## Destroy and rebuild the Attributes frame
@@ -797,7 +797,7 @@ proc vTcl:prop:update_saves {w} {
     ## special options support
     set spec_opts ""
     if {[info exist ::classoption($class)]} {
-        set spec_opts $::classoption($class)
+	set spec_opts $::classoption($class)
     }
 
     foreach opt [concat $vTcl(w,optlist) $spec_opts] {
@@ -929,164 +929,164 @@ proc vTcl:propmgr:show_rightclick_menu {base option variable X Y} {
 
     if {![winfo exists $base.menu_rightclk]} {
 
-        menu $base.menu_rightclk -tearoff 0
+	menu $base.menu_rightclk -tearoff 0
 
-        $base.menu_rightclk add cascade \
-                -menu "$base.menu_rightclk.men22" -accelerator {} -command {} -font {} \
-                -label {Reset to default}
+	$base.menu_rightclk add cascade \
+		-menu "$base.menu_rightclk.men22" -accelerator {} -command {} -font {} \
+		-label {Reset to default}
 
-        $base.menu_rightclk add separator
+	$base.menu_rightclk add separator
 
-        $base.menu_rightclk add cascade \
-                -menu "$base.menu_rightclk.men24" -accelerator {} -command {} -font {} \
-                -label {Do not save option for}
+	$base.menu_rightclk add cascade \
+		-menu "$base.menu_rightclk.men24" -accelerator {} -command {} -font {} \
+		-label {Do not save option for}
 
-        $base.menu_rightclk add cascade \
-                -menu "$base.menu_rightclk.men25" -accelerator {} -command {} -font {} \
-                -label {Save option for}
+	$base.menu_rightclk add cascade \
+		-menu "$base.menu_rightclk.men25" -accelerator {} -command {} -font {} \
+		-label {Save option for}
 
-        $base.menu_rightclk add separator
+	$base.menu_rightclk add separator
 
-        $base.menu_rightclk add cascade \
-                -menu "$base.menu_rightclk.men26" -accelerator {} -command {} -font {} \
-                -label {Apply to}
+	$base.menu_rightclk add cascade \
+		-menu "$base.menu_rightclk.men26" -accelerator {} -command {} -font {} \
+		-label {Apply to}
 
-        menu $base.menu_rightclk.men24 -tearoff 0
-
-        $base.menu_rightclk.men24 add command \
-                -accelerator {} \
-		-command {vTcl:prop:apply_opt $vTcl(w,widget) \
-			$::vTcl::_rclick_option $::vTcl::_rclick_variable \
-			subwidgets vTcl:prop:save_or_unsave_opt \
-                        0} \
-                -label {Same Class Subwidgets}
-
-        $base.menu_rightclk.men24 add command \
-                -accelerator {} \
-		-command {vTcl:prop:apply_opt $vTcl(w,widget) \
-			$::vTcl::_rclick_option $::vTcl::_rclick_variable \
-			frame vTcl:prop:save_or_unsave_opt \
-                        0} \
-                -label {All Same Class Widgets in same Parent}
-
-        $base.menu_rightclk.men24 add command \
-                -accelerator {} \
-		-command {vTcl:prop:apply_opt $vTcl(w,widget) \
-			$::vTcl::_rclick_option $::vTcl::_rclick_variable \
-			toplevel vTcl:prop:save_or_unsave_opt \
-                        0} \
-                -label {All Same Class Widgets in toplevel}
+	menu $base.menu_rightclk.men24 -tearoff 0
 
 	$base.menu_rightclk.men24 add command \
-                -accelerator {} \
-		-command {vTcl:prop:apply_opt $vTcl(w,widget) \
-			$::vTcl::_rclick_option $::vTcl::_rclick_variable \
-			all vTcl:prop:save_or_unsave_opt \
-                        0} \
-                -label {All Same Class Widgets in this project}
-
-        menu $base.menu_rightclk.men25 -tearoff 0
-
-        $base.menu_rightclk.men25 add command \
-                -accelerator {} \
+		-accelerator {} \
 		-command {vTcl:prop:apply_opt $vTcl(w,widget) \
 			$::vTcl::_rclick_option $::vTcl::_rclick_variable \
 			subwidgets vTcl:prop:save_or_unsave_opt \
-                        1} \
-                -label {Same Class Subwidgets}
+			0} \
+		-label {Same Class Subwidgets}
 
-        $base.menu_rightclk.men25 add command \
-                -accelerator {} \
+	$base.menu_rightclk.men24 add command \
+		-accelerator {} \
 		-command {vTcl:prop:apply_opt $vTcl(w,widget) \
 			$::vTcl::_rclick_option $::vTcl::_rclick_variable \
 			frame vTcl:prop:save_or_unsave_opt \
-                        1} \
-                -label {All Same Class Widgets in same Parent}
+			0} \
+		-label {All Same Class Widgets in same Parent}
 
-        $base.menu_rightclk.men25 add command \
-                -accelerator {} \
+	$base.menu_rightclk.men24 add command \
+		-accelerator {} \
 		-command {vTcl:prop:apply_opt $vTcl(w,widget) \
 			$::vTcl::_rclick_option $::vTcl::_rclick_variable \
 			toplevel vTcl:prop:save_or_unsave_opt \
-                        1} \
-                -label {All Same Class Widgets in toplevel}
-        $base.menu_rightclk.men25 add command \
-                -accelerator {} \
+			0} \
+		-label {All Same Class Widgets in toplevel}
+
+	$base.menu_rightclk.men24 add command \
+		-accelerator {} \
 		-command {vTcl:prop:apply_opt $vTcl(w,widget) \
 			$::vTcl::_rclick_option $::vTcl::_rclick_variable \
 			all vTcl:prop:save_or_unsave_opt \
-                        1} \
-                -label {All Same Class Widgets in this project}
+			0} \
+		-label {All Same Class Widgets in this project}
 
-        menu $base.menu_rightclk.men26 -tearoff 0
+	menu $base.menu_rightclk.men25 -tearoff 0
 
-        $base.menu_rightclk.men26 add command \
-                -accelerator {} \
+	$base.menu_rightclk.men25 add command \
+		-accelerator {} \
+		-command {vTcl:prop:apply_opt $vTcl(w,widget) \
+			$::vTcl::_rclick_option $::vTcl::_rclick_variable \
+			subwidgets vTcl:prop:save_or_unsave_opt \
+			1} \
+		-label {Same Class Subwidgets}
+
+	$base.menu_rightclk.men25 add command \
+		-accelerator {} \
+		-command {vTcl:prop:apply_opt $vTcl(w,widget) \
+			$::vTcl::_rclick_option $::vTcl::_rclick_variable \
+			frame vTcl:prop:save_or_unsave_opt \
+			1} \
+		-label {All Same Class Widgets in same Parent}
+
+	$base.menu_rightclk.men25 add command \
+		-accelerator {} \
+		-command {vTcl:prop:apply_opt $vTcl(w,widget) \
+			$::vTcl::_rclick_option $::vTcl::_rclick_variable \
+			toplevel vTcl:prop:save_or_unsave_opt \
+			1} \
+		-label {All Same Class Widgets in toplevel}
+	$base.menu_rightclk.men25 add command \
+		-accelerator {} \
+		-command {vTcl:prop:apply_opt $vTcl(w,widget) \
+			$::vTcl::_rclick_option $::vTcl::_rclick_variable \
+			all vTcl:prop:save_or_unsave_opt \
+			1} \
+		-label {All Same Class Widgets in this project}
+
+	menu $base.menu_rightclk.men26 -tearoff 0
+
+	$base.menu_rightclk.men26 add command \
+		-accelerator {} \
 		-command {vTcl:prop:apply_opt $vTcl(w,widget) \
 			$::vTcl::_rclick_option $::vTcl::_rclick_variable \
 			subwidgets vTcl:prop:set_opt \
-                        [set $::vTcl::_rclick_variable]} \
-                -label {Same Class Subwidgets}
+			[set $::vTcl::_rclick_variable]} \
+		-label {Same Class Subwidgets}
 
-        $base.menu_rightclk.men26 add command \
-                -accelerator {} \
+	$base.menu_rightclk.men26 add command \
+		-accelerator {} \
 		-command {vTcl:prop:apply_opt $vTcl(w,widget) \
 			$::vTcl::_rclick_option $::vTcl::_rclick_variable \
 			frame vTcl:prop:set_opt \
-                        [set $::vTcl::_rclick_variable]} \
-                -label {All Same Class Widgets in same Parent}
+			[set $::vTcl::_rclick_variable]} \
+		-label {All Same Class Widgets in same Parent}
 
-        $base.menu_rightclk.men26 add command \
-                -accelerator {} \
+	$base.menu_rightclk.men26 add command \
+		-accelerator {} \
 		-command {vTcl:prop:apply_opt $vTcl(w,widget) \
 			$::vTcl::_rclick_option $::vTcl::_rclick_variable \
 			toplevel vTcl:prop:set_opt \
-                        [set $::vTcl::_rclick_variable]} \
-                -label {All Same Class Widgets in toplevel}
+			[set $::vTcl::_rclick_variable]} \
+		-label {All Same Class Widgets in toplevel}
 
-        $base.menu_rightclk.men26 add command \
-                -accelerator {} \
+	$base.menu_rightclk.men26 add command \
+		-accelerator {} \
 		-command {vTcl:prop:apply_opt $vTcl(w,widget) \
 			$::vTcl::_rclick_option $::vTcl::_rclick_variable \
 			all vTcl:prop:set_opt \
-                        [set $::vTcl::_rclick_variable]} \
-                -label {All Same Class Widgets in this project}
+			[set $::vTcl::_rclick_variable]} \
+		-label {All Same Class Widgets in this project}
 
-        menu $base.menu_rightclk.men22 -tearoff 0
+	menu $base.menu_rightclk.men22 -tearoff 0
 
-        $base.menu_rightclk.men22 add command \
-                -accelerator {} \
+	$base.menu_rightclk.men22 add command \
+		-accelerator {} \
 		-command {vTcl:prop:default_opt $vTcl(w,widget) \
 			$::vTcl::_rclick_option $::vTcl::_rclick_variable} \
-                -label {This Widget}
+		-label {This Widget}
 
-        $base.menu_rightclk.men22 add command \
-                -accelerator {} \
+	$base.menu_rightclk.men22 add command \
+		-accelerator {} \
 		-command {vTcl:prop:apply_opt $vTcl(w,widget) \
 			$::vTcl::_rclick_option $::vTcl::_rclick_variable \
 			subwidgets vTcl:prop:default_opt} \
-                -label {Same Class Subwidgets}
+		-label {Same Class Subwidgets}
 
-        $base.menu_rightclk.men22 add command \
-                -accelerator {} \
+	$base.menu_rightclk.men22 add command \
+		-accelerator {} \
 		-command {vTcl:prop:apply_opt $vTcl(w,widget) \
 			$::vTcl::_rclick_option $::vTcl::_rclick_variable \
 			frame vTcl:prop:default_opt} \
-                -label {All Same Class Widgets in same Parent}
+		-label {All Same Class Widgets in same Parent}
 
-        $base.menu_rightclk.men22 add command \
-                -accelerator {} \
+	$base.menu_rightclk.men22 add command \
+		-accelerator {} \
 		-command {vTcl:prop:apply_opt $vTcl(w,widget) \
 			$::vTcl::_rclick_option $::vTcl::_rclick_variable \
 			toplevel vTcl:prop:default_opt} \
-                -label {All Same Class Widgets in toplevel}
+		-label {All Same Class Widgets in toplevel}
 
-        $base.menu_rightclk.men22 add command \
-                -accelerator {} \
+	$base.menu_rightclk.men22 add command \
+		-accelerator {} \
 		-command {vTcl:prop:apply_opt $vTcl(w,widget) \
 			$::vTcl::_rclick_option $::vTcl::_rclick_variable \
 			all vTcl:prop:default_opt} \
-                -label {All Same Class Widgets in this project}
+		-label {All Same Class Widgets in this project}
     }
 
     set ::vTcl::_rclick_option   $option
@@ -1169,26 +1169,26 @@ proc vTcl:prop:save_or_unsave_opt {w opt varName save_or_not} {
 # class as w
 #
 # Parameters:
-#   w         currently selected widget
+#   w	 currently selected widget
 #   opt       the option to change (eg. -background)
 #   varName   name of variable for display in attributes editor
 #   extent    which widgets to modify; can be one of
 #	      frame
 #		  apply to given widget and all in same parent
-#             subwidgets
-#                 apply to given widget and all its subwidgets
-#             toplevel
-#                 apply to all widgets in toplevel containing given widget
-#             all
-#                 apply to all widgets in the current project
+#	     subwidgets
+#		 apply to given widget and all its subwidgets
+#	     toplevel
+#		 apply to all widgets in toplevel containing given widget
+#	     all
+#		 apply to all widgets in the current project
 #   action    name of proc to call for each widget
-#             this callback proc should have the following parameters:
-#                 w          widget to modify
-#                 opt        option name (eg. -cursor)
-#                 varName    name of variable in attributes editor
-#                 user_param optional parameter
+#	     this callback proc should have the following parameters:
+#		 w	  widget to modify
+#		 opt	option name (eg. -cursor)
+#		 varName    name of variable in attributes editor
+#		 user_param optional parameter
 #   user_param
-#             value of optional user parameter
+#	     value of optional user parameter
 
 proc vTcl:prop:apply_opt {w opt varName extent action {user_param {}}} {
 
@@ -1206,23 +1206,23 @@ proc vTcl:prop:apply_opt {w opt varName extent action {user_param {}}} {
     }
     toplevel {
 	set top [winfo toplevel $w]
-        set widgets [vTcl:complete_widget_tree $top 0]
+	set widgets [vTcl:complete_widget_tree $top 0]
     }
     all {
-        set widgets [vTcl:complete_widget_tree . 0]
+	set widgets [vTcl:complete_widget_tree . 0]
     }
     frame {
-        set widgets [list]
-        set man  [winfo manager $w]
-        set par  [winfo parent $w]
-        if {$man == "grid" || $man == "pack" || $man == "place"} {
-            set widgets [$man slaves $par]
-        }
+	set widgets [list]
+	set man  [winfo manager $w]
+	set par  [winfo parent $w]
+	if {$man == "grid" || $man == "pack" || $man == "place"} {
+	    set widgets [$man slaves $par]
+	}
     }
     }
 
     foreach widget $widgets {
-        if {[vTcl:get_class $widget] == $class} {
+	if {[vTcl:get_class $widget] == $class} {
 	    $action $widget $opt $varName $user_param
 	}
     }
@@ -1242,35 +1242,35 @@ proc vTcl:propmgr:scrollWheelMouse {delta label} {
 namespace eval ::vTcl::properties {
 
     proc setAlias {target aliasVar entryWidget} {
-        if {![winfo exists $target]} return
+	if {![winfo exists $target]} return
 
-        set alias [set $aliasVar]
+	set alias [set $aliasVar]
 
-        ## has the alias changed ? no, really, just asking
-        if {[info exists ::widget(rev,$target)] &&
-            $::widget(rev,$target) == $alias} {
-            return
-        }
+	## has the alias changed ? no, really, just asking
+	if {[info exists ::widget(rev,$target)] &&
+	    $::widget(rev,$target) == $alias} {
+	    return
+	}
 
-        set valid [vTcl:valid_alias $target $alias]
-        if {!$valid} {
-            ## disable focusOut binding before showing message box
-            set oldBind [bind $entryWidget <FocusOut>]
+	set valid [vTcl:valid_alias $target $alias]
+	if {!$valid} {
+	    ## disable focusOut binding before showing message box
+	    set oldBind [bind $entryWidget <FocusOut>]
 
-            ## now we can show the message box
-            ::vTcl::MessageBox -message "Alias '$alias' already exists"
+	    ## now we can show the message box
+	    ::vTcl::MessageBox -message "Alias '$alias' already exists"
 
-            ## restore focusOut binding after message box is dismissed
-            bind $entryWidget <FocusOut> $oldBind
-            return
-        }
+	    ## restore focusOut binding after message box is dismissed
+	    bind $entryWidget <FocusOut> $oldBind
+	    return
+	}
 
-        ## user wants to unset alias?
-        if {$alias == ""} {
-            vTcl:unset_alias $target
-        } else {
-            vTcl:set_alias $target $alias
-        }
+	## user wants to unset alias?
+	if {$alias == ""} {
+	    vTcl:unset_alias $target
+	} else {
+	    vTcl:set_alias $target $alias
+	}
     }
 }
 

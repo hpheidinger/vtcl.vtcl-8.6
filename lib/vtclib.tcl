@@ -36,24 +36,24 @@ proc Window {args} {
     if {$name == "."} { wm withdraw $name; return }
     set exists [winfo exists $newname]
     switch $cmd {
-        show {
-            if {$exists} {
-                wm deiconify $newname
-            } elseif {[info procs vTclWindow$name] != ""} {
-                eval "vTclWindow$name $newname $rest"
-            }
-            if {[winfo exists $newname] && [wm state $newname] == "normal"} {
-                vTcl:FireEvent $newname <<Show>>
-            }
-        }
-        hide    {
-            if {$exists} {
-                wm withdraw $newname
-                vTcl:FireEvent $newname <<Hide>>
-                return}
-        }
-        iconify { if $exists {wm iconify $newname; return} }
-        destroy { if $exists {destroy $newname; return} }
+	show {
+	    if {$exists} {
+		wm deiconify $newname
+	    } elseif {[info procs vTclWindow$name] != ""} {
+		eval "vTclWindow$name $newname $rest"
+	    }
+	    if {[winfo exists $newname] && [wm state $newname] == "normal"} {
+		vTcl:FireEvent $newname <<Show>>
+	    }
+	}
+	hide    {
+	    if {$exists} {
+		wm withdraw $newname
+		vTcl:FireEvent $newname <<Hide>>
+		return}
+	}
+	iconify { if $exists {wm iconify $newname; return} }
+	destroy { if $exists {destroy $newname; return} }
     }
 }
 
@@ -64,8 +64,8 @@ proc vTcl:WidgetProc {w args} {
     ##    Please read their license agreements for details.
 
     if {[llength $args] == 0} {
-        ## If no arguments, returns the path the alias points to
-        return $w
+	## If no arguments, returns the path the alias points to
+	return $w
     }
 
     set command [lindex $args 0]
@@ -83,13 +83,13 @@ proc vTcl:DefineAlias {target alias widgetProc top_or_alias cmdalias} {
     set widget($alias) $target
     set widget(rev,$target) $alias
     if {$cmdalias} {
-        interp alias {} $alias {} $widgetProc $target
+	interp alias {} $alias {} $widgetProc $target
     }
     if {$top_or_alias != ""} {
-        set widget($top_or_alias,$alias) $target
-        if {$cmdalias} {
-            interp alias {} $top_or_alias.$alias {} $widgetProc $target
-        }
+	set widget($top_or_alias,$alias) $target
+	if {$cmdalias} {
+	    interp alias {} $top_or_alias.$alias {} $widgetProc $target
+	}
     }
 }
 
@@ -103,25 +103,25 @@ proc vTcl:FireEvent {target event {params {}}} {
     if {![winfo exists $target]} return
     ## Process each binding tag, looking for the event
     foreach bindtag [bindtags $target] {
-        set tag_events [bind $bindtag]
-        set stop_processing 0
-        foreach tag_event $tag_events {
-            if {$tag_event == $event} {
-                set bind_code [bind $bindtag $tag_event]
-                foreach rep "\{%W $target\} $params" {
-                    regsub -all [lindex $rep 0] $bind_code [lindex $rep 1] bind_code
-                }
-                set result [catch {uplevel #0 $bind_code} errortext]
-                if {$result == 3} {
-                    ## break exception, stop processing
-                    set stop_processing 1
-                } elseif {$result != 0} {
-                    bgerror $errortext
-                }
-                break
-            }
-        }
-        if {$stop_processing} {break}
+	set tag_events [bind $bindtag]
+	set stop_processing 0
+	foreach tag_event $tag_events {
+	    if {$tag_event == $event} {
+		set bind_code [bind $bindtag $tag_event]
+		foreach rep "\{%W $target\} $params" {
+		    regsub -all [lindex $rep 0] $bind_code [lindex $rep 1] bind_code
+		}
+		set result [catch {uplevel #0 $bind_code} errortext]
+		if {$result == 3} {
+		    ## break exception, stop processing
+		    set stop_processing 1
+		} elseif {$result != 0} {
+		    bgerror $errortext
+		}
+		break
+	    }
+	}
+	if {$stop_processing} {break}
     }
 }
 
@@ -138,13 +138,13 @@ You should remove any calls to vTcl:WindowsCleanup before saving your project." 
 # Two utilities:
 #
 # info script: returns the absolute filename of the currently
-#              interpreted script.
+#	      interpreted script.
 # chase filename: chases a given path "filename" and follows any
-#              symlinks until getting a real file/directory or
-#              whatever, or until 8 levels of symlinks are reached,
-#              when it aborts with an error message.
-#              The nesting level can be changed at the location
-#              "$count ==" below
+#	      symlinks until getting a real file/directory or
+#	      whatever, or until 8 levels of symlinks are reached,
+#	      when it aborts with an error message.
+#	      The nesting level can be changed at the location
+#	      "$count ==" below
 #
 
 proc {chasehelper} {filename {count 0}} {
@@ -162,7 +162,7 @@ proc {info_script} {} {
 
     set scriptinfo [info script]
     if {$::tcl_platform(platform) != "unix"} {
-        return $scriptinfo      ;# windows/mac don't have symbolic links
+	return $scriptinfo      ;# windows/mac don't have symbolic links
     }
 
     if {[string index $scriptinfo 0] == "!"} then {
@@ -173,7 +173,7 @@ proc {info_script} {} {
 	if {[lindex $scriptpath 0] == "."} {
 	    set scriptpath [lrange $scriptpath 1 [llength $scriptpath]]
 	}
-        set filename [eval file join [pwd] $scriptpath]
+	set filename [eval file join [pwd] $scriptpath]
 
 	set scriptdir [chasehelper $filename]
     }

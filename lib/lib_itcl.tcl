@@ -36,14 +36,14 @@ proc vTcl:lib_itcl:init {} {
     global vTcl
 
     if {[catch {
-        package require itcl
-        package require itk
-        package require iwidgets
+	package require itcl
+	package require Itk
+	package require iwidgets
     } errorText]} {
-        vTcl:log $errorText
-        lappend vTcl(libNames) \
-            {(not detected) Incr Tcl/Tk MegaWidgets Support Library}
-        return 0
+	vTcl:log $errorText
+	lappend vTcl(libNames) \
+	    {(not detected) Incr Tcl/Tk MegaWidgets Support Library}
+	return 0
     }
     lappend vTcl(libNames) {Incr Tcl/Tk MegaWidgets Support Library}
     return 1
@@ -60,14 +60,14 @@ proc vTcl:widget:lib:lib_itcl {args} {
     package require itcl
 
     # Needs Itk
-    package require itk
+    package require Itk
 
     # Needs Iwidgets
     package require iwidgets
 
     switch $tcl_platform(platform) {
 	windows {
-            option add *Pushbutton.padY         0
+	    option add *Pushbutton.padY	 0
 	}
 	default {
 	    option add *Scrolledhtml.sbWidth    10
@@ -75,20 +75,20 @@ proc vTcl:widget:lib:lib_itcl {args} {
 	    option add *Scrolledlistbox.sbWidth 10
 	    option add *Scrolledframe.sbWidth   10
 	    option add *Hierarchy.sbWidth       10
-            option add *Pushbutton.padY         2
-        }
+	    option add *Pushbutton.padY	 2
+	}
     }
     }
 
     set order {Entryfield Spinint Spintime Combobox Scrolledlistbox Calendar
-               Dateentry Scrolledhtml Toolbar Feedback Optionmenu
-               Hierarchy Buttonbox Checkbox Radiobox Labeledframe
-               Notebook Tabnotebook Panedwindow Scrolledtext Scrolledcanvas
-               Scrolledframe}
+	       Dateentry Scrolledhtml Toolbar Feedback Optionmenu
+	       Hierarchy Buttonbox Checkbox Radiobox Labeledframe
+	       Notebook Tabnotebook Panedwindow Scrolledtext Scrolledcanvas
+	       Scrolledframe}
 
     ## avoid conflicts with Tk 8.4
     if {[info tclversion] >= 8.4} {
-        ::vTcl::lremove order Panedwindow
+	::vTcl::lremove order Panedwindow
     }
 
     vTcl:lib:add_widgets_to_toolbar $order Incr  "Incr Widgets"
@@ -96,7 +96,7 @@ proc vTcl:widget:lib:lib_itcl {args} {
     lappend vTcl(proc,ignore) "::iwidgets::*"
 
     foreach cmd [string tolower $order] {
-        lappend vTcl(proc,ignore) "$cmd"
+	lappend vTcl(proc,ignore) "$cmd"
     }
 
     button .tmp
@@ -114,17 +114,17 @@ proc vTcl:lib_itcl:setup {} {
     # additional attributes to set on insert
     #
     set vTcl(scrolledlistbox,insert)    "-labeltext {Label:} "
-    set vTcl(combobox,insert)           "-labeltext {Label:} "
-    set vTcl(entryfield,insert)         "-labeltext {Label:} "
-    set vTcl(spinint,insert)            "-labeltext {Label:} -range {0 10} -step 1"
-    set vTcl(calendar,insert)           ""
-    set vTcl(dateentry,insert)	        "-labeltext {Selected date:}"
+    set vTcl(combobox,insert)	   "-labeltext {Label:} "
+    set vTcl(entryfield,insert)	 "-labeltext {Label:} "
+    set vTcl(spinint,insert)	    "-labeltext {Label:} -range {0 10} -step 1"
+    set vTcl(calendar,insert)	   ""
+    set vTcl(dateentry,insert)		"-labeltext {Selected date:}"
     set vTcl(scrolledhtml,insert)       ""
-    set vTcl(toolbar,insert)            ""
-    set vTcl(feedback,insert)           "-labeltext {Percent complete:}"
-    set vTcl(optionmenu,insert)         "-labeltext {Select option:}"
-    set vTcl(hierarchy,insert)          ""
-    set vTcl(panedwindow,insert)        ""
+    set vTcl(toolbar,insert)	    ""
+    set vTcl(feedback,insert)	   "-labeltext {Percent complete:}"
+    set vTcl(optionmenu,insert)	 "-labeltext {Select option:}"
+    set vTcl(hierarchy,insert)	  ""
+    set vTcl(panedwindow,insert)	""
     set vTcl(scrolledtext,insert)       ""
 
     TranslateOption    -textfont vTcl:font:translate
@@ -138,17 +138,17 @@ proc vTcl:lib_itcl:setup {} {
 
     ## under Windows, we want to use the default values
     switch $tcl_platform(platform) {
-        windows {
-            option add *Pushbutton.padY         0
-        }
-        default {
-            option add *Scrolledhtml.sbWidth    10
-            option add *Scrolledtext.sbWidth    10
-            option add *Scrolledlistbox.sbWidth 10
+	windows {
+	    option add *Pushbutton.padY	 0
+	}
+	default {
+	    option add *Scrolledhtml.sbWidth    10
+	    option add *Scrolledtext.sbWidth    10
+	    option add *Scrolledlistbox.sbWidth 10
 	    option add *Scrolledframe.sbWidth   10
-            option add *Hierarchy.sbWidth       10
-            option add *Pushbutton.padY         2
-        }
+	    option add *Hierarchy.sbWidth       10
+	    option add *Pushbutton.padY	 2
+	}
     }
 
     # hum... this is not too clean, but the hierarchy widget creates
@@ -181,16 +181,16 @@ proc vTcl:lib_itcl:dump_subwidgets {subwidget {sitebasename {}}} {
 
     foreach i $widget_tree {
 
-        set basename [vTcl:base_name $i]
+	set basename [vTcl:base_name $i]
 
-        # don't try to dump subwidget itself
-        if {"$i" != "$subwidget"} {
-            set basenames($i) $basename
-            set class [vTcl:get_class $i]
-            append output [$classes($class,dumpCmd) $i $basename]
-            append geometry [vTcl:dump_widget_geom $i $basename]
-            catch {unset basenames($i)}
-        }
+	# don't try to dump subwidget itself
+	if {"$i" != "$subwidget"} {
+	    set basenames($i) $basename
+	    set class [vTcl:get_class $i]
+	    append output [$classes($class,dumpCmd) $i $basename]
+	    append geometry [vTcl:dump_widget_geom $i $basename]
+	    catch {unset basenames($i)}
+	}
     }
 
     ## don't forget to dump grid geometry though
@@ -213,9 +213,9 @@ proc vTcl:lib_itcl:tagscmd {target} {
     set toplevel [winfo toplevel $target]
 
     if {$special == -1} {
-        return [list $target $class $toplevel all]
+	return [list $target $class $toplevel all]
     } else {
-        return [list [lindex $tags $special] $target $class $toplevel all]
+	return [list [lindex $tags $special] $target $class $toplevel all]
     }
 }
 
@@ -229,18 +229,18 @@ namespace eval vTcl::widgets::iwidgets::boxes {
     }
 
     proc update_pages {target var} {
-        ## there is a trace on var to update the combobox
-        ## first item in the list is the current index
-        set last -1
-        catch {set last [$target index end]}
-        set values 0
-        for {set i 0} {$i <= $last} {incr i} {
-            set labelOption [$target buttonconfigure $i -text]
-            lappend values [lindex $labelOption 4]
-        }
+	## there is a trace on var to update the combobox
+	## first item in the list is the current index
+	set last -1
+	catch {set last [$target index end]}
+	set values 0
+	for {set i 0} {$i <= $last} {incr i} {
+	    set labelOption [$target buttonconfigure $i -text]
+	    lappend values [lindex $labelOption 4]
+	}
 
-        ## this will trigger the trace
-        set ::$var $values
+	## this will trigger the trace
+	set ::$var $values
     }
 
     proc config_pages {target var} {
@@ -250,45 +250,45 @@ namespace eval vTcl::widgets::iwidgets::boxes {
     }
 
     proc getOptions {target opts} {
-        set result {}
-        set last -1
-        catch {set last [$target index end]}
-        for {set i 0} {$i <= $last} {incr i} {
-            foreach opt $opts {
-                set value [lindex [$target buttonconfigure $i $opt] 4]
-                if {$value != ""} {
-                    lappend result $value
-                }
-            }
-        }
-        return $result
+	set result {}
+	set last -1
+	catch {set last [$target index end]}
+	for {set i 0} {$i <= $last} {incr i} {
+	    foreach opt $opts {
+		set value [lindex [$target buttonconfigure $i $opt] 4]
+		if {$value != ""} {
+		    lappend result $value
+		}
+	    }
+	}
+	return $result
     }
 
     proc getImagesCmd {target} {
-        switch [vTcl:get_class $target] {
-        Radiobox - Checkbox {
-            set opts {-image -selectimage}
-        }
-        default {
-            set opts -image
-        }
-        }
-        return [getOptions $target $opts]
+	switch [vTcl:get_class $target] {
+	Radiobox - Checkbox {
+	    set opts {-image -selectimage}
+	}
+	default {
+	    set opts -image
+	}
+	}
+	return [getOptions $target $opts]
     }
 
     proc getFontsCmd {target} {
-        return [getOptions $target -font]
+	return [getOptions $target -font]
     }
 
     proc setDefaultValues {target opts} {
-        set last -1
-        catch {set last [$target index end]}
-        for {set i 0} {$i <= $last} {incr i} {
-            foreach opt $opts {
-                set default [lindex [$target buttonconfigure $i $opt] 3]
-                $target buttonconfigure $i $opt $default
-            }
-        }
+	set last -1
+	catch {set last [$target index end]}
+	for {set i 0} {$i <= $last} {incr i} {
+	    foreach opt $opts {
+		set default [lindex [$target buttonconfigure $i $opt] 3]
+		$target buttonconfigure $i $opt $default
+	    }
+	}
     }
 }
 
@@ -300,60 +300,60 @@ namespace eval vTcl::widgets::iwidgets::boxes::edit {
     variable counter 0
 
     proc getTitle {target} {
-        return "Edit boxes for $target"
+	return "Edit boxes for $target"
     }
 
     proc getLabelOption {} {
-        return -text
+	return -text
     }
 
     proc getItems {target} {
-        ## first item in the list is the current index
-        set last -1
-        catch {set last [$target index end]}
-        set values 0
-        for {set i 0} {$i <= $last} {incr i} {
-            set labelOption [$target buttonconfigure $i -text]
-            lappend values [lindex $labelOption 4]
-        }
-        return $values
+	## first item in the list is the current index
+	set last -1
+	catch {set last [$target index end]}
+	set values 0
+	for {set i 0} {$i <= $last} {incr i} {
+	    set labelOption [$target buttonconfigure $i -text]
+	    lappend values [lindex $labelOption 4]
+	}
+	return $values
     }
 
     proc addItem {target} {
-        variable counter
-        incr counter
-        $target add tag_$counter -text "New Box"
-        if {$::vTcl(w,widget) == $target} {
-            vTcl:place_handles $target
-        }
-        return "New Box"
+	variable counter
+	incr counter
+	$target add tag_$counter -text "New Box"
+	if {$::vTcl(w,widget) == $target} {
+	    vTcl:place_handles $target
+	}
+	return "New Box"
     }
 
     proc removeItem {target index} {
-        $target delete $index
-        if {$::vTcl(w,widget) == $target} {
-            vTcl:place_handles $target
-        }
+	$target delete $index
+	if {$::vTcl(w,widget) == $target} {
+	    vTcl:place_handles $target
+	}
     }
 
     proc itemConfigure {target index args} {
-        if {$args == ""} {
-            set options [$target buttonconfigure $index]
-            set result ""
-            foreach option $options {
-                ## only return valid options
-                if {[llength $option] == 5} {
-                    lappend result $option
-                }
-            }
-            return $result
-        } else {
-            eval $target buttonconfigure $index $args
-        }
+	if {$args == ""} {
+	    set options [$target buttonconfigure $index]
+	    set result ""
+	    foreach option $options {
+		## only return valid options
+		if {[llength $option] == 5} {
+		    lappend result $option
+		}
+	    }
+	    return $result
+	} else {
+	    eval $target buttonconfigure $index $args
+	}
     }
 
     proc moveUpOrDown {target index direction} {
-        error "Not implemented yet!"
+	error "Not implemented yet!"
     }
 }
 
@@ -372,8 +372,8 @@ proc vTcl:lib_itcl:update_pages {target var} {
     set num_pages [llength $sites]
     set values $current
     for {set i 0} {$i < $num_pages} {incr i} {
-        set label_opt [$target pageconfigure $i -label]
-        lappend values [lindex $label_opt 4]
+	set label_opt [$target pageconfigure $i -label]
+	lappend values [lindex $label_opt 4]
     }
 
     ## this will trigger the trace
@@ -393,71 +393,71 @@ proc vTcl:lib_itcl:select_page {target index} {
 namespace eval vTcl::widgets::iwidgets::notebooks::edit {
 
     proc saveBkgnd {w} {
-        namespace eval ::widgets::${w}::options {}
-        namespace eval ::widgets::${w}::save    {}
-        vTcl:WidgetVar $w options
-        vTcl:WidgetVar $w save
+	namespace eval ::widgets::${w}::options {}
+	namespace eval ::widgets::${w}::save    {}
+	vTcl:WidgetVar $w options
+	vTcl:WidgetVar $w save
 	set value [$w cget -background]
-        set options(-background) $value
+	set options(-background) $value
 	set save(-background) 1
     }
 
     proc getTitle {target} {
-        return "Edit pages for $target"
+	return "Edit pages for $target"
     }
 
     proc getLabelOption {} {
-        return -label
+	return -label
     }
 
     proc getItems {target} {
-        ## first item in the list is the current index
-        set sites [$target childsite]
-        set current [$target index select]
-        if {$current == -1} {
-            set current 0
-        }
-        set values $current
-        for {set i 0} {$i < [llength $sites]} {incr i} {
-            set labelOption [$target pageconfigure $i -label]
-            lappend values [lindex $labelOption 4]
-        }
-        return $values
+	## first item in the list is the current index
+	set sites [$target childsite]
+	set current [$target index select]
+	if {$current == -1} {
+	    set current 0
+	}
+	set values $current
+	for {set i 0} {$i < [llength $sites]} {incr i} {
+	    set labelOption [$target pageconfigure $i -label]
+	    lappend values [lindex $labelOption 4]
+	}
+	return $values
     }
 
     proc addItem {target} {
-        $target add -label "New Page"
-        $target select end
-        vTcl:init_wtree
+	$target add -label "New Page"
+	$target select end
+	vTcl:init_wtree
 	set page [lindex [$target childsite] end]
-        saveBkgnd $page
+	saveBkgnd $page
 
-        return "New Page"
+	return "New Page"
     }
 
     proc removeItem {target index} {
-        $target delete $index
-        vTcl:init_wtree
+	$target delete $index
+	vTcl:init_wtree
     }
 
     proc itemConfigure {target index args} {
-        if {$args == ""} {
-            set options [$target pageconfigure $index]
-            set result ""
-            foreach option $options {
-                ## only return valid options
-                if {[llength $option] == 5} {
-                    lappend result $option
-                }
-            }
-            return $result
-        } else {
-            eval $target pageconfigure $index $args
-        }
+	if {$args == ""} {
+	    set options [$target pageconfigure $index]
+	    set result ""
+	    foreach option $options {
+		## only return valid options
+		if {[llength $option] == 5} {
+		    lappend result $option
+		}
+	    }
+	    return $result
+	} else {
+	    eval $target pageconfigure $index $args
+	}
     }
 
     proc moveUpOrDown {target index direction} {
-        error "Not implemented yet!"
+	error "Not implemented yet!"
     }
 }
 

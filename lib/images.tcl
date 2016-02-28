@@ -29,6 +29,7 @@
 set vTcl(image,filetypes) {
    {{All Files}          *            }
    {{GIF Files}          {.gif}       }
+   {{PNG Files}          {.png}       }
    {{Portable Pixel Map} {.ppm}       }
    {{X Windows Bitmap}   {.xbm}       }
 }
@@ -45,7 +46,8 @@ proc vTcl:image:get_creation_type {filename} {
         .ppm -
         .jpg -
         .bmp -
-        .gif    {return photo}
+        .gif -
+	.png	{return photo}
         .xbm    {return bitmap}
         default {return photo}
     }

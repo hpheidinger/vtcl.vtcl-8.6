@@ -27,10 +27,10 @@ namespace eval ::stack_trace {
 
 proc vTclWindow.vTcl.bgerror {base} {
     if {$base == ""} {
-        set base .vTcl.bgerror
+	set base .vTcl.bgerror
     }
     if {[winfo exists $base]} {
-        wm deiconify $base; return
+	wm deiconify $base; return
     }
 
     global [vTcl:rename $base.error]
@@ -56,64 +56,64 @@ proc vTclWindow.vTcl.bgerror {base} {
     wm deiconify $base
     wm title $base "Error"
     wm protocol $base WM_DELETE_WINDOW "
-            set [vTcl:rename $base.dialogStatus] ok
-            destroy $base"
+	    set [vTcl:rename $base.dialogStatus] ok
+	    destroy $base"
     
     frame $base.fra20 \
-        -borderwidth 2
+	-borderwidth 2
     label $base.fra20.lab21 \
-        -bitmap error -borderwidth 0 \
-        -padx 0 -pady 0 -relief raised -text label
+	-bitmap error -borderwidth 0 \
+	-padx 0 -pady 0 -relief raised -text label
 
     ScrolledWindow $base.fra20.cpd23
     text $base.fra20.cpd23.03 \
-        -background #dcdcdc -font [vTcl:font:get_font "vTcl:font8"] \
-        -foreground #000000 -height 1 -highlightbackground #ffffff \
-        -highlightcolor #000000 -selectbackground #008080 \
-        -selectforeground #ffffff \
+	-background #dcdcdc -font [vTcl:font:get_font "vTcl:font8"] \
+	-foreground #000000 -height 1 -highlightbackground #ffffff \
+	-highlightcolor #000000 -selectbackground #008080 \
+	-selectforeground #ffffff \
 	-width 8 -wrap word 
 	
 
     $base.fra20.cpd23 setwidget $base.fra20.cpd23.03
 
     frame $base.fra25 \
-        -borderwidth 2
+	-borderwidth 2
     button $base.fra25.but26 \
-        -padx 9 -text OK \
-        -command "
-            set [vTcl:rename $base.dialogStatus] ok
-            destroy $base"
+	-padx 9 -text OK \
+	-command "
+	    set [vTcl:rename $base.dialogStatus] ok
+	    destroy $base"
     button $base.fra25.but27 \
-        -padx 9 -text {Skip messages} \
-        -command "set [vTcl:rename $base.dialogStatus] skip
-                  destroy $base"
+	-padx 9 -text {Skip messages} \
+	-command "set [vTcl:rename $base.dialogStatus] skip
+		  destroy $base"
     button $base.fra25.but28 \
-        -padx 9 -text {Stack Trace...}  \
-        -command "::vTcl::InitTkcon
-	          edit -attach \[::tkcon::Attach\] -type error -- [list $errorInfo]
-                  set [vTcl:rename $base.dialogStatus] ok
-                  after idle \{destroy $base\}"
+	-padx 9 -text {Stack Trace...}  \
+	-command "::vTcl::InitTkcon
+		  edit -attach \[::tkcon::Attach\] -type error -- [list $errorInfo]
+		  set [vTcl:rename $base.dialogStatus] ok
+		  after idle \{destroy $base\}"
 
     ###################
     # SETTING GEOMETRY
     ###################
     pack $base.fra20 \
-        -in $base -anchor center -expand 1 -fill both -pady 2 -side top
+	-in $base -anchor center -expand 1 -fill both -pady 2 -side top
     pack $base.fra20.lab21 \
-        -in $base.fra20 -anchor e -expand 0 -fill none -padx 5 -side left
+	-in $base.fra20 -anchor e -expand 0 -fill none -padx 5 -side left
 
     pack $base.fra20.cpd23 \
-        -in $base.fra20 -anchor center -expand 1 -fill both -padx 2 -side top
+	-in $base.fra20 -anchor center -expand 1 -fill both -padx 2 -side top
     pack $base.fra20.cpd23.03
 
     pack $base.fra25 \
-        -in $base -anchor center -expand 0 -fill x -pady 4 -side top
+	-in $base -anchor center -expand 0 -fill x -pady 4 -side top
     pack $base.fra25.but26 \
-        -in $base.fra25 -anchor center -expand 1 -fill none -side left
+	-in $base.fra25 -anchor center -expand 1 -fill none -side left
     pack $base.fra25.but27 \
-        -in $base.fra25 -anchor center -expand 1 -fill none -side left
+	-in $base.fra25 -anchor center -expand 1 -fill none -side left
     pack $base.fra25.but28 \
-        -in $base.fra25 -anchor center -expand 1 -fill none -side left
+	-in $base.fra25 -anchor center -expand 1 -fill none -side left
 
     $widget($base,error_box_text) insert 1.0 $error
     #The box must be disabled after the error is inserted
@@ -122,7 +122,6 @@ proc vTclWindow.vTcl.bgerror {base} {
 }
 
 proc bgerror {error} {
-
     global widget errorInfo
 
     incr ::stack_trace::boxIndex
@@ -149,8 +148,7 @@ proc bgerror {error} {
     unset [vTcl:rename $top.dialogStatus]
 
     if {$status != "skip"} {
-
-        return
+	return
     }
 
     return -code break

@@ -25,7 +25,7 @@
 proc vTcl:wm_take_focus {target} {
     global vTcl
     if {$vTcl(w,class) == "Toplevel"} {
-        set vTcl(w,insert) $target
+	set vTcl(w,insert) $target
     }
 
     after idle "vTcl:place_handles \"$vTcl(w,widget)\""
@@ -44,18 +44,18 @@ proc vTcl:show_top {target} {
     global vTcl
     if {[vTcl:streq $target "."]} { return }
     if [winfo exists $target] {
-        if {[vTcl:get_class $target] == "Toplevel"} {
-            wm deiconify $target
-            vTcl:raise $target
-        }
+	if {[vTcl:get_class $target] == "Toplevel"} {
+	    wm deiconify $target
+	    vTcl:raise $target
+	}
     } else {
-        Window show $target
-        wm deiconify $target
-        vTcl:raise $target
-        vTcl:widget:register_all_widgets $target
-        vTcl:setup_bind_widget $target
-        vTcl:update_top_list
-        vTcl:init_wtree
+	Window show $target
+	wm deiconify $target
+	vTcl:raise $target
+	vTcl:widget:register_all_widgets $target
+	vTcl:setup_bind_widget $target
+	vTcl:update_top_list
+	vTcl:init_wtree
     }
     vTcl:select_widget $target
     vTcl:destroy_handles
@@ -64,10 +64,10 @@ proc vTcl:show_top {target} {
 proc vTcl:hide_top {target} {
     global vTcl
     if [winfo exists $target] {
-        if {[vTcl:get_class $target] == "Toplevel"} {
-            wm withdraw $target
-            vTcl:select_widget .
-        }
+	if {[vTcl:get_class $target] == "Toplevel"} {
+	    wm withdraw $target
+	    vTcl:select_widget .
+	}
     }
 }
 
@@ -75,16 +75,16 @@ proc vTcl:update_top_list {} {
     global vTcl
     set base .vTcl.toplist
     if {[winfo exists $base]} {
-        $base.f2.list delete 0 end
-        set index 0
-        foreach i $vTcl(tops) {
-            if [catch {set n [wm title $i]}] {
-                set n $i
-            }
-            $base.f2.list insert end $n
-            set vTcl(tops,$index) $i
-            incr index
-        }
+	$base.f2.list delete 0 end
+	set index 0
+	foreach i $vTcl(tops) {
+	    if [catch {set n [wm title $i]}] {
+		set n $i
+	    }
+	    $base.f2.list insert end $n
+	    set vTcl(tops,$index) $i
+	    incr index
+	}
     }
 }
 
@@ -93,14 +93,14 @@ proc vTcl:convert_tops {} {
     global vTcl
 
     foreach i $vTcl(tops) {
-        if {![winfo exists $i]} {
-            # this is to convert 1.22 projects to 1.51
-            # 1.51 hidden toplevels exist but are hidden
-            # 1.2x hidden toplevels don't exist at all except
-            # their proc
-            vTcl:show_top $i
-            vTcl:hide_top $i
-        }
+	if {![winfo exists $i]} {
+	    # this is to convert 1.22 projects to 1.51
+	    # 1.51 hidden toplevels exist but are hidden
+	    # 1.2x hidden toplevels don't exist at all except
+	    # their proc
+	    vTcl:show_top $i
+	    vTcl:hide_top $i
+	}
     }
 }
 
@@ -126,10 +126,10 @@ proc vTcl:toplist:show {{on ""}} {
     if {$on == "flip"} { set on [expr - $vTcl(pr,show_top)] }
     if {$on == ""}     { set on $vTcl(pr,show_top) }
     if {$on == 1} {
-        Window show $vTcl(gui,toplist)
-        vTcl:update_top_list
+	Window show $vTcl(gui,toplist)
+	vTcl:update_top_list
     } else {
-        Window hide $vTcl(gui,toplist)
+	Window hide $vTcl(gui,toplist)
     }
     set vTcl(pr,show_top) $on
 }
@@ -142,7 +142,7 @@ proc vTcl:toplist:show_selection {base {show show}} {
     }
     	set vTcl(x) [$base.f2.list curselection]
     	if {$vTcl(x) != ""} {
-        vTcl:${show}_top $vTcl(tops,$vTcl(x))
+	vTcl:${show}_top $vTcl(tops,$vTcl(x))
     }
 }
 
@@ -165,29 +165,29 @@ proc vTclWindow.vTcl.toplist {args} {
     bind $base <Double-Button-1> "vTcl:toplist:show_selection $base"
 
     frame $base.frame7 \
-        -borderwidth 1 -height 30 -relief sunken -width 30
+	-borderwidth 1 -height 30 -relief sunken -width 30
     pack $base.frame7 \
-        -in $base -anchor center -expand 0 -fill x -ipadx 0 -ipady 0 \
-        -padx 0 -pady 0 -side top
+	-in $base -anchor center -expand 0 -fill x -ipadx 0 -ipady 0 \
+	-padx 0 -pady 0 -side top
     vTcl:toolbar_button $base.frame7.button8 \
-        -command "vTcl:toplist:show_selection $base" \
-        -padx 9 -pady 3 -image [vTcl:image:get_image show.gif]
+	-command "vTcl:toplist:show_selection $base" \
+	-padx 9 -pady 3 -image [vTcl:image:get_image show.gif]
     pack $base.frame7.button8 \
-        -in $base.frame7 -anchor center -expand 0 -fill none -ipadx 0 \
-        -ipady 0 -padx 0 -pady 0 -side left
+	-in $base.frame7 -anchor center -expand 0 -fill none -ipadx 0 \
+	-ipady 0 -padx 0 -pady 0 -side left
     vTcl:set_balloon $base.frame7.button8 "Show toplevel window"
     vTcl:toolbar_button $base.frame7.button9 \
-        -command "vTcl:toplist:show_selection $base hide" \
-        -padx 9 -pady 3 -image [vTcl:image:get_image hide.gif]
+	-command "vTcl:toplist:show_selection $base hide" \
+	-padx 9 -pady 3 -image [vTcl:image:get_image hide.gif]
     pack $base.frame7.button9 \
-        -in $base.frame7 -anchor center -expand 0 -fill none -ipadx 0 \
-        -ipady 0 -padx 0 -pady 0 -side left
+	-in $base.frame7 -anchor center -expand 0 -fill none -ipadx 0 \
+	-ipady 0 -padx 0 -pady 0 -side left
     vTcl:set_balloon $base.frame7.button9 "Hide toplevel window"
     ::vTcl::CancelButton $base.frame7.button10 \
-        -command "vTcl:toplist:show_selection $base destroy"
+	-command "vTcl:toplist:show_selection $base destroy"
     pack $base.frame7.button10 \
-        -in $base.frame7 -anchor center -expand 0 -fill none -ipadx 0 \
-        -ipady 0 -padx 0 -pady 0 -side left
+	-in $base.frame7 -anchor center -expand 0 -fill none -ipadx 0 \
+	-ipady 0 -padx 0 -pady 0 -side left
     vTcl:set_balloon $base.frame7.button10 "Delete toplevel window"
     ::vTcl::OkButton $base.frame7.button11 -command "vTcl:toplist:show 0"
     pack $base.frame7.button11 \
@@ -196,8 +196,8 @@ proc vTclWindow.vTcl.toplist {args} {
 
     ScrolledWindow $base.f2
     pack $base.f2 \
-        -in $base -anchor center -expand 1 -fill both -ipadx 0 \
-        -ipady 0 -padx 0 -pady 0 -side top
+	-in $base -anchor center -expand 1 -fill both -ipadx 0 \
+	-ipady 0 -padx 0 -pady 0 -side top
     listbox $base.f2.list -exportselection 0
     $base.f2 setwidget $base.f2.list
     pack $base.f2.list
@@ -211,19 +211,19 @@ proc vTclWindow.vTcl.toplist {args} {
 
     # first, make sure the list gets the focus when it's clicked on
     bind $base.f2.list <ButtonPress-1> {
-        focus %W
+	focus %W
     }
 
     # bind all controls in the window
     foreach child [vTcl:list_widget_tree $base] {
-        bindtags $child "_vTclTopDelete [bindtags $child]"
+	bindtags $child "_vTclTopDelete [bindtags $child]"
     }
 
     bind _vTclTopDelete <KeyPress-Delete> {
-        vTcl:toplist:show_selection [winfo toplevel %W] destroy
+	vTcl:toplist:show_selection [winfo toplevel %W] destroy
 
-        # stop event processing here
-        break
+	# stop event processing here
+	break
     }
 
     # when the title option changes in the attributes editor, we want
@@ -234,26 +234,26 @@ proc vTclWindow.vTcl.toplist {args} {
 namespace eval ::vTcl::tops {
 
     proc geom_config_event {id target cmd option} {
-        if {$cmd == "vTcl:wm:conf_title" && $option == "title"} {
-            vTcl:update_top_list
+	if {$cmd == "vTcl:wm:conf_title" && $option == "title"} {
+	    vTcl:update_top_list
 	}
     }
 
     proc handleRunvisible {cmd} {
-        foreach i $::vTcl(tops) {
-            set var ::widgets::${i}::runvisible
-            if {[info exists $var] &&
-                [set $var] == 0} {
-                wm $cmd $i
-            }
-        }
+	foreach i $::vTcl(tops) {
+	    set var ::widgets::${i}::runvisible
+	    if {[info exists $var] &&
+		[set $var] == 0} {
+		wm $cmd $i
+	    }
+	}
     }
     proc editMode {id args} {
-        handleRunvisible deiconify
+	handleRunvisible deiconify
     }
 
     proc testMode {id args} {
-        handleRunvisible withdraw
+	handleRunvisible withdraw
     }
 
     ## manages the "run visible" feature

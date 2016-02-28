@@ -64,13 +64,13 @@ proc vTcl:widget:lib:lib_core {args} {
     package require Tk
     switch $tcl_platform(platform) {
 	windows {
-            option add *Button.padY 0
+	    option add *Button.padY 0
 	}
 	default {
-            option add *Scrollbar.width 10
-            option add *Scrollbar.highlightThickness 0
-            option add *Scrollbar.elementBorderWidth 2
-            option add *Scrollbar.borderWidth 2
+	    option add *Scrollbar.width 10
+	    option add *Scrollbar.highlightThickness 0
+	    option add *Scrollbar.elementBorderWidth 2
+	    option add *Scrollbar.borderWidth 2
 	}
     }
     }
@@ -83,11 +83,11 @@ proc vTcl:widget:lib:lib_core {args} {
 proc vTcl:get_balloon {target} {
     set events [bind $target]
     if {[lsearch -exact $events <<SetBalloon>>] == -1} {
-        return ""
+	return ""
     }
     set event [string trim [bind $target <<SetBalloon>>]]
     if {[string match {set ::vTcl::balloon::%W*} $event]} {
-        return [lindex $event 2]
+	return [lindex $event 2]
     }
     return ""
 }
@@ -100,21 +100,21 @@ proc vTcl:config_balloon {target value} {
     set old [vTcl:get_balloon $target]
     set new $value
     if {$old == "" && $new == ""} {
-        return
+	return
     }
     if {$old != "" && $new == ""} {
-        bind $target <<SetBalloon>> {}
-        ::widgets_bindings::remove_tag_from_widget $target _vTclBalloon
+	bind $target <<SetBalloon>> {}
+	::widgets_bindings::remove_tag_from_widget $target _vTclBalloon
     } else {
-        bind $target <<SetBalloon>> "set ::vTcl::balloon::%W \{$new\}"
-        ::widgets_bindings::add_tag_to_widget $target _vTclBalloon
-        ::widgets_bindings::add_tag_to_tagslist _vTclBalloon
+	bind $target <<SetBalloon>> "set ::vTcl::balloon::%W \{$new\}"
+	::widgets_bindings::add_tag_to_widget $target _vTclBalloon
+	::widgets_bindings::add_tag_to_tagslist _vTclBalloon
     }
 
     ## if the bindings editor is there, refresh it
     if {[winfo exists .vTcl.bind]} {
-        ::widgets_bindings::save_current_binding
-        vTcl:get_bind $target
+	::widgets_bindings::save_current_binding
+	vTcl:get_bind $target
     }
 }
 
@@ -146,11 +146,11 @@ proc vTcl:wm:enable_geom {} {
     # Enable/disable UI elements
     array set state {0 disabled 1 normal}
     if {$vTcl(w,class) == "Menu"} {
-        set origin_state disabled
-        set size_state   disabled
+	set origin_state disabled
+	set size_state   disabled
     } else {
-        set origin_state $state($vTcl(w,wm,set,origin))
-        set size_state   $state($vTcl(w,wm,set,size))
+	set origin_state $state($vTcl(w,wm,set,origin))
+	set size_state   $state($vTcl(w,wm,set,size))
     }
 
     vTcl:prop:enable_manager_entry geometry,x $origin_state
@@ -205,10 +205,10 @@ proc vTcl:wm:dump_info {target basename} {
     append out $vTcl(tab)
     append out "namespace eval ::widgets::$basename \{\n"
     foreach wm_option $vTcl(m,wm,savelist) {
-        if {[info exists ::widgets::${target}::${wm_option}]} {
-            append out $vTcl(tab2)
-            append out "set $wm_option [vTcl:at ::widgets::${target}::${wm_option}]\n"
-        }
+	if {[info exists ::widgets::${target}::${wm_option}]} {
+	    append out $vTcl(tab2)
+	    append out "set $wm_option [vTcl:at ::widgets::${target}::${wm_option}]\n"
+	}
     }
     append out "$vTcl(tab)\}\n"
     return $out
@@ -222,18 +222,18 @@ proc vTcl:wm:dump_info {target basename} {
 proc vTcl:edit_target_menu {target} {
     global vTcl
     if [catch {set menu [$target cget -menu]}] {
-        return
+	return
     }
     if {$menu == ""} {
-        set menu [vTcl:new_widget_name m $target]
-        menu $menu
-        vTcl:widget:register_widget $menu -tearoff
-        vTcl:setup_vTcl:bind $menu
-        $target conf -menu $menu
-        foreach def {-activebackground -activeforeground
-                     -background -foreground -font} {
-            vTcl:prop:default_opt $menu $def vTcl(w,opt,$def)
-        }
+	set menu [vTcl:new_widget_name m $target]
+	menu $menu
+	vTcl:widget:register_widget $menu -tearoff
+	vTcl:setup_vTcl:bind $menu
+	$target conf -menu $menu
+	foreach def {-activebackground -activeforeground
+		     -background -foreground -font} {
+	    vTcl:prop:default_opt $menu $def vTcl(w,opt,$def)
+	}
     }
 
     set name [vTcl:rename $menu]
@@ -263,7 +263,7 @@ proc vTcl:core:menutranslate {value} {
 
 		if {$matchAll == $value} {
 
-	               	set path [vTcl:base_name $path]
+		       	set path [vTcl:base_name $path]
 
 			return "\"$path\""
 		}
@@ -298,23 +298,23 @@ NoEncaseOptionWhen -textvariable vTcl:core:noencasewhen
 
 proc vTcl:core:variabletranslate {value} {
 
-        global vTcl
+	global vTcl
 
 	if {[regexp {(\.[\.a-zA-Z0-9_]+)::(.*)} $value matchAll path variable]} {
 
-            ## potential candidate, is it a window ?
-            if {![winfo exists $path]} {return $value}
+	    ## potential candidate, is it a window ?
+	    if {![winfo exists $path]} {return $value}
 
 	    if {"$path" == "[winfo toplevel $path]"} {
-	        set path {$top}
+		set path {$top}
 	    } else {
-                set path [vTcl:base_name $path]
+		set path [vTcl:base_name $path]
 	    }
 
-            return "\"${path}\\::${variable}\""
-        }
+	    return "\"${path}\\::${variable}\""
+	}
 
-        return $value
+	return $value
 }
 
 proc vTcl:core:scrolltranslate {value} {
@@ -323,7 +323,7 @@ proc vTcl:core:scrolltranslate {value} {
 
 	if [regexp {((\.[a-zA-Z0-9_]+)+) set} $value matchAll path] {
 
-               	set path [vTcl:base_name $path]
+	       	set path [vTcl:base_name $path]
 
 		return "\"$path set\""
 	}
@@ -343,9 +343,9 @@ proc vTcl:core:commandtranslate {value} {
 
     } elseif {[regexp {vTcl:DoCmdOption (\.[\.a-zA-Z0-9_]+) (.*)} $value matchAll path cmd]} {
 
-        set path [vTcl:base_name $path]
+	set path [vTcl:base_name $path]
 
-        return "\[list vTcl:DoCmdOption $path $cmd\]"
+	return "\[list vTcl:DoCmdOption $path $cmd\]"
     }
 
     return $value
@@ -354,10 +354,10 @@ proc vTcl:core:commandtranslate {value} {
 proc vTcl:core:noencasewhen {value} {
 
     if { [string match {"$base*} $value] ||
-         [string match {"$site*} $value] ||
-         [string match {"$target*} $value] ||
+	 [string match {"$site*} $value] ||
+	 [string match {"$target*} $value] ||
 	 [string match {"$top*} $value] } {
-        return 1
+	return 1
     }
 
     return 0
@@ -366,11 +366,11 @@ proc vTcl:core:noencasewhen {value} {
 proc vTcl:core:noencasecommandwhen {value} {
 
 	if { [string match {"$base*?view"} $value] ||
-             [string match {"$site*?view"} $value] ||
-             [string match {"$top*?view"} $value] ||
-             [string match {\[list vTcl:DoCmdOption $base*} $value] ||
-             [string match {\[list vTcl:DoCmdOption $top*} $value] ||
-             [string match {\[list vTcl:DoCmdOption $site*} $value] } {
+	     [string match {"$site*?view"} $value] ||
+	     [string match {"$top*?view"} $value] ||
+	     [string match {\[list vTcl:DoCmdOption $base*} $value] ||
+	     [string match {\[list vTcl:DoCmdOption $top*} $value] ||
+	     [string match {\[list vTcl:DoCmdOption $site*} $value] } {
 		return 1
 	} else {
 		return 0
@@ -385,19 +385,19 @@ proc vTcl:core:set_option {target option description} {
     set newvalue [vTcl:get_string $description $target $value]
     # cancelled?
     if {$newvalue == ""} {
-        return
+	return
     }
 
     if {! [vTcl:streq $value $newvalue]} {
-        $target configure $option $newvalue
+	$target configure $option $newvalue
 
-        # we better save that option, too
-        set vTcl(w,opt,$option) $newvalue
-        vTcl:prop:save_opt $target $option vTcl(w,opt,$option)
+	# we better save that option, too
+	set vTcl(w,opt,$option) $newvalue
+	vTcl:prop:save_opt $target $option vTcl(w,opt,$option)
 
-        # keep showing the selection in the toplevel
-        # (do not destroy the selection handles)
-        vTcl:init_wtree 0
+	# keep showing the selection in the toplevel
+	# (do not destroy the selection handles)
+	vTcl:init_wtree 0
     }
 }
 
@@ -409,30 +409,30 @@ namespace eval vTcl::widgets::core {
     ## itself (`vTcl:dump:widgets $subwidget' doesn't do the right thing if
     ## the grid geometry manager is used to manage children of $subwidget.
     proc dump_subwidgets {subwidget {sitebasename {}}} {
-        puts "dump_subwidgets $subwidget"
-        global vTcl basenames classes
-        set output ""
-        set geometry ""
-        set length      [string length $subwidget]
-        set basenames($subwidget) $sitebasename
+	puts "dump_subwidgets $subwidget"
+	global vTcl basenames classes
+	set output ""
+	set geometry ""
+	set length      [string length $subwidget]
+	set basenames($subwidget) $sitebasename
 
-        foreach i [vTcl:get_children $subwidget] {
+	foreach i [vTcl:get_children $subwidget] {
 
-            set basename [vTcl:base_name $i]
+	    set basename [vTcl:base_name $i]
 
-            # don't try to dump subwidget itself
-            if {"$i" != "$subwidget"} {
-                set basenames($i) $basename
-                set class [vTcl:get_class $i]
-                append output [$classes($class,dumpCmd) $i $basename]
-                append geometry [vTcl:dump_widget_geom $i $basename]
-                unset basenames($i)
-            }
-        }
-        append output $geometry
+	    # don't try to dump subwidget itself
+	    if {"$i" != "$subwidget"} {
+		set basenames($i) $basename
+		set class [vTcl:get_class $i]
+		append output [$classes($class,dumpCmd) $i $basename]
+		append geometry [vTcl:dump_widget_geom $i $basename]
+		unset basenames($i)
+	    }
+	}
+	append output $geometry
 
-        unset basenames($subwidget)
-        return $output
+	unset basenames($subwidget)
+	return $output
     }
 }
 
@@ -442,10 +442,10 @@ namespace eval vTcl::widgets::core {
 
 proc vTclWindow.vTcl.itemEdit {base} {
     if {$base == ""} {
-        set base .vTcl.itemEdit
+	set base .vTcl.itemEdit
     }
     if {[winfo exists $base]} {
-        wm deiconify $base; return
+	wm deiconify $base; return
     }
 
     global widget
@@ -457,10 +457,10 @@ proc vTclWindow.vTcl.itemEdit {base} {
     wm focusmodel $base passive
     set defaultGeometry 1
     if {[info exists ::vTcl(pr,edit[vTcl:at ::vTcl::itemEdit::class($base)])]} {
-        wm geometry $base $::vTcl(pr,edit[vTcl:at ::vTcl::itemEdit::class($base)])
-        set defaultGeometry 0
+	wm geometry $base $::vTcl(pr,edit[vTcl:at ::vTcl::itemEdit::class($base)])
+	set defaultGeometry 0
     } else {
-        wm geometry $base 490x343
+	wm geometry $base 490x343
     }
     wm withdraw $base
     wm maxsize $base 1009 738
@@ -483,65 +483,65 @@ proc vTclWindow.vTcl.itemEdit {base} {
 
     menu $base.m73 -relief flat
     $base.m73 add cascade \
-        -menu "$base.m73.men74" -label Item
+	-menu "$base.m73.men74" -label Item
     $base.m73 add cascade \
-        -menu "$base.m73.men75" -label Move
+	-menu "$base.m73.men75" -label Move
     menu $base.m73.men74 \
-        -tearoff 0
+	-tearoff 0
     $base.m73.men74 add command \
-        -command "::vTcl::itemEdit::addItem $base" -label Add
+	-command "::vTcl::itemEdit::addItem $base" -label Add
     $base.m73.men74 add command \
-        -command "::vTcl::itemEdit::removeItem $base" -label Delete
+	-command "::vTcl::itemEdit::removeItem $base" -label Delete
     menu $base.m73.men75 \
-        -tearoff 0
+	-tearoff 0
     $base.m73.men75 add command \
-        -command "::vTcl::itemEdit::moveUpOrDown $base up" -label Up
+	-command "::vTcl::itemEdit::moveUpOrDown $base up" -label Up
     $base.m73.men75 add command \
-        -command "::vTcl::itemEdit::moveUpOrDown $base down" -label Down
+	-command "::vTcl::itemEdit::moveUpOrDown $base down" -label Down
 
     frame $base.fra34 \
-        -width 125
+	-width 125
     vTcl:toolbar_button $base.fra34.but35 \
-        -image [vTcl:image:get_image add.gif] \
-        -command "::vTcl::itemEdit::addItem $base"
+	-image [vTcl:image:get_image add.gif] \
+	-command "::vTcl::itemEdit::addItem $base"
     vTcl:set_balloon $base.fra34.but35 {Add}
     vTcl:toolbar_button $base.fra34.but36 \
-        -image [vTcl:image:get_image remove.gif] \
-        -command "::vTcl::itemEdit::removeItem $base"
+	-image [vTcl:image:get_image remove.gif] \
+	-command "::vTcl::itemEdit::removeItem $base"
     vTcl:set_balloon $base.fra34.but36 {Delete}
     vTcl:toolbar_button $base.fra34.but37 \
-        -image up -command "::vTcl::itemEdit::moveUpOrDown $base up"
+	-image up -command "::vTcl::itemEdit::moveUpOrDown $base up"
     vTcl:set_balloon $base.fra34.but37 {Move Up}
     vTcl:toolbar_button $base.fra34.but38 \
-        -image down -command "::vTcl::itemEdit::moveUpOrDown $base down"
+	-image down -command "::vTcl::itemEdit::moveUpOrDown $base down"
     vTcl:set_balloon $base.fra34.but38 {Move Down}
     vTcl:toolbar_button $base.fra34.but39 \
-        -image [vTcl:image:get_image ok.gif] \
-        -command "::vTcl::itemEdit::close $base"
+	-image [vTcl:image:get_image ok.gif] \
+	-command "::vTcl::itemEdit::close $base"
     vTcl:set_balloon $base.fra34.but39 {Close}
     frame $base.cpd37 \
-        -background #000000 -height 100 -width 200
+	-background #000000 -height 100 -width 200
     frame $base.cpd37.01
     frame $base.cpd37.01.cpd38 \
-        -borderwidth 1 -height 30 -relief raised -width 30
+	-borderwidth 1 -height 30 -relief raised -width 30
     listbox $base.cpd37.01.cpd38.01 \
-        -background #ffffff \
-        -xscrollcommand "$base.cpd37.01.cpd38.02 set" \
-        -yscrollcommand "$base.cpd37.01.cpd38.03 set" \
-        -listvariable ::${base}::list_items
+	-background #ffffff \
+	-xscrollcommand "$base.cpd37.01.cpd38.02 set" \
+	-yscrollcommand "$base.cpd37.01.cpd38.03 set" \
+	-listvariable ::${base}::list_items
     bind $base.cpd37.01.cpd38.01 <<ListboxSelect>> {
-        ::vTcl::itemEdit::selectItem [winfo toplevel %W] \
-            [lindex [%W curselection] 0]
+	::vTcl::itemEdit::selectItem [winfo toplevel %W] \
+	    [lindex [%W curselection] 0]
     }
     scrollbar $base.cpd37.01.cpd38.02 \
-        -command "$base.cpd37.01.cpd38.01 xview" -orient horizontal
+	-command "$base.cpd37.01.cpd38.01 xview" -orient horizontal
     scrollbar $base.cpd37.01.cpd38.03 \
-        -command "$base.cpd37.01.cpd38.01 yview"
+	-command "$base.cpd37.01.cpd38.01 yview"
     frame $base.cpd37.02
     frame $base.cpd37.03 \
-        -background #ff0000 -borderwidth 2 -relief raised
+	-background #ff0000 -borderwidth 2 -relief raised
     bind $base.cpd37.03 <B1-Motion> {
-        set root [ split %W . ]
+	set root [ split %W . ]
     set nb [ llength $root ]
     incr nb -1
     set root [ lreplace $root $nb $nb ]
@@ -550,57 +550,57 @@ proc vTclWindow.vTcl.itemEdit {base} {
     set val [ expr (%X - [winfo rootx $root]) /$width ]
     if { $val >= 0 && $val <= 1.0 } {
 
-        place $root.01 -relwidth $val
-        place $root.03 -relx $val
-        place $root.02 -relwidth [ expr 1.0 - $val ]
+	place $root.01 -relwidth $val
+	place $root.03 -relx $val
+	place $root.02 -relwidth [ expr 1.0 - $val ]
     }
     }
     ScrolledWindow $base.cpd37.02.sw
     canvas $base.cpd37.02.sw.c \
-        -highlightthickness 0 -yscrollincrement 20
+	-highlightthickness 0 -yscrollincrement 20
     ###################
     # SETTING GEOMETRY
     ###################
     pack $base.fra34 \
-        -in $base -anchor center -expand 0 -fill x -side top
+	-in $base -anchor center -expand 0 -fill x -side top
     pack $base.fra34.but35 \
-        -in $base.fra34 -anchor center -expand 0 -fill none -side left
+	-in $base.fra34 -anchor center -expand 0 -fill none -side left
     pack $base.fra34.but36 \
-        -in $base.fra34 -anchor center -expand 0 -fill none -side left
+	-in $base.fra34 -anchor center -expand 0 -fill none -side left
     pack $base.fra34.but37 \
-        -in $base.fra34 -anchor center -expand 0 -fill none -side left
+	-in $base.fra34 -anchor center -expand 0 -fill none -side left
     pack $base.fra34.but38 \
-        -in $base.fra34 -anchor center -expand 0 -fill none -side left
+	-in $base.fra34 -anchor center -expand 0 -fill none -side left
     pack $base.fra34.but39 \
-        -in $base.fra34 -anchor center -expand 0 -fill none -side right
+	-in $base.fra34 -anchor center -expand 0 -fill none -side right
     pack $base.cpd37 \
-        -in $base -anchor center -expand 1 -fill both -side top
+	-in $base -anchor center -expand 1 -fill both -side top
     place $base.cpd37.01 \
-        -x 0 -y 0 -width -1 -relwidth 0.55 -relheight 1 -anchor nw \
-        -bordermode ignore
+	-x 0 -y 0 -width -1 -relwidth 0.55 -relheight 1 -anchor nw \
+	-bordermode ignore
     pack $base.cpd37.01.cpd38 \
-        -in $base.cpd37.01 -anchor center -expand 1 -fill both -side top
+	-in $base.cpd37.01 -anchor center -expand 1 -fill both -side top
     grid columnconf $base.cpd37.01.cpd38 0 -weight 1
     grid rowconf $base.cpd37.01.cpd38 0 -weight 1
     grid $base.cpd37.01.cpd38.01 \
-        -in $base.cpd37.01.cpd38 -column 0 -row 0 -columnspan 1 -rowspan 1 \
-        -sticky nesw
+	-in $base.cpd37.01.cpd38 -column 0 -row 0 -columnspan 1 -rowspan 1 \
+	-sticky nesw
     grid $base.cpd37.01.cpd38.02 \
-        -in $base.cpd37.01.cpd38 -column 0 -row 1 -columnspan 1 -rowspan 1 \
-        -sticky ew
+	-in $base.cpd37.01.cpd38 -column 0 -row 1 -columnspan 1 -rowspan 1 \
+	-sticky ew
     grid $base.cpd37.01.cpd38.03 \
-        -in $base.cpd37.01.cpd38 -column 1 -row 0 -columnspan 1 -rowspan 1 \
-        -sticky ns
+	-in $base.cpd37.01.cpd38 -column 1 -row 0 -columnspan 1 -rowspan 1 \
+	-sticky ns
     place $base.cpd37.02 \
-        -x 0 -relx 1 -y 0 -width -1 -relwidth 0.45 -relheight 1 -anchor ne \
-        -bordermode ignore
+	-x 0 -relx 1 -y 0 -width -1 -relwidth 0.45 -relheight 1 -anchor ne \
+	-bordermode ignore
     place $base.cpd37.03 \
-        -x 0 -relx 0.55 -y 0 -rely 0.9 -width 10 -height 10 -anchor s \
-        -bordermode ignore
+	-x 0 -relx 0.55 -y 0 -rely 0.9 -width 10 -height 10 -anchor s \
+	-bordermode ignore
     pack $base.cpd37.02.sw \
-        -in $base.cpd37.02 -anchor center -expand 1 -fill both -side top
+	-in $base.cpd37.02 -anchor center -expand 1 -fill both -side top
     pack $base.cpd37.02.sw.c \
-        -in $base.cpd37.02.sw
+	-in $base.cpd37.02.sw
 
     ## tell the scrolledwindow what widget it should scroll
     $base.cpd37.02.sw setwidget $base.cpd37.02.sw.c
@@ -608,7 +608,7 @@ proc vTclWindow.vTcl.itemEdit {base} {
     ## insert a frame into the canvas so we can put stuff in it
     frame $base.cpd37.02.sw.c.f
     $base.cpd37.02.sw.c create window 0 0 -window $base.cpd37.02.sw.c.f \
-        -anchor nw -tag properties
+	-anchor nw -tag properties
 
     ## set up visual Tcl keyboard accelerators
     vTcl:setup_vTcl:bind $base
@@ -635,67 +635,67 @@ namespace eval ::vTcl::itemEdit {
     set counter 0
 
     proc edit {target cmds} {
-        variable counter
-        variable suffix
-        variable class
+	variable counter
+	variable suffix
+	variable class
 
-        incr counter
-        set top .vTcl.itemEdit_$counter
-        set suffix($top) $counter
-        set class($top) [vTcl:get_class $target]
-        Window show .vTcl.itemEdit $top
-        init $top $target $cmds
+	incr counter
+	set top .vTcl.itemEdit_$counter
+	set suffix($top) $counter
+	set class($top) [vTcl:get_class $target]
+	Window show .vTcl.itemEdit $top
+	init $top $target $cmds
     }
 
     ## get initial values for the checkboxes
     proc initBoxes {top} {
-        variable target
-        variable allOptions
+	variable target
+	variable allOptions
 	variable cmds
 
-        set w $target($top)
-        set nm ::widgets::${w}::subOptions
-        namespace eval $nm {}
+	set w $target($top)
+	set nm ::widgets::${w}::subOptions
+	namespace eval $nm {}
 
 	## first time ? if so, check values that are not the default
 	if {![info exists ${nm}::save]} {
-            ## how many subitems ?
-            set size [llength [vTcl:at ::${top}::list_items]]
-            for {set i 0} {$i < $size} {incr i} {
-	        set conf [::$cmds($top)::itemConfigure $target($top) $i]
-                foreach opt $conf {
+	    ## how many subitems ?
+	    set size [llength [vTcl:at ::${top}::list_items]]
+	    for {set i 0} {$i < $size} {incr i} {
+		set conf [::$cmds($top)::itemConfigure $target($top) $i]
+		foreach opt $conf {
 		    set option  [lindex $opt 0]
-                    set default [lindex $opt 3]
+		    set default [lindex $opt 3]
 		    set value   [lindex $opt 4]
 		    if {$value != $default} {
-		        set ${nm}::save($option) 1
+			set ${nm}::save($option) 1
 		    }
-                }
-            }
+		}
+	    }
 	}
     }
 
     ## action to take when a box is checked
     proc setGetBox {top option {var {}}} {
-        variable target
+	variable target
 
-        set w $target($top)
-        set nm ::widgets::${w}::subOptions
-        if {$var != ""} {
-            set ${nm}::save($option) [vTcl:at $var]
-        } else {
-            if {[info exists ${nm}::save($option)]} {
-                return [vTcl:at ${nm}::save($option)]
-            } else {
-                return 0
-            }
-        }
+	set w $target($top)
+	set nm ::widgets::${w}::subOptions
+	if {$var != ""} {
+	    set ${nm}::save($option) [vTcl:at $var]
+	} else {
+	    if {[info exists ${nm}::save($option)]} {
+		return [vTcl:at ${nm}::save($option)]
+	    } else {
+		return 0
+	    }
+	}
     }
 
     ## action to take when a key is released in an option
     proc keyRelease {top option var boxvar} {
-        variable cmds
-        variable current
+	variable cmds
+	variable current
 	variable target
 
 	set conf [::$cmds($top)::itemConfigure $target($top) $current($top) $option]
@@ -709,202 +709,202 @@ namespace eval ::vTcl::itemEdit {
     }
 
     proc init {top w cmdsEdit} {
-        variable cmds
-        variable target
-        variable current
-        variable adding
+	variable cmds
+	variable target
+	variable current
+	variable adding
 
-        set cmds($top) $cmdsEdit
-        set target($top) $w
-        set adding($top) 0
-        set list_items [::$cmds($top)::getItems $target($top)]
-        set current($top) [lindex $list_items 0]
-        set list_items [lrange $list_items 1 end]
-        set ::${top}::list_items $list_items
-        initBoxes $top
-        initProperties $top
-        selectItem $top $current($top)
-        wm title $top [::$cmds($top)::getTitle $w]
+	set cmds($top) $cmdsEdit
+	set target($top) $w
+	set adding($top) 0
+	set list_items [::$cmds($top)::getItems $target($top)]
+	set current($top) [lindex $list_items 0]
+	set list_items [lrange $list_items 1 end]
+	set ::${top}::list_items $list_items
+	initBoxes $top
+	initProperties $top
+	selectItem $top $current($top)
+	wm title $top [::$cmds($top)::getTitle $w]
 
-        ::vTcl::notify::subscribe delete_widget $top ::vTcl::itemEdit::widgetDeleted
-        ::vTcl::notify::subscribe deleted_childsite $top ::vTcl::itemEdit::childsiteDeleted
+	::vTcl::notify::subscribe delete_widget $top ::vTcl::itemEdit::widgetDeleted
+	::vTcl::notify::subscribe deleted_childsite $top ::vTcl::itemEdit::childsiteDeleted
     }
 
     ## find the superset of all options for all subitems
     proc allOptions {top} {
-        variable cmds
-        variable target
+	variable cmds
+	variable target
 
-        set optionsList ""
-        if {[info proc ::$cmds($top)::getMinimumOptions] != ""} {
-            return [::$cmds($top)::getMinimumOptions]
-        }
+	set optionsList ""
+	if {[info proc ::$cmds($top)::getMinimumOptions] != ""} {
+	    return [::$cmds($top)::getMinimumOptions]
+	}
 
-        ## how many subitems ?
-        set size [llength [vTcl:at ::${top}::list_items]]
-        for {set i 0} {$i < $size} {incr i} {
-            set conf [::$cmds($top)::itemConfigure $target($top) $i]
-            foreach option $conf {
-                lappend optionsList [lindex $option 0]
-            }
-        }
+	## how many subitems ?
+	set size [llength [vTcl:at ::${top}::list_items]]
+	for {set i 0} {$i < $size} {incr i} {
+	    set conf [::$cmds($top)::itemConfigure $target($top) $i]
+	    foreach option $conf {
+		lappend optionsList [lindex $option 0]
+	    }
+	}
 
-        ## remove duplicates
-        set optionsList [vTcl:lrmdups $optionsList]
-        return $optionsList
+	## remove duplicates
+	set optionsList [vTcl:lrmdups $optionsList]
+	return $optionsList
     }
 
     proc initProperties {top} {
-        variable cmds
-        variable target
-        variable suffix
-        variable current
-        variable allOptions
-        variable enableData
+	variable cmds
+	variable target
+	variable suffix
+	variable current
+	variable allOptions
+	variable enableData
 
-        set options [allOptions $top]
-        set allOptions($top) $options
+	set options [allOptions $top]
+	set allOptions($top) $options
 
-        foreach option $options {
-            set variable ::vTcl::itemEdit::${option}_$suffix($top)
-            set $variable ""
-            set f [$top.PropertiesFrame].$option
-            frame $f
-            set config_cmd "
-               ::$cmds($top)::itemConfigure $target($top) \
-                   \[vTcl:at ::vTcl::itemEdit::current($top)\] \
-                   $option \[vTcl:at $variable\]
-               "
-            set enableData($top,$option) [::vTcl::ui::attributes::newAttribute \
-                $target($top) $f $option $variable $config_cmd \
-                "::vTcl::itemEdit::setGetBox $top" \
+	foreach option $options {
+	    set variable ::vTcl::itemEdit::${option}_$suffix($top)
+	    set $variable ""
+	    set f [$top.PropertiesFrame].$option
+	    frame $f
+	    set config_cmd "
+	       ::$cmds($top)::itemConfigure $target($top) \
+		   \[vTcl:at ::vTcl::itemEdit::current($top)\] \
+		   $option \[vTcl:at $variable\]
+	       "
+	    set enableData($top,$option) [::vTcl::ui::attributes::newAttribute \
+		$target($top) $f $option $variable $config_cmd \
+		"::vTcl::itemEdit::setGetBox $top" \
 		"::vTcl::itemEdit::keyRelease $top"]
-            pack $f -side top -fill x -expand 0
-        }
+	    pack $f -side top -fill x -expand 0
+	}
 
-        ## the label option is kinda special, it updates the label in the
-        ## listbox as well
-        set labelOption [::$cmds($top)::getLabelOption]
-        if {$labelOption != ""} {
-            set variable ::vTcl::itemEdit::${labelOption}_$suffix($top)
-            trace variable $variable w \
-                "::vTcl::itemEdit::setLabel $top $labelOption $variable"
-        }
+	## the label option is kinda special, it updates the label in the
+	## listbox as well
+	set labelOption [::$cmds($top)::getLabelOption]
+	if {$labelOption != ""} {
+	    set variable ::vTcl::itemEdit::${labelOption}_$suffix($top)
+	    trace variable $variable w \
+		"::vTcl::itemEdit::setLabel $top $labelOption $variable"
+	}
 
-        ## calculate the scrolling region
-        update idletasks
-        set w [winfo width  [$top.PropertiesFrame]]
-        set h [winfo height [$top.PropertiesFrame]]
-        ${top}.PropertiesCanvas configure -scrollregion [list 0 0 $w $h]
+	## calculate the scrolling region
+	update idletasks
+	set w [winfo width  [$top.PropertiesFrame]]
+	set h [winfo height [$top.PropertiesFrame]]
+	${top}.PropertiesCanvas configure -scrollregion [list 0 0 $w $h]
 
 	## keyboard accelerators
-        vTcl:setup_vTcl:bind [$top.PropertiesFrame]
+	vTcl:setup_vTcl:bind [$top.PropertiesFrame]
     }
 
     proc setLabel {top option variable args} {
-        variable current
-        variable target
-        variable cmds
-        variable adding
+	variable current
+	variable target
+	variable cmds
+	variable adding
 
-        ## when adding items, prevent the trace from being executed
-        if {$adding($top)} {return}
+	## when adding items, prevent the trace from being executed
+	if {$adding($top)} {return}
 
-        set label [::vTcl:at $variable]
-        set ::${top}::list_items [lreplace [::vTcl:at ::${top}::list_items] \
-            $current($top) $current($top) $label]
-        ::$cmds($top)::itemConfigure $target($top) $current($top) \
-            $option $label
+	set label [::vTcl:at $variable]
+	set ::${top}::list_items [lreplace [::vTcl:at ::${top}::list_items] \
+	    $current($top) $current($top) $label]
+	::$cmds($top)::itemConfigure $target($top) $current($top) \
+	    $option $label
     }
 
     proc selectItem {top index} {
-        variable cmds
-        variable target
-        variable suffix
-        variable current
-        variable allOptions
-        variable enableData
+	variable cmds
+	variable target
+	variable suffix
+	variable current
+	variable allOptions
+	variable enableData
 
-        ## first, sets any pending options
-        ::vTcl::ui::attributes::setPending
+	## first, sets any pending options
+	::vTcl::ui::attributes::setPending
 
-        ${top}.ItemsListbox selection clear 0 end
-        ${top}.ItemsListbox selection set $index
-        set current($top) $index
+	${top}.ItemsListbox selection clear 0 end
+	${top}.ItemsListbox selection set $index
+	set current($top) $index
 
-        set properties [::$cmds($top)::itemConfigure $target($top) $index]
-        foreach property $properties {
-            set option [lindex $property 0]
-            set value  [lindex $property 4]
-            set variable ::vTcl::itemEdit::${option}_$suffix($top)
-            set $variable $value
-            lappend currentOptions $option
-        }
+	set properties [::$cmds($top)::itemConfigure $target($top) $index]
+	foreach property $properties {
+	    set option [lindex $property 0]
+	    set value  [lindex $property 4]
+	    set variable ::vTcl::itemEdit::${option}_$suffix($top)
+	    set $variable $value
+	    lappend currentOptions $option
+	}
 
-        foreach option $allOptions($top) {
-            # enable/disable option if it does/does not apply to subitem
-            if {[lsearch -exact $currentOptions $option] == -1} {
-                ::vTcl::ui::attributes::enableAttribute $enableData($top,$option) 0
-            } else {
-                ::vTcl::ui::attributes::enableAttribute $enableData($top,$option) 1
-            }
-        }
+	foreach option $allOptions($top) {
+	    # enable/disable option if it does/does not apply to subitem
+	    if {[lsearch -exact $currentOptions $option] == -1} {
+		::vTcl::ui::attributes::enableAttribute $enableData($top,$option) 0
+	    } else {
+		::vTcl::ui::attributes::enableAttribute $enableData($top,$option) 1
+	    }
+	}
     }
 
     proc widgetDeleted {top w} {
-        variable target
-        if {$target($top) == $w} {
-            close $top
-        }
+	variable target
+	if {$target($top) == $w} {
+	    close $top
+	}
     }
 
     proc close {top} {
-        variable cmds
-        variable target
-        variable suffix
-        variable current
-        variable allOptions
-        variable enableData
-        variable class
+	variable cmds
+	variable target
+	variable suffix
+	variable current
+	variable allOptions
+	variable enableData
+	variable class
 
-        ## first, sets any pending options
-        ::vTcl::ui::attributes::setPending
+	## first, sets any pending options
+	::vTcl::ui::attributes::setPending
 
-        set ::vTcl(pr,edit$class($top)) [wm geometry $top]
-        destroy $top
-        ## clean up after ourselves
-        foreach option $allOptions($top) {
-            set variable ${option}_$suffix($top)
-            variable $variable
-            unset $variable
-            unset enableData($top,$option)
-        }
-        unset cmds($top)
-        unset target($top)
-        unset suffix($top)
-        unset current($top)
-        unset allOptions($top)
+	set ::vTcl(pr,edit$class($top)) [wm geometry $top]
+	destroy $top
+	## clean up after ourselves
+	foreach option $allOptions($top) {
+	    set variable ${option}_$suffix($top)
+	    variable $variable
+	    unset $variable
+	    unset enableData($top,$option)
+	}
+	unset cmds($top)
+	unset target($top)
+	unset suffix($top)
+	unset current($top)
+	unset allOptions($top)
 
-        ::vTcl::notify::unsubscribe delete_widget $top
-        ::vTcl::notify::unsubscribe deleted_childsite $top
+	::vTcl::notify::unsubscribe delete_widget $top
+	::vTcl::notify::unsubscribe deleted_childsite $top
     }
 
     proc addItem {top} {
-        variable cmds
-        variable target
-        variable adding
+	variable cmds
+	variable target
+	variable adding
 
-        ::vTcl::ui::attributes::setPending
-        vTcl:setup_unbind_widget $target($top)
-        set added [::$cmds($top)::addItem $target($top)]
-        vTcl:setup_bind_widget $target($top)
-        ## user canceled ?
-        if {$added == ""} {return}
-        set adding($top) 1
-        lappend ::${top}::list_items $added
-        set length [llength [vTcl:at ::${top}::list_items]]
-        selectItem $top [expr $length - 1]
-        set adding($top) 0
+	::vTcl::ui::attributes::setPending
+	vTcl:setup_unbind_widget $target($top)
+	set added [::$cmds($top)::addItem $target($top)]
+	vTcl:setup_bind_widget $target($top)
+	## user canceled ?
+	if {$added == ""} {return}
+	set adding($top) 1
+	lappend ::${top}::list_items $added
+	set length [llength [vTcl:at ::${top}::list_items]]
+	selectItem $top [expr $length - 1]
+	set adding($top) 0
     	enableMenus $top
 
 	## update attributes editor
@@ -915,36 +915,36 @@ namespace eval ::vTcl::itemEdit {
 
     ## a childsite has been deleted, need to refresh the display
     proc childsiteDeleted {top w index} {
-        variable cmds
-        variable target
-        variable current
+	variable cmds
+	variable target
+	variable current
 
-        if {$index == -1} {return}
-        ::vTcl::ui::attributes::setPending
-        set ::${top}::list_items [lreplace [::vTcl:at ::${top}::list_items] \
-            $index $index]
-        set length [llength [::vTcl:at ::${top}::list_items]]
+	if {$index == -1} {return}
+	::vTcl::ui::attributes::setPending
+	set ::${top}::list_items [lreplace [::vTcl:at ::${top}::list_items] \
+	    $index $index]
+	set length [llength [::vTcl:at ::${top}::list_items]]
 
-        set current($top) [expr $current($top) % $length]
-        selectItem $top $current($top)
+	set current($top) [expr $current($top) % $length]
+	selectItem $top $current($top)
 
-        enableMenus $top
+	enableMenus $top
     }
 
     proc removeItem {top} {
-        variable cmds
-        variable target
-        variable current
+	variable cmds
+	variable target
+	variable current
 
-        ::vTcl::ui::attributes::setPending
-        vTcl:setup_unbind_widget $target($top)
-        ::$cmds($top)::removeItem $target($top) $current($top)
-        vTcl:setup_bind_widget $target($top)
-        set ::${top}::list_items [lreplace [::vTcl:at ::${top}::list_items] \
-            $current($top) $current($top)]
-        set length [llength [::vTcl:at ::${top}::list_items]]
-        set current($top) [expr $current($top) % $length]
-        selectItem $top $current($top)
+	::vTcl::ui::attributes::setPending
+	vTcl:setup_unbind_widget $target($top)
+	::$cmds($top)::removeItem $target($top) $current($top)
+	vTcl:setup_bind_widget $target($top)
+	set ::${top}::list_items [lreplace [::vTcl:at ::${top}::list_items] \
+	    $current($top) $current($top)]
+	set length [llength [::vTcl:at ::${top}::list_items]]
+	set current($top) [expr $current($top) % $length]
+	selectItem $top $current($top)
 	enableMenus $top
 
 	## update attributes editor
@@ -954,24 +954,24 @@ namespace eval ::vTcl::itemEdit {
     }
 
     proc moveUpOrDown {top direction} {
-        variable cmds
-        variable target
-        variable current
+	variable cmds
+	variable target
+	variable current
 
-        ::vTcl::ui::attributes::setPending
-        set offset(up) -1
-        set offset(down) 1
-        ::$cmds($top)::moveUpOrDown $target($top) $current($top) $direction
-        set list_items [::$cmds($top)::getItems $target($top)]
-        set list_items [lrange $list_items 1 end]
-        set ::${top}::list_items $list_items
-        set length [llength $list_items]
-        set current($top) [expr ($current($top) + $offset($direction)) % $length]
-        selectItem $top $current($top)
+	::vTcl::ui::attributes::setPending
+	set offset(up) -1
+	set offset(down) 1
+	::$cmds($top)::moveUpOrDown $target($top) $current($top) $direction
+	set list_items [::$cmds($top)::getItems $target($top)]
+	set list_items [lrange $list_items 1 end]
+	set ::${top}::list_items $list_items
+	set length [llength $list_items]
+	set current($top) [expr ($current($top) + $offset($direction)) % $length]
+	selectItem $top $current($top)
     }
 
     proc enableMenus {top} {
-        set length [llength [vTcl:at ::${top}::list_items]]
+	set length [llength [vTcl:at ::${top}::list_items]]
 
 	## if there is only one item left, we don't allow the user to delete it
 	## (it wouldn't make much sense to have a tabnotebook with no pages or a toolbar

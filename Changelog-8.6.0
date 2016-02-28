@@ -58,4 +58,15 @@
 			pppp	- [p]atchlevel, 4 digits
 			
 ----[0006]----
+2016-02-26/hph	Fixes for Freewrap to work.
+		- lib/file.tcl tried to lookup Freewrap by directory name
+		  'Freewrap', but it was named 'freewrap'; 
+		     # cd lib; mv freewrap Freewrap"
+		   fixed this.
+		- Provided 'INSTALL-Freewrap' with installaion instruction for
+		  Unix/Linux. For windows I need a contribution on that topic.
+		- Fixed the missleading instructions that come from the error
+		  dialog in lib/file.tcl
+
 ----[_PL_]----
+_Tstamp&token_

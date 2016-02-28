@@ -11,7 +11,7 @@ ttd.tagdef {Centered Title} -background #fefefe -font {-family helvetica -weight
 ttd.tagdef center -background white -font {-family helvetica -weight normal -slant roman -size 10 -underline 0 -overstrike 0} -foreground #000000 -justify center
 
 ttd.tagon {Centered Title}
-ttd.text {Visual Tcl 1.6.x-development}
+ttd.text {Visual Tcl 8.6.x-development}
 ttd.tagoff {Centered Title}
 ttd.text {
 }

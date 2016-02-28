@@ -26,7 +26,7 @@ proc vTcl:lib_blt:init {} {
     global vTcl
 
     if {[catch {package require BLT} error]} {
-        lappend vTcl(libNames) {(not detected) BLT Widgets Support Library}
+	lappend vTcl(libNames) {(not detected) BLT Widgets Support Library}
 	return 0
     }
     lappend vTcl(libNames) {BLT Widgets Support Library}
@@ -62,38 +62,38 @@ namespace eval vTcl::widgets::blt {
     ## itself (`vTcl:dump:widgets $subwidget' doesn't do the right thing if
     ## the grid geometry manager is used to manage children of $subwidget.
     proc dump_subwidgets {subwidget {sitebasename {}}} {
-        global vTcl basenames classes
-        set output ""
-        set geometry ""
-        set widget_tree [vTcl:get_children $subwidget]
-        set length      [string length $subwidget]
-        set basenames($subwidget) $sitebasename
+	global vTcl basenames classes
+	set output ""
+	set geometry ""
+	set widget_tree [vTcl:get_children $subwidget]
+	set length      [string length $subwidget]
+	set basenames($subwidget) $sitebasename
 
-        foreach i $widget_tree {
+	foreach i $widget_tree {
 
-            set basename [vTcl:base_name $i]
+	    set basename [vTcl:base_name $i]
 
-            # don't try to dump subwidget itself
-            if {"$i" != "$subwidget"} {
-                set basenames($i) $basename
-                set class [vTcl:get_class $i]
-                append output [$classes($class,dumpCmd) $i $basename]
-                append geometry [vTcl:dump_widget_geom $i $basename]
-                catch {unset basenames($i)}
-            }
-        }
-        append output $geometry
+	    # don't try to dump subwidget itself
+	    if {"$i" != "$subwidget"} {
+		set basenames($i) $basename
+		set class [vTcl:get_class $i]
+		append output [$classes($class,dumpCmd) $i $basename]
+		append geometry [vTcl:dump_widget_geom $i $basename]
+		catch {unset basenames($i)}
+	    }
+	}
+	append output $geometry
 
-        catch {unset basenames($subwidget)}
-        return $output
+	catch {unset basenames($subwidget)}
+	return $output
     }
 
     proc pathTranslate {value} {
-        if [regexp {((\.[a-zA-Z0-9_]+)+)} $value matchAll path] {
-            set path [vTcl:base_name $path]
-            return "\"$path\""
-        }
-        return $value
+	if [regexp {((\.[a-zA-Z0-9_]+)+)} $value matchAll path] {
+	    set path [vTcl:base_name $path]
+	    return "\"$path\""
+	}
+	return $value
     }
 }
 

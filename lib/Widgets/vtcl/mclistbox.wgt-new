@@ -24,54 +24,54 @@
 ##############################################################################
 #
 
-Class         Mclistbox
-Lib           vtcl
+Class		Mclistbox
+Lib		vtcl
 
-CreateCmd     ::mclistbox::mclistbox
-Icon          icon_mclistbox.gif
-Balloon       multicolumn listbox
-DumpChildren  no
-MegaWidget    yes
-Resizable     both
-TreeLabel     Multicolumn Listbox
-AliasPrefix   Mclistbox
-ResizeCmd     vTcl::widgets::vtcl::mclistbox::resizeCmd
-InsertCmd     vTcl::widgets::vtcl::mclistbox::insertCmd
-DumpCmd       vTcl::widgets::vtcl::mclistbox::dumpCmd
-GetImagesCmd  vTcl::widgets::vtcl::mclistbox::getImagesCmd
-GetFontsCmd   vTcl::widgets::vtcl::mclistbox::getFontsCmd
+CreateCmd	::mclistbox::mclistbox
+Icon		icon_mclistbox.gif
+Balloon		multicolumn listbox
+DumpChildren	no
+MegaWidget	yes
+Resizable	both
+TreeLabel	Multicolumn Listbox
+AliasPrefix	Mclistbox
+ResizeCmd	vTcl::widgets::vtcl::mclistbox::resizeCmd
+InsertCmd	vTcl::widgets::vtcl::mclistbox::insertCmd
+DumpCmd		vTcl::widgets::vtcl::mclistbox::dumpCmd
+GetImagesCmd	vTcl::widgets::vtcl::mclistbox::getImagesCmd
+GetFontsCmd	vTcl::widgets::vtcl::mclistbox::getFontsCmd
 
 Function      "Edit Columns..." vTcl::widgets::vtcl::mclistbox::editColumns
 
 lappend vTcl(classes) MclistboxColumn
 
 ## New options for this widget
-NewOption -columnborderwidth {Col Brdr Width}   type
-NewOption -columnrelief      {Col Relief}       relief
-NewOption -fillcolumn        {Fill Col}         type
-NewOption -labelanchor       {Label Anchor}     choice  {n ne e se s sw w nw center}
-NewOption -labelbackground   {Label Bkgnd}      color {} Colors
-NewOption -labelborderwidth  {Label Brdr Width} type
-NewOption -labelforeground   {Label Foregnd}    color {} Colors
-NewOption -labelheight       {Label Height}     type
-NewOption -labelrelief       {Label Relief}     relief
-NewOption -labels            {Show Labels}      boolean  {0 1}
-NewOption -resizablecolumns  {Resizable Cols}   boolean  {0 1}
+NewOption -columnborderwidth	{Col Brdr Width}	type
+NewOption -columnrelief		{Col Relief}		relief
+NewOption -fillcolumn		{Fill Col}		type
+NewOption -labelanchor		{Label Anchor}		choice  {n ne e se s sw w nw center}
+NewOption -labelbackground	{Label Bkgnd}		color {} Colors
+NewOption -labelborderwidth	{Label Brdr Width}	type
+NewOption -labelforeground	{Label Foregnd}		color {} Colors
+NewOption -labelheight		{Label Height}		type
+NewOption -labelrelief		{Label Relief}		relief
+NewOption -labels		{Show Labels}		boolean  {0 1}
+NewOption -resizablecolumns	{Resizable Cols}	boolean  {0 1}
 
 ## New options for columns
-NewOption -position          {Col Position}	type
-NewOption -resizable         {Col Resizable}    boolean  {0 1}
-NewOption -visible           {Col Visible}      boolean  {0 1}
+NewOption -position		{Col Position}		type
+NewOption -resizable		{Col Resizable}		boolean  {0 1}
+NewOption -visible		{Col Visible}		boolean  {0 1}
 
 ## Multicolumn listbox support
 NewOption -_mclistbox_columns  "columns"  combobox
 ClassOption -_mclistbox_columns
-OptionConfigCmd -_mclistbox_columns     config     vTcl::widgets::vtcl::mclistbox::config_columns
-OptionConfigCmd -_mclistbox_columns     update     vTcl::widgets::vtcl::mclistbox::update_columns
-OptionConfigCmd -_mclistbox_columns     get        vTcl::widgets::vtcl::mclistbox::get_columns
-OptionConfigCmd -_mclistbox_columns     select     vTcl::widgets::vtcl::mclistbox::select_column
-OptionConfigCmd -_mclistbox_columns     edit       vTcl::itemEdit::edit
-OptionConfigCmd -_mclistbox_columns     editArg    vTcl::widgets::vtcl::mclistbox::edit
+OptionConfigCmd -_mclistbox_columns     config		vTcl::widgets::vtcl::mclistbox::config_columns
+OptionConfigCmd -_mclistbox_columns     update		vTcl::widgets::vtcl::mclistbox::update_columns
+OptionConfigCmd -_mclistbox_columns     get		vTcl::widgets::vtcl::mclistbox::get_columns
+OptionConfigCmd -_mclistbox_columns     select		vTcl::widgets::vtcl::mclistbox::select_column
+OptionConfigCmd -_mclistbox_columns     edit		vTcl::itemEdit::edit
+OptionConfigCmd -_mclistbox_columns     editArg		vTcl::widgets::vtcl::mclistbox::edit
 
 ## For saving images
 TranslateOption -labelimage vTcl:image:translate
@@ -80,85 +80,85 @@ NoEncaseOption  -labelimage 1
 namespace eval ::vTcl::widgets::vtcl::mclistbox::edit {
 
     proc getTitle {target} {
-        return "Edit columns for $target"
+	return "Edit columns for $target"
     }
 
     proc getLabelOption {} {
-        return -label
+	return -label
     }
 
     proc getItems {target} {
-        ## first item in the list is the current index
-        set names [$target column names]
-        set values 0
-        foreach name $names {
-            set label_opt [$target column cget $name -label]
-            lappend values $label_opt
-        }
-        return $values
+	## first item in the list is the current index
+	set names [$target column names]
+	set values 0
+	foreach name $names {
+	    set label_opt [$target column cget $name -label]
+	    lappend values $label_opt
+	}
+	return $values
     }
 
     proc addItem {target} {
-        set pages [$target column names]
-        set index 0
-        ## repeat until we find an unused page number
-        while {1} {
-            incr index
-            set newpage "col$index"
-            if {[lsearch -exact $pages $newpage] == -1} break
-        }
-        $target column add $newpage -label "Column $index"
-        return "Column $index"
+	set pages [$target column names]
+	set index 0
+	## repeat until we find an unused page number
+	while {1} {
+	    incr index
+	    set newpage "col$index"
+	    if {[lsearch -exact $pages $newpage] == -1} break
+	}
+	$target column add $newpage -label "Column $index"
+	return "Column $index"
     }
 
     proc removeItem {target index} {
-        set columns [$target column names]
-        set column  [lindex $columns $index]
-        $target column delete $column
+	set columns [$target column names]
+	set column  [lindex $columns $index]
+	$target column delete $column
     }
 
     proc moveUpOrDown {target index direction} {
-        set columns [$target column names]
-        set length [llength $columns]
-        set i 0
-        set offset(up) -1
-        set offset(down) 1
-        set k [expr ($index + $offset($direction)) % $length]
-        ## here we assign positions to columns
-        foreach column $columns {
-            if {$i == $index} {
-                $target column configure $column -position $k
-            } elseif {$i == $k} {
-                $target column configure $column -position $index
-            } else {
-                $target column configure $column -position $i
-            }
-            incr i
-        }
-        update idletasks
-        ## do it one more time
-        set columns [$target column names]
-        foreach column $columns {
-            set position [$target column cget $column -position]
-            $target column configure $column -position $position
-        }
+	set columns [$target column names]
+	set length [llength $columns]
+	set i 0
+	set offset(up) -1
+	set offset(down) 1
+	set k [expr ($index + $offset($direction)) % $length]
+	## here we assign positions to columns
+	foreach column $columns {
+	    if {$i == $index} {
+		$target column configure $column -position $k
+	    } elseif {$i == $k} {
+		$target column configure $column -position $index
+	    } else {
+		$target column configure $column -position $i
+	    }
+	    incr i
+	}
+	update idletasks
+	## do it one more time
+	set columns [$target column names]
+	foreach column $columns {
+	    set position [$target column cget $column -position]
+	    $target column configure $column -position $position
+	}
     }
 
     proc itemConfigure {target index args} {
-        set columns [$target column names]
-        set column  [lindex $columns $index]
-        if {$args == ""} {
-            return [$target column configure $column]
-        } else {
-            eval $target column configure $column $args
-        }
+	set columns [$target column names]
+	set column  [lindex $columns $index]
+	if {$args == ""} {
+	    return [$target column configure $column]
+	} else {
+	    eval $target column configure $column $args
+	}
     }
 }
 
 namespace eval ::vTcl::widgets::vtcl::mclistbox {
 
     proc editColumns {} {
-        set target $::vTcl(w,widget)
+	set target $::vTcl(w,widget)
 	::vTcl::itemEdit::edit $target vTcl::widgets::vtcl::mclistbox::edit
     }
 
@@ -166,17 +166,17 @@ namespace eval ::vTcl::widgets::vtcl::mclistbox {
     }
 
     proc update_columns {target var} {
-        ## there is a trace on var to update the combobox
-        ## first item in the list is the current index
-        set names [$target column names]
-        set values 0
-        foreach name $names {
-            set label_opt [$target column cget $name -label]
-            lappend values $label_opt
-        }
+	## there is a trace on var to update the combobox
+	## first item in the list is the current index
+	set names [$target column names]
+	set values 0
+	foreach name $names {
+	    set label_opt [$target column cget $name -label]
+	    lappend values $label_opt
+	}
 
-        ## this will trigger the trace
-        set ::$var $values
+	## this will trigger the trace
+	set ::$var $values
     }
 
     proc config_columns {target var} {
@@ -186,53 +186,53 @@ namespace eval ::vTcl::widgets::vtcl::mclistbox {
     }
 
     proc insertCmd {target} {
-        $target configure -height 0
-        $target column add col1 -label {Column 1}
-        $target column add col2 -label {Column 2}
-        $target insert end {{line1 col1} {line1 col2}}
-        $target insert end {{line2 col1} {line2 col2}}
+	$target configure -height 0
+	$target column add col1 -label {Column 1}
+	$target column add col2 -label {Column 2}
+	$target insert end {{line1 col1} {line1 col2}}
+	$target insert end {{line2 col1} {line2 col2}}
     }
 
     proc dumpCmd {target basename} {
-        set result [vTcl:dump_widget_opt $target $basename]
-        set names [$target column names]
-        set index 1
-        foreach name $names {
-            set conf [$target column configure $name]
-            set pairs [vTcl:get_subopts_special $conf $target]
-            append result "$::vTcl(tab)$basename column add col$index \\\n"
-            append result "[vTcl:clean_pairs $pairs]\n"
-            incr index
-        }
-        return $result
+	set result [vTcl:dump_widget_opt $target $basename]
+	set names [$target column names]
+	set index 1
+	foreach name $names {
+	    set conf [$target column configure $name]
+	    set pairs [vTcl:get_subopts_special $conf $target]
+	    append result "$::vTcl(tab)$basename column add col$index \\\n"
+	    append result "[vTcl:clean_pairs $pairs]\n"
+	    incr index
+	}
+	return $result
     }
 
     proc resizeCmd {target w h} {
-        $target configure -width $w -height $h
+	$target configure -width $w -height $h
     }
 
     proc getImagesCmd {target} {
-        set result [$target cget -labelimage]
-        set names [$target column names]
-        foreach name $names {
-            set image [$target column cget $name -image]
-            if {$image != ""} {
-                lappend result $image
-            }
-        }
-        return $result
+	set result [$target cget -labelimage]
+	set names [$target column names]
+	foreach name $names {
+	    set image [$target column cget $name -image]
+	    if {$image != ""} {
+		lappend result $image
+	    }
+	}
+	return $result
     }
 
     proc getFontsCmd {target} {
-        set result [$target cget -labelfont]
-        set names [$target column names]
-        foreach name $names {
-            set image [$target column cget $name -font]
-            if {$image != ""} {
-                lappend result $image
-            }
-        }
-        return $result
+	set result [$target cget -labelfont]
+	set names [$target column names]
+	foreach name $names {
+	    set image [$target column cget $name -font]
+	    if {$image != ""} {
+		lappend result $image
+	    }
+	}
+	return $result
     }
 }
 
@@ -271,18 +271,18 @@ proc __mclistbox_Setup {} {
 
     namespace eval ::mclistbox {
 
-        # this is the public interface
-        namespace export mclistbox
+	# this is the public interface
+	namespace export mclistbox
 
-        # these contain references to available options
-        variable widgetOptions
-        variable columnOptions
+	# these contain references to available options
+	variable widgetOptions
+	variable columnOptions
 	variable itemConfigureOptions
 
-        # these contain references to available commands and subcommands
-        variable widgetCommands
-        variable columnCommands
-        variable labelCommands
+	# these contain references to available commands and subcommands
+	variable widgetCommands
+	variable columnCommands
+	variable labelCommands
     }
 }
 
@@ -368,46 +368,46 @@ proc ::mclistbox::Init {} {
     # actual item.
 
     array set widgetOptions [list \
-	    -background          {background          Background} \
-	    -bd                  -borderwidth \
-	    -bg                  -background \
-	    -borderwidth         {borderWidth         BorderWidth} \
-	    -columnbd            -columnborderwidth \
+	    -background	  {background	  Background} \
+	    -bd		  -borderwidth \
+	    -bg		  -background \
+	    -borderwidth	 {borderWidth	 BorderWidth} \
+	    -columnbd	    -columnborderwidth \
 	    -columnborderwidth   {columnBorderWidth   BorderWidth} \
-	    -columnrelief        {columnRelief        Relief} \
-	    -cursor              {cursor              Cursor} \
+	    -columnrelief	{columnRelief	Relief} \
+	    -cursor	      {cursor	      Cursor} \
 	    -exportselection     {exportSelection     ExportSelection} \
-	    -fg                  -foreground \
-	    -fillcolumn          {fillColumn          FillColumn} \
-	    -font                {font                Font} \
-	    -foreground          {foreground          Foreground} \
-	    -height              {height              Height} \
+	    -fg		  -foreground \
+	    -fillcolumn	  {fillColumn	  FillColumn} \
+	    -font		{font		Font} \
+	    -foreground	  {foreground	  Foreground} \
+	    -height	      {height	      Height} \
 	    -highlightbackground {highlightBackground HighlightBackground} \
 	    -highlightcolor      {highlightColor      HighlightColor} \
 	    -highlightthickness  {highlightThickness  HighlightThickness} \
-	    -labelanchor         {labelAnchor         Anchor} \
+	    -labelanchor	 {labelAnchor	 Anchor} \
 	    -labelbackground     {labelBackground     Background} \
-	    -labelbd             -labelborderwidth \
-	    -labelbg             -labelbackground \
+	    -labelbd	     -labelborderwidth \
+	    -labelbg	     -labelbackground \
 	    -labelborderwidth    {labelBorderWidth    BorderWidth} \
-	    -labelfg             -labelforeground \
-	    -labelfont           {labelFont           Font} \
+	    -labelfg	     -labelforeground \
+	    -labelfont	   {labelFont	   Font} \
 	    -labelforeground     {labelForeground     Foreground} \
-	    -labelheight         {labelHeight         Height} \
-	    -labelimage          {labelImage          Image} \
-	    -labelrelief         {labelRelief         Relief} \
-	    -labels              {labels              Labels} \
-	    -relief              {relief              Relief} \
+	    -labelheight	 {labelHeight	 Height} \
+	    -labelimage	  {labelImage	  Image} \
+	    -labelrelief	 {labelRelief	 Relief} \
+	    -labels	      {labels	      Labels} \
+	    -relief	      {relief	      Relief} \
 	    -resizablecolumns    {resizableColumns    ResizableColumns} \
 	    -selectbackground    {selectBackground    Foreground} \
 	    -selectborderwidth   {selectBorderWidth   BorderWidth} \
 	    -selectcommand       {selectCommand       Command} \
 	    -selectforeground    {selectForeground    Background} \
-	    -selectmode          {selectMode          SelectMode} \
-	    -setgrid             {setGrid             SetGrid} \
-            -state               {state               State} \
-	    -takefocus           {takeFocus           TakeFocus} \
-	    -width               {width               Width} \
+	    -selectmode	  {selectMode	  SelectMode} \
+	    -setgrid	     {setGrid	     SetGrid} \
+	    -state	       {state	       State} \
+	    -takefocus	   {takeFocus	   TakeFocus} \
+	    -width	       {width	       Width} \
 	    -xscrollcommand      {xScrollCommand      ScrollCommand} \
 	    -yscrollcommand      {yScrollCommand      ScrollCommand} \
 	    -iseditableindexcommand \
@@ -417,35 +417,35 @@ proc ::mclistbox::Init {} {
     # If we have bwidget, add the bwidget drag-and-drop stuff.
     if { $::mclistbox::bwidget } {
 	array set widgetOptions [list \
-		-dragendcmd     {dragEndCmd           DragEndCmd}   \
-		-dragenabled    {dragEnabled          DragEnabled}  \
-		-draginitcmd    {dragInitCmd          DragInitCmd}  \
-		-dragtype       {dragType             DragType}     \
-		-dropcmd        {dropCmd              DropCmd}      \
-		-dropenabled    {dropEnabled          DropEnabled}  \
-		-dropovercmd    {dropOverCmd          DropOverCmd}  \
-		-droptypes      {dropTypes            DropTypes}    \
-		-dropcursor     {dropCursor           DropCursor}  \
+		-dragendcmd     {dragEndCmd	   DragEndCmd}   \
+		-dragenabled    {dragEnabled	  DragEnabled}  \
+		-draginitcmd    {dragInitCmd	  DragInitCmd}  \
+		-dragtype       {dragType	     DragType}     \
+		-dropcmd	{dropCmd	      DropCmd}      \
+		-dropenabled    {dropEnabled	  DropEnabled}  \
+		-dropovercmd    {dropOverCmd	  DropOverCmd}  \
+		-droptypes      {dropTypes	    DropTypes}    \
+		-dropcursor     {dropCursor	   DropCursor}  \
 		]
 
     }
 
     # and likewise for column-specific stuff. 
     array set columnOptions [list \
-	    -background         {background           Background} \
-	    -bitmap		{bitmap               Bitmap} \
-	    -font               {font                 Font} \
-	    -foreground         {foreground           Foreground} \
-	    -image              {image                Image} \
-	    -label 		{label                Label} \
-	    -position           {position             Position} \
-	    -resizable          {resizable            Resizable} \
-	    -visible            {visible              Visible} \
-	    -width              {width                Width} \
-	    -editable           {editable             Editable} \
-	    -editcommand        {editcommand          Editcommand} \
-	    -listvar            {listvar              Listvar} \
-            ]
+	    -background	 {background	   Background} \
+	    -bitmap		{bitmap	       Bitmap} \
+	    -font	       {font		 Font} \
+	    -foreground	 {foreground	   Foreground} \
+	    -image	      {image		Image} \
+	    -label 		{label		Label} \
+	    -position	   {position	     Position} \
+	    -resizable	  {resizable	    Resizable} \
+	    -visible	    {visible	      Visible} \
+	    -width	      {width		Width} \
+	    -editable	   {editable	     Editable} \
+	    -editcommand	{editcommand	  Editcommand} \
+	    -listvar	    {listvar	      Listvar} \
+	    ]
 
     # this defines the valid widget commands. It's important to
     # list them here; we use this list to validate commands and
@@ -453,7 +453,7 @@ proc ::mclistbox::Init {} {
     set widgetCommands [list \
 	    activate	 bbox       cget     column    configure  \
 	    curselection delete     edit     editcombo get       index      \
-	    insert 	 label      nearest  scan      see        \
+	    insert 	 label      nearest  scan      see	\
 	    selection  	 size       xview    yview
     ]
 
@@ -516,36 +516,36 @@ proc ::mclistbox::Init {} {
 
 	# these are unique to us...
 	option add *Mclistbox.columnBorderWidth   0      widgetDefault
-	option add *Mclistbox.columnRelief        flat   widgetDefault
+	option add *Mclistbox.columnRelief	flat   widgetDefault
 	option add *Mclistbox.labelBorderWidth    1      widgetDefault
-	option add *Mclistbox.labelRelief         raised widgetDefault
-	option add *Mclistbox.labels              1      widgetDefault
+	option add *Mclistbox.labelRelief	 raised widgetDefault
+	option add *Mclistbox.labels	      1      widgetDefault
 	option add *Mclistbox.resizableColumns    1      widgetDefault
 	option add *Mclistbox.selectcommand       {}     widgetDefault
-	option add *Mclistbox.fillcolumn          {}     widgetDefault
+	option add *Mclistbox.fillcolumn	  {}     widgetDefault
 	option add *Mclistbox.iseditableindexcommand   {} widgetDefault
-        option add *Mclistbox.state               normal widgetDefault
+	option add *Mclistbox.state	       normal widgetDefault
 
 	# Bwidget stuff
-	option add *Mclistbox.dragEndCmd          {}     widgetDefault
-	option add *Mclistbox.dragEnabled         false  widgetDefault
-	option add *Mclistbox.dragInitCmd         {}     widgetDefault
-	option add *Mclistbox.dragType            {LISTBOX_ITEM} widgetDefault
-	option add *Mclistbox.dropCmd             {}     widgetDefault
-	option add *Mclistbox.dropEnabled         false  widgetDefault
-	option add *Mclistbox.dropOverCmd         {}     widgetDefault
-	option add *Mclistbox.dropTypes           \
+	option add *Mclistbox.dragEndCmd	  {}     widgetDefault
+	option add *Mclistbox.dragEnabled	 false  widgetDefault
+	option add *Mclistbox.dragInitCmd	 {}     widgetDefault
+	option add *Mclistbox.dragType	    {LISTBOX_ITEM} widgetDefault
+	option add *Mclistbox.dropCmd	     {}     widgetDefault
+	option add *Mclistbox.dropEnabled	 false  widgetDefault
+	option add *Mclistbox.dropOverCmd	 {}     widgetDefault
+	option add *Mclistbox.dropTypes	   \
 		{LISTBOX_ITEM {copy {} move {}}} widgetDefault
-	option add *Mclistbox.dropCursor          before   widgetDefault
+	option add *Mclistbox.dropCursor	  before   widgetDefault
 
 	# column options
 	option add *Mclistbox*MclistboxColumn.visible       1      widgetDefault
 	option add *Mclistbox*MclistboxColumn.resizable     1      widgetDefault
 	option add *Mclistbox*MclistboxColumn.position      end    widgetDefault
-	option add *Mclistbox*MclistboxColumn.label         ""     widgetDefault
-	option add *Mclistbox*MclistboxColumn.width         0      widgetDefault
-	option add *Mclistbox*MclistboxColumn.bitmap        ""     widgetDefault
-	option add *Mclistbox*MclistboxColumn.image         ""     widgetDefault
+	option add *Mclistbox*MclistboxColumn.label	 ""     widgetDefault
+	option add *Mclistbox*MclistboxColumn.width	 0      widgetDefault
+	option add *Mclistbox*MclistboxColumn.bitmap	""     widgetDefault
+	option add *Mclistbox*MclistboxColumn.image	 ""     widgetDefault
 	option add *Mclistbox*MclistboxColumn.editable      \
 		0   widgetDefault
 	option add *Mclistbox*MclistboxColumn.editcommand      \
@@ -567,7 +567,7 @@ proc ::mclistbox::Init {} {
 #
 # Arguments:
 #
-#     w        path of new widget to create
+#     w	path of new widget to create
 #     args     additional option/value pairs (eg: -background white, etc.)
 #
 # Results:
@@ -618,7 +618,7 @@ proc ::mclistbox::mclistbox {args} {
 #
 # Arguments:
 #
-#    w        widget name
+#    w	widget name
 #    args     additional option/value pairs
 #
 # Results:
@@ -759,7 +759,7 @@ proc ::mclistbox::Build {w args} {
 #    w       pathname of the widget
 #    type    one of "own", "lose" or "get"
 #    offset  only used if type is "get"; offset into the selection
-#            buffer where the returned data should begin
+#	    buffer where the returned data should begin
 #    length  number of bytes to return
 #
 
@@ -824,18 +824,18 @@ proc ::mclistbox::SelectionHandler {w type {offset ""} {length ""}} {
 # Arguments:
 #
 #     w     a widget path; typically the actual result of a %W 
-#           substitution in a binding. It should be either a
-#           mclistbox widget or one of its subwidgets
+#	   substitution in a binding. It should be either a
+#	   mclistbox widget or one of its subwidgets
 #
 #     args  should one or more of the following arguments or 
-#           pairs of arguments:
+#	   pairs of arguments:
 #
-#           -x <x>      will convert the value <x>; typically <x> will
-#                       be the result of a %x substitution
-#           -y <y>      will convert the value <y>; typically <y> will
-#                       be the result of a %y substitution
-#           -W (or -w)  will return the name of the mclistbox widget
-#                       which is the parent of $w
+#	   -x <x>      will convert the value <x>; typically <x> will
+#		       be the result of a %x substitution
+#	   -y <y>      will convert the value <y>; typically <y> will
+#		       be the result of a %y substitution
+#	   -W (or -w)  will return the name of the mclistbox widget
+#		       which is the parent of $w
 #
 # Returns:
 #
@@ -974,9 +974,9 @@ proc ::mclistbox::SetClassBindings {} {
 #
 # Arguments:
 #
-#    path          The path to the widget where the drag is started (%W from
-#                  bind).
-#    Y             The %Y from bind.
+#    path	  The path to the widget where the drag is started (%W from
+#		  bind).
+#    Y	     The %Y from bind.
 #
 # Results:
 #
@@ -1045,7 +1045,7 @@ proc ::mclistbox::NewColumn {w id {hidden false}} {
 	    -relief raised \
 	    -bd 1 \
 	    -highlightthickness 0 \
-            -state $options(-state) \
+	    -state $options(-state) \
 	    ]
 
     set listbox   \
@@ -1061,9 +1061,9 @@ proc ::mclistbox::NewColumn {w id {hidden false}} {
 
     set button \
 	    [button $frame.editbutton \
-	    -bd 1        \
-            -padx 0      \
-            -pady 0      \
+	    -bd 1	\
+	    -padx 0      \
+	    -pady 0      \
 	    -text "Edit" \
 	    -command [list ::mclistbox::_editButtonCommand $w $id] \
 	    -state disabled
@@ -1119,13 +1119,13 @@ proc ::mclistbox::NewColumn {w id {hidden false}} {
     # Make the listbox a bwidget drag and drop site, if we have bwidgets
     if { $::mclistbox::bwidget } {
 	if { $options(-dragenabled) } {
-	    DragSite::register $listbox                      \
+	    DragSite::register $listbox		      \
 		    -draginitcmd ::mclistbox::_init_drag_cmd \
 		    -dragendcmd  ::mclistbox::_drag_end_cmd  \
 		    -dragevent 1
 	}
 	if { $options(-dropenabled) } {
-	    DropSite::register $listbox                 \
+	    DropSite::register $listbox		 \
 		    -droptypes   $options(-droptypes)   \
 		    -dropovercmd ::mclistbox::_over_cmd \
 		    -dropcmd     ::mclistbox::_drop_cmd
@@ -1180,7 +1180,7 @@ proc ::mclistbox::Column-add {w args} {
     set opts(-width)       20
     set opts(-background)  $options(-background)
     set opts(-foreground)  $options(-foreground)
-    set opts(-font)        $options(-font)
+    set opts(-font)	$options(-font)
     set opts(-label)       $id
     set opts(-editable)    0
     set opts(-editcommand) ""
@@ -1215,7 +1215,7 @@ proc ::mclistbox::Column-add {w args} {
     # ericm@scriptics
 
     if {[string equal $options(-state) "disabled"]} {
-        set opts(-foreground) [$widgets(label$id) cget -disabledforeground]
+	set opts(-foreground) [$widgets(label$id) cget -disabledforeground]
     }
 
     # add this column to the list of known columns
@@ -1231,7 +1231,7 @@ proc ::mclistbox::Column-add {w args} {
     if {$existingRows > 0} {
 	set blanks {}
 	# The new listbox may already have data in it (because of the listvar)
-        # so start iterating from [listbox size] instead of from 0
+	# so start iterating from [listbox size] instead of from 0
 	for {set i [$widgets(listbox$id) size]} {$i < $existingRows} {incr i} {
 	    lappend blanks {}
 	}
@@ -1449,9 +1449,9 @@ proc ::mclistbox::Column-configure {w id args} {
 		set options($id:-editcommand) $value
 	    }
 
-            -listvar {
-                # Set the list variable for the column
-                $listbox configure $option $value
+	    -listvar {
+		# Set the list variable for the column
+		$listbox configure $option $value
 	    }
 	}
     }
@@ -1563,7 +1563,7 @@ proc ::mclistbox::MassageIndex {w index} {
 #
 # Arguments:
 #
-#    w         widget pathname
+#    w	 widget pathname
 #    command   widget subcommand
 #    args      additional arguments; varies with the subcommand
 #
@@ -1599,7 +1599,7 @@ proc ::mclistbox::WidgetProc {w command args} {
 
     set result ""
     if {[info exists priorSelection]} {
-        unset priorSelection
+	unset priorSelection
     }
 
     # here we go. Error checking be damned!
@@ -2006,11 +2006,11 @@ proc ::mclistbox::WidgetProc {w command args} {
 	    # we do anything. Just before returning we'll see if the
 	    # selection has changed. If so, we'll call our selectcommand
 
-           if {[string equal $options(-state) "disabled"]} {
+	   if {[string equal $options(-state) "disabled"]} {
 	       foreach id $misc(columns) {
-                   $widgets(listbox$id) selection clear 0 end
+		   $widgets(listbox$id) selection clear 0 end
 	       }
-           }
+	   }
 
 	    if {$options(-selectcommand) != ""} {
 		set col0 [lindex $misc(columns) 0]
@@ -2126,9 +2126,9 @@ proc ::mclistbox::WidgetProc {w command args} {
 	    if {![info exists misc(skipRecursiveCall)]} {
 		set misc(skipRecursiveCall) 1
 		uplevel \#0 $options(-selectcommand) $currentSelection
-                if {[info exists misc(skipRecursiveCall)]} {
+		if {[info exists misc(skipRecursiveCall)]} {
 		    unset misc(skipRecursiveCall)
-                }
+		}
 	    }
 	}
     }
@@ -2151,11 +2151,11 @@ proc ::mclistbox::WidgetProc {w command args} {
 		}
 	    }
 	}
-        if {[string equal $options(-state) normal]} {
+	if {[string equal $options(-state) normal]} {
 	    foreach editbutton [array names widgets editbutton*] {
-	        $widgets($editbutton) configure -state $state
+		$widgets($editbutton) configure -state $state
 	    }
-        }
+	}
     }
     # ericm@scriptics.com
 
@@ -2246,7 +2246,7 @@ proc ::mclistbox::CheckColumnID {w id} {
 #
 # Arguments:
 #
-#    w        widget pathname
+#    w	widget pathname
 #    id       a column identifier
 #    code     tcl code to be evaluated.
 #
@@ -2310,9 +2310,9 @@ proc ::mclistbox::HumanizeList {list} {
 #
 # Arguments:
 #
-#    w        widget pathname
+#    w	widget pathname
 #    object   type of object to canonize; must be one of "command",
-#             "option", "column" or "column option".
+#	     "option", "column" or "column option".
 #    opt      the option (or command) to be canonized
 #
 # Returns:
@@ -2567,7 +2567,7 @@ proc ::mclistbox::Configure {w args} {
 		$widgets(hiddenListbox) configure $option $newValue
 		set options($option) [$widgets(hiddenListbox) cget $option]
 	    }
-            -state {
+	    -state {
 		set newValue [string tolower $newValue]
 		set vals [list "normal" "disabled"]
 		if { [lsearch $vals $newValue] == -1 } {
@@ -2575,32 +2575,32 @@ proc ::mclistbox::Configure {w args} {
 		}
 		set options($option) $newValue
 
-                if {[string equal $newValue "disabled"]} {
+		if {[string equal $newValue "disabled"]} {
 		    
-                    foreach id $misc(columns) {
-		        $widgets(label$id) configure -state $newValue
-                        set fgcolor [$widgets(label$id) cget -disabledforeground]
-                        $widgets(listbox$id) configure -foreground $fgcolor
-                        set misc(oldSelect$id) [$widgets(listbox$id) curselection]
-  		        $widgets(listbox$id) selection clear 0 end
+		    foreach id $misc(columns) {
+			$widgets(label$id) configure -state $newValue
+			set fgcolor [$widgets(label$id) cget -disabledforeground]
+			$widgets(listbox$id) configure -foreground $fgcolor
+			set misc(oldSelect$id) [$widgets(listbox$id) curselection]
+  			$widgets(listbox$id) selection clear 0 end
 		    }
- 	            foreach editbutton [array names widgets editbutton*] {
-	                $widgets($editbutton) configure -state disabled
-	            }
+ 		    foreach editbutton [array names widgets editbutton*] {
+			$widgets($editbutton) configure -state disabled
+		    }
 
 		} else {
-                    foreach id $misc(columns) {
-		        $widgets(label$id) configure -state $newValue
-                        $widgets(listbox$id) configure \
-                                -foreground $options(-foreground)
-                        if {[info exists misc(oldSelect$id)]} {
-		            foreach index $misc(oldSelect$id) {
-                                $widgets(listbox$id) selection set $index
-                            }
+		    foreach id $misc(columns) {
+			$widgets(label$id) configure -state $newValue
+			$widgets(listbox$id) configure \
+				-foreground $options(-foreground)
+			if {[info exists misc(oldSelect$id)]} {
+			    foreach index $misc(oldSelect$id) {
+				$widgets(listbox$id) selection set $index
+			    }
 			}
-                    }
+		    }
 		}
-            }
+	    }
 	    -cursor {
 		# { these must be applied to each listbox and frame }
 		foreach id $misc(columns) {
@@ -2763,9 +2763,9 @@ proc ::mclistbox::UpdateScrollbars {w} {
     upvar ::mclistbox::${w}::misc    misc
 
     if {![winfo ismapped $w]} {
-        if {[info exists misc(afterid)]} {
+	if {[info exists misc(afterid)]} {
 	    unset misc(afterid)
-        }
+	}
 	return
     }
 
@@ -2784,7 +2784,7 @@ proc ::mclistbox::UpdateScrollbars {w} {
 	}
     }
     if {[info exists misc(afterid)]} {  
-        unset misc(afterid)
+	unset misc(afterid)
     }
 }
 
@@ -2820,12 +2820,12 @@ proc ::mclistbox::InvalidateScrollbars {w args} {
 #
 # Arguments:
 #
-#    w         widget pathname
+#    w	 widget pathname
 #    index     a valid listbox index to designate where the data is
-#              to be inserted
+#	      to be inserted
 #    arglist   A list of values to be inserted. Each element of the
-#              list will itself be treated as a list, one element for
-#              each column.
+#	      list will itself be treated as a list, one element for
+#	      each column.
 #
 # Results:
 #
@@ -2911,8 +2911,8 @@ proc ::mclistbox::ColumnIsHidden {w id} {
 #
 #    w       widget pathname
 #    height  height, in pixels, that the columns should be adjusted
-#            to. If null, the height will be the height of the text
-#            widget that underlies our columns.
+#	    to. If null, the height will be the height of the text
+#	    widget that underlies our columns.
 #
 # Results:
 #
@@ -2941,12 +2941,12 @@ proc ::mclistbox::AdjustColumns {w {height ""}} {
     foreach id $misc(columns) {
 	if { ![ColumnIsHidden $w $id] } {
 	    if { $misc(min-$widgets(frame$id)) == 0 } {
-                set count [$widgets(listbox$id) index end]
-                set maxw 0
-                set columnLabel [$widgets(label$id) cget -text]
-                if {$columnLabel != ""} {
-                    set maxw [font measure $options(-font) $columnLabel]
-                }
+		set count [$widgets(listbox$id) index end]
+		set maxw 0
+		set columnLabel [$widgets(label$id) cget -text]
+		if {$columnLabel != ""} {
+		    set maxw [font measure $options(-font) $columnLabel]
+		}
 		for { set i 0 } { $i < $count } { incr i } {
 		    set thisw [font measure $options(-font) \
 			    [$widgets(listbox$id) get $i]]
@@ -3009,10 +3009,10 @@ proc ::mclistbox::AdjustColumns {w {height ""}} {
 #
 # Arguments:
 #
-#    w          widget pathname
-#    id         column identifier
+#    w	  widget pathname
+#    id	 column identifier
 #    direction  should be one of "right" or "left". Actually, anything
-#               that doesn't match "right" will be treated as "left"
+#	       that doesn't match "right" will be treated as "left"
 #
 # Results:
 #
@@ -3022,7 +3022,7 @@ proc ::mclistbox::AdjustColumns {w {height ""}} {
 proc ::mclistbox::FindResizableNeighbor {w id {direction right}} {
     upvar ::mclistbox::${w}::widgets       widgets
     upvar ::mclistbox::${w}::options       options
-    upvar ::mclistbox::${w}::misc          misc
+    upvar ::mclistbox::${w}::misc	  misc
 
 
     if {$direction == "right"} {
@@ -3051,13 +3051,13 @@ proc ::mclistbox::FindResizableNeighbor {w id {direction right}} {
 #
 # Arguments:
 #
-#    w        widget pathname
+#    w	widget pathname
 #    type     type of event; must be one of "buttonpress", "drag",
-#             "motion", or "buttonrelease"
+#	     "motion", or "buttonrelease"
 #    widget   the actual widget that the event occured over
-#    x        the x coordinate of the mouse, relative to $widget
-#    X        the root x coordinate of the mouse
-#    Y        the root y coordinate of the mouse
+#    x	the x coordinate of the mouse, relative to $widget
+#    X	the root x coordinate of the mouse
+#    Y	the root y coordinate of the mouse
 #
 # The basic idea is this:
 #
@@ -3085,7 +3085,7 @@ proc ::mclistbox::ResizeEvent {w type widget x X Y} {
 
     upvar ::mclistbox::${w}::widgets       widgets
     upvar ::mclistbox::${w}::options       options
-    upvar ::mclistbox::${w}::misc          misc
+    upvar ::mclistbox::${w}::misc	  misc
     upvar ::mclistbox::${w}::columnID      columnID
 
     # if the widget doesn't allow resizable cursors, there's
@@ -3226,9 +3226,9 @@ proc ::mclistbox::ResizeEvent {w type widget x X Y} {
 	    }
 
 	    # reset the state and the cursor
-            if {[info exists drag]} {
-	        unset drag
-            }
+	    if {[info exists drag]} {
+		unset drag
+	    }
 	    $widgets(label$id) configure -cursor $options(-cursor)
 
 	}
@@ -3241,8 +3241,8 @@ proc ::mclistbox::ResizeEvent {w type widget x X Y} {
 #
 # Arguments:
 #	path      path receiving the event
-#       X         root X coord of the event
-#       Y         root Y coord of the event
+#       X	 root X coord of the event
+#       Y	 root Y coord of the event
 #       top       toplevel created to represent the dragged data.
 #
 # Results:
@@ -3257,14 +3257,14 @@ proc ::mclistbox::_init_drag_cmd {path X Y top} {
 
     if {[info exists options(dragIndex)]} {
 
-        set index $options(dragIndex)
+	set index $options(dragIndex)
 
     } else {
 
-        # I don't think this will ever happen.. We should always get a button
-        # press event before the drag init is called.
+	# I don't think this will ever happen.. We should always get a button
+	# press event before the drag init is called.
 
-        set index 0
+	set index 0
     }
 
     set cmd   $options(-draginitcmd)
@@ -3279,20 +3279,20 @@ proc ::mclistbox::_init_drag_cmd {path X Y top} {
 #	Respond to a BWidget drag-and-drop "over" event.
 #
 # Arguments:
-#	path            target of the over event
-#       source          source of the drag event
-#       event           one of enter, motion or leave
-#       X               root X coord of the event
-#       Y               root Y coord of the event
-#       op              operation, one of copy, move or link
-#       type            type of dragged data
-#       data            dragged data
+#	path	    target of the over event
+#       source	  source of the drag event
+#       event	   one of enter, motion or leave
+#       X	       root X coord of the event
+#       Y	       root Y coord of the event
+#       op	      operation, one of copy, move or link
+#       type	    type of dragged data
+#       data	    dragged data
 #
 # Results:
-#	0        to refuse drag
-#       1        to accept but prevent future calls to _over_cmd
-#       2        to refuse drag but allow future calls to re-evaluate
-#       3        to accept drag and allow future calls to _over_cmd
+#	0	to refuse drag
+#       1	to accept but prevent future calls to _over_cmd
+#       2	to refuse drag but allow future calls to re-evaluate
+#       3	to accept drag and allow future calls to _over_cmd
 
 proc ::mclistbox::_over_cmd {path source event X Y op type data} {
     set index [$path nearest [expr {$Y - [winfo rooty $path]}]]
@@ -3357,12 +3357,12 @@ proc ::mclistbox::_over_cmd {path source event X Y op type data} {
 	    }
 	}
 
-        DropSite::setcursor based_arrow_down
+	DropSite::setcursor based_arrow_down
     } else {
 	if { [winfo exists $path._dragframe] } {
 	    destroy $path._dragframe
 	}
-        DropSite::setcursor dot
+	DropSite::setcursor dot
     }
 
     # Scrolling is a major pain in the butt, but it's really necessary.
@@ -3421,12 +3421,12 @@ proc ::mclistbox::_over_cmd {path source event X Y op type data} {
 #	Cleanup after a drag event.
 #
 # Arguments:
-#	path            target of the over event
-#       source          source of the drag event
-#       op              operation, one of copy, move or link
-#       type            type of dragged data
-#       data            dragged data
-#       result          result of target's -dropcmd
+#	path	    target of the over event
+#       source	  source of the drag event
+#       op	      operation, one of copy, move or link
+#       type	    type of dragged data
+#       data	    dragged data
+#       result	  result of target's -dropcmd
 #
 # Results:
 #	None.
@@ -3452,17 +3452,17 @@ proc ::mclistbox::_drag_end_cmd {path source op type data result} {
 #	Respond to a BWidget drag-and-drop "drop" event.
 #
 # Arguments:
-#	path            target of the over event
-#       source          source of the drag event
-#       X               root X coord of the event
-#       Y               root Y coord of the event
-#       op              operation, one of copy, move or link
-#       type            type of dragged data
-#       data            dragged data
+#	path	    target of the over event
+#       source	  source of the drag event
+#       X	       root X coord of the event
+#       Y	       root Y coord of the event
+#       op	      operation, one of copy, move or link
+#       type	    type of dragged data
+#       data	    dragged data
 #
 # Results:
-#	0               for failed drop
-#       1               for successful drop
+#	0	       for failed drop
+#       1	       for successful drop
 
 proc ::mclistbox::_drop_cmd {path source X Y op type data} {
     
@@ -3499,20 +3499,20 @@ proc ::mclistbox::_drop_cmd {path source X Y op type data} {
 #       indicator frame.
 #
 # Arguments:
-#	path            target of the over event
-#       source          source of the drag event
-#       event           one of enter, motion or leave
-#       X               root X coord of the event
-#       Y               root Y coord of the event
-#       op              operation, one of copy, move or link
-#       type            type of dragged data
-#       data            dragged data
+#	path	    target of the over event
+#       source	  source of the drag event
+#       event	   one of enter, motion or leave
+#       X	       root X coord of the event
+#       Y	       root Y coord of the event
+#       op	      operation, one of copy, move or link
+#       type	    type of dragged data
+#       data	    dragged data
 #
 # Results:
-#	0        to refuse drag
-#       1        to accept but prevent future calls to _over_cmd
-#       2        to refuse drag but allow future calls to re-evaluate
-#       3        to accept drag and allow future calls to _over_cmd
+#	0	to refuse drag
+#       1	to accept but prevent future calls to _over_cmd
+#       2	to refuse drag but allow future calls to re-evaluate
+#       3	to accept drag and allow future calls to _over_cmd
 
 proc ::mclistbox::_over_drag_frame_cmd {path source event X Y op type data} {
     # This is pretty gross -- we can't use winfo parent because the dragframe
@@ -3529,17 +3529,17 @@ proc ::mclistbox::_over_drag_frame_cmd {path source event X Y op type data} {
 #	Respond to a BWidget drag-and-drop "drop" event.
 #
 # Arguments:
-#	path            target of the over event
-#       source          source of the drag event
-#       X               root X coord of the event
-#       Y               root Y coord of the event
-#       op              operation, one of copy, move or link
-#       type            type of dragged data
-#       data            dragged data
+#	path	    target of the over event
+#       source	  source of the drag event
+#       X	       root X coord of the event
+#       Y	       root Y coord of the event
+#       op	      operation, one of copy, move or link
+#       type	    type of dragged data
+#       data	    dragged data
 #
 # Results:
-#	0               for failed drop
-#       1               for successful drop
+#	0	       for failed drop
+#       1	       for successful drop
 
 proc ::mclistbox::_drop_drag_frame_cmd {path source X Y op type data} {
     # This is pretty gross -- we can't use winfo parent because the dragframe
@@ -3562,11 +3562,11 @@ proc ::mclistbox::_drop_drag_frame_cmd {path source X Y op type data} {
 #	index   index to edit
 #	var	name of the variable to fill with a value
 #       vcmd    script used to validate the input; if null, no validation
-#               will occur.  If non-null, names a function that will be passed
-#               the input and will return a boolean indicating whether or not
-#               the input should be accepted (1 == good input, 0 == bad).  
-#               The edit widget will remain active as long as the input is
-#               rejected.
+#	       will occur.  If non-null, names a function that will be passed
+#	       the input and will return a boolean indicating whether or not
+#	       the input should be accepted (1 == good input, 0 == bad).  
+#	       The edit widget will remain active as long as the input is
+#	       rejected.
 
 #
 # Results:
@@ -3590,7 +3590,7 @@ proc ::mclistbox::edit {widget id index var {vcmd ""}} {
     # is better than throwing a stack trace :-).
     if {[winfo exists $listbox._inlineEditFrame]} {
 	set result ""
-        return 0
+	return 0
     }
 
     set initval [$listbox get $index]
@@ -3611,13 +3611,13 @@ proc ::mclistbox::edit {widget id index var {vcmd ""}} {
 
     # Create the widgets
     set fr  [frame $listbox._inlineEditFrame \
-	    -borderwidth 0                   \
-	    -highlightthickness 0            \
+	    -borderwidth 0		   \
+	    -highlightthickness 0	    \
 	    -relief flat]
     set ent [entry $fr.edit       \
-	    -borderwidth 1        \
+	    -borderwidth 1	\
 	    -highlightthickness 0 \
-	    -relief solid         \
+	    -relief solid	 \
 	    -selectborderwidth 0  -font [$listbox cget -font]]
     pack $ent -expand yes -fill both
 
@@ -3625,8 +3625,8 @@ proc ::mclistbox::edit {widget id index var {vcmd ""}} {
     set ::mclistbox::_edit(wait) 0
     bind $ent <KeyPress-Return> [list set ::mclistbox::_edit(wait) 1]
     bind $ent <KeyPress-Escape> [list set ::mclistbox::_edit(wait) 0]
-    bind $fr  <Button>          [list set ::mclistbox::_edit(wait) 3]
-    bind $ent <Unmap>           [list set ::mclistbox::_edit(wait) 0]
+    bind $fr  <Button>	  [list set ::mclistbox::_edit(wait) 3]
+    bind $ent <Unmap>	   [list set ::mclistbox::_edit(wait) 0]
     set oldBinding [bind $widget <Leave>]
     bind $widget <Leave> {break}
     
@@ -3715,7 +3715,7 @@ proc ::mclistbox::editcombo {widget id index var values} {
     # am not 100% sure that this is all we have to do, but it sure
     # is better than throwing a stack trace :-).
     if {[winfo exists $listbox._inlineEditFrame]} {
-        set result ""
+	set result ""
 	return 0
     }
 
@@ -3737,8 +3737,8 @@ proc ::mclistbox::editcombo {widget id index var values} {
 
     # Create the widgets
     set fr  [frame $listbox._inlineEditFrame \
-	    -borderwidth 0                   \
-	    -highlightthickness 0            \
+	    -borderwidth 0		   \
+	    -highlightthickness 0	    \
 	    -relief flat]
     
     set cmb [ComboBox $fr.edit		\
@@ -3762,7 +3762,7 @@ proc ::mclistbox::editcombo {widget id index var values} {
     set ::mclistbox::_edit(wait) 0
     bind $cmb.e <KeyPress-Return> [list set ::mclistbox::_edit(wait) 1]
     bind $cmb.e <KeyPress-Escape> [list set ::mclistbox::_edit(wait) 0]
-    bind $fr  <Button>          [list set ::mclistbox::_edit(wait) 3]
+    bind $fr  <Button>	  [list set ::mclistbox::_edit(wait) 3]
     set oldBinding [bind $widget <Leave>]
     bind $widget <Leave> {break}
     
@@ -3804,7 +3804,7 @@ proc ::mclistbox::editcombo {widget id index var values} {
 #       if such a command is defined and if something is selected.
 #
 # Arguments:
-#	w         megawidet pathname
+#	w	 megawidet pathname
 #       column    column that was clicked
 #
 # Results:

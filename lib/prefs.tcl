@@ -31,24 +31,24 @@ proc vTcl:prefs:init {base} {
 
     # this is to store all variables
     namespace eval prefs {
-       variable balloon          ""
-       variable getname          ""
-       variable shortname        ""
-       variable winfocus         ""
-       variable autoplace        ""
-       variable cmdalias         ""
-       variable autoalias        ""
+       variable balloon	  ""
+       variable getname	  ""
+       variable shortname	""
+       variable winfocus	 ""
+       variable autoplace	""
+       variable cmdalias	 ""
+       variable autoalias	""
        variable multiplace       ""
        variable autoloadcomp     ""
        variable autoloadcompfile ""
-       variable font_dlg         ""
+       variable font_dlg	 ""
        variable font_fixed       ""
-       variable manager          ""
-       variable encase           ""
+       variable manager	  ""
+       variable encase	   ""
        variable projecttype      ""
        variable imageeditor      ""
        variable saveimagesinline ""
-       variable projfile         ""
+       variable projfile	 ""
        variable saveasexecutable ""
        variable bgcolor		 ""
        variable entrybgcolor     ""
@@ -84,11 +84,11 @@ proc vTclWindow.vTcl.prefs {{base ""}} {
     global widget
 
     if {$base == ""} {
-        set base .vTcl.prefs
+	set base .vTcl.prefs
     }
     if {[winfo exists $base]} {
-        wm deiconify $base
-        return
+	wm deiconify $base
+	return
     }
 
     ###################
@@ -113,14 +113,14 @@ proc vTclWindow.vTcl.prefs {{base ""}} {
     wm title $base "Visual Tcl Preferences"
     wm protocol $base WM_DELETE_WINDOW "wm withdraw $base"
     bind $base <Key-Return> {
-        vTcl:prefs:data_exchange 1; wm withdraw [winfo toplevel %W]
+	vTcl:prefs:data_exchange 1; wm withdraw [winfo toplevel %W]
     }
     bind $base <Key-Escape> {
-        wm withdraw [winfo toplevel %W]; vTcl:prefs:data_exchange 0
+	wm withdraw [winfo toplevel %W]; vTcl:prefs:data_exchange 0
     }
     bind $base <<Show>> {
-        ## make sure the dialog is up-to-date
-        vTcl:prefs:data_exchange 0
+	## make sure the dialog is up-to-date
+	vTcl:prefs:data_exchange 0
     }
     frame $base.fra19
     ::vTcl::OkButton $base.fra19.but20 \
@@ -131,11 +131,11 @@ proc vTclWindow.vTcl.prefs {{base ""}} {
     # SETTING GEOMETRY
     ###################
     pack $base.fra19 \
-        -in $base -anchor e -expand 0 -fill none -pady 5 -side top
+	-in $base -anchor e -expand 0 -fill none -pady 5 -side top
     pack $base.fra19.but20 \
-        -in $base.fra19 -side left
+	-in $base.fra19 -side left
     pack $base.fra19.but21 \
-        -in $base.fra19 -side left
+	-in $base.fra19 -side left
 
     ###################
     # Balloon help
@@ -162,63 +162,63 @@ proc {vTcl:prefs:data_exchange} {save_and_validate} {
     # the dialog to the preferences (this is typically done when
     # the user presses the OK button
 
-    vTcl:data_exchange_var vTcl(pr,balloon)          \
-	prefs::balloon          $save_and_validate
-    vTcl:data_exchange_var vTcl(pr,getname)          \
-	prefs::getname          $save_and_validate
-    vTcl:data_exchange_var vTcl(pr,shortname)        \
-	prefs::shortname        $save_and_validate
-    vTcl:data_exchange_var vTcl(pr,winfocus)         \
-	prefs::winfocus         $save_and_validate
-    vTcl:data_exchange_var vTcl(pr,autoplace)        \
-	prefs::autoplace        $save_and_validate
+    vTcl:data_exchange_var vTcl(pr,balloon)	  \
+	prefs::balloon	  $save_and_validate
+    vTcl:data_exchange_var vTcl(pr,getname)	  \
+	prefs::getname	  $save_and_validate
+    vTcl:data_exchange_var vTcl(pr,shortname)	\
+	prefs::shortname	$save_and_validate
+    vTcl:data_exchange_var vTcl(pr,winfocus)	 \
+	prefs::winfocus	 $save_and_validate
+    vTcl:data_exchange_var vTcl(pr,autoplace)	\
+	prefs::autoplace	$save_and_validate
     vTcl:data_exchange_var vTcl(pr,autoloadcomp)     \
 	prefs::autoloadcomp     $save_and_validate
     vTcl:data_exchange_var vTcl(pr,autoloadcompfile) \
 	prefs::autoloadcompfile $save_and_validate
-    vTcl:data_exchange_var vTcl(pr,manager)          \
-	prefs::manager          $save_and_validate
-    vTcl:data_exchange_var vTcl(pr,encase)           \
-	prefs::encase           $save_and_validate
+    vTcl:data_exchange_var vTcl(pr,manager)	  \
+	prefs::manager	  $save_and_validate
+    vTcl:data_exchange_var vTcl(pr,encase)	   \
+	prefs::encase	   $save_and_validate
     vTcl:data_exchange_var vTcl(pr,projecttype)      \
 	prefs::projecttype      $save_and_validate
     vTcl:data_exchange_var vTcl(pr,imageeditor)      \
 	prefs::imageeditor      $save_and_validate
     vTcl:data_exchange_var vTcl(pr,saveimagesinline) \
 	prefs::saveimagesinline $save_and_validate
-    vTcl:data_exchange_var vTcl(pr,cmdalias)         \
-	prefs::cmdalias         $save_and_validate
-    vTcl:data_exchange_var vTcl(pr,autoalias)        \
-	prefs::autoalias        $save_and_validate
+    vTcl:data_exchange_var vTcl(pr,cmdalias)	 \
+	prefs::cmdalias	 $save_and_validate
+    vTcl:data_exchange_var vTcl(pr,autoalias)	\
+	prefs::autoalias	$save_and_validate
     vTcl:data_exchange_var vTcl(pr,multiplace)       \
 	prefs::multiplace       $save_and_validate
-    vTcl:data_exchange_var vTcl(pr,projfile)         \
-    	prefs::projfile         $save_and_validate
+    vTcl:data_exchange_var vTcl(pr,projfile)	 \
+    	prefs::projfile	 $save_and_validate
     vTcl:data_exchange_var vTcl(pr,saveasexecutable) \
-        prefs::saveasexecutable $save_and_validate
-    vTcl:data_exchange_var vTcl(pr,bgcolor)          \
-        prefs::bgcolor $save_and_validate
+	prefs::saveasexecutable $save_and_validate
+    vTcl:data_exchange_var vTcl(pr,bgcolor)	  \
+	prefs::bgcolor $save_and_validate
     vTcl:data_exchange_var vTcl(pr,entrybgcolor)     \
-        prefs::entrybgcolor $save_and_validate
+	prefs::entrybgcolor $save_and_validate
     vTcl:data_exchange_var vTcl(pr,entryactivecolor) \
-        prefs::entryactivecolor $save_and_validate
+	prefs::entryactivecolor $save_and_validate
     vTcl:data_exchange_var vTcl(pr,listboxbgcolor)   \
-        prefs::listboxbgcolor $save_and_validate
+	prefs::listboxbgcolor $save_and_validate
     vTcl:data_exchange_var vTcl(pr,treehighlight)    \
-        prefs::treehighlight $save_and_validate
+	prefs::treehighlight $save_and_validate
     vTcl:data_exchange_var vTcl(pr,texteditor)       \
-        prefs::texteditor $save_and_validate
+	prefs::texteditor $save_and_validate
 
     if {$save_and_validate} {
-        set vTcl(pr,font_dlg)   [font configure $prefs::font_dlg]
-        set vTcl(pr,font_fixed) [font configure $prefs::font_fixed]
+	set vTcl(pr,font_dlg)   [font configure $prefs::font_dlg]
+	set vTcl(pr,font_fixed) [font configure $prefs::font_fixed]
 
-        vTcl:prefs:saveLibs
+	vTcl:prefs:saveLibs
     } else {
-        eval font configure $prefs::font_dlg   [font actual $vTcl(pr,font_dlg)]
-        eval font configure $prefs::font_fixed [font actual $vTcl(pr,font_fixed)]
+	eval font configure $prefs::font_dlg   [font actual $vTcl(pr,font_dlg)]
+	eval font configure $prefs::font_fixed [font actual $vTcl(pr,font_fixed)]
 
-        vTcl:prefs:fillLibs
+	vTcl:prefs:fillLibs
     }
 }
 
@@ -336,13 +336,13 @@ proc {vTcl:prefs:fonts} {tab} {
 
 proc vTcl:prefs:bgcolor_get {w} {
     if {[string equal $::prefs::bgcolor ""]} {
-        set initial "#d9d9d9"
+	set initial "#d9d9d9"
     } else {
-        set initial $::prefs::bgcolor
+	set initial $::prefs::bgcolor
     }
     set color [vTcl:get_color $initial $w]
     if {![string equal $color ""]} {
-        set prefs::bgcolor $color
+	set prefs::bgcolor $color
     }
 }
 
@@ -350,8 +350,8 @@ proc vTcl:prefs:color_pref_get {w visual variable} {
     set initial [vTcl:at $variable]
     set color [vTcl:get_color $initial $w]
     if {![string equal $color ""]} {
-        set $variable $color
-        $visual configure -bg $color
+	set $variable $color
+	$visual configure -bg $color
     }
 }
 
@@ -360,19 +360,19 @@ proc vTcl:prefs:color_pref {w text variable} {
     set color_frame [vTcl:formCompound:add $w frame]
     pack configure $color_frame -fill x
     set last [vTcl:formCompound:add $color_frame label \
-        -text $text -justify left]
+	-text $text -justify left]
     pack configure $last -side left
     set browse [vTcl:formCompound:add $color_frame ::vTcl::BrowseButton]
     pack configure $browse -side right
     set last [vTcl:formCompound:add $color_frame label \
-                -text "" -bg [vTcl:at $variable] -width 8]
+		-text "" -bg [vTcl:at $variable] -width 8]
     pack configure $last -side right -padx 1 -pady 1
     $browse configure -command "vTcl:prefs:color_pref_get $last $last $variable"
 }
 
 proc {vTcl:prefs:bgcolor} {tab} {
     switch $prefs::bgcolor {
-	""        {set prefs::bgcolortype auto}
+	""	{set prefs::bgcolortype auto}
 	"#d9d9d9" {set prefs::bgcolortype default}
 	default   {set prefs::bgcolortype custom}
     }
@@ -508,23 +508,23 @@ proc vTcl:prefs:fillLibs {} {
 
     ## not yet initialized?
     if {![info exists ::prefs::libsListbox]} {
-        return
+	return
     }
 
     set libs [glob -nocomplain [file join $::vTcl(VTCL_HOME) lib lib*.tcl]]
     set i 0
     foreach load [::vTcl::project::getLibrariesToLoad] {
-        lappend toload [file tail $load]
+	lappend toload [file tail $load]
     }
     set listbox [set ::prefs::libsListbox]
     $listbox delete 0 end
     foreach lib $libs {
-        set item [file tail $lib]
-        $listbox insert end $item
-        if {[lsearch -exact $toload $item] != -1} {
-            $listbox selection set $i
-        }
-        incr i
+	set item [file tail $lib]
+	$listbox insert end $item
+	if {[lsearch -exact $toload $item] != -1} {
+	    $listbox selection set $i
+	}
+	incr i
     }
 }
 
@@ -532,15 +532,15 @@ proc vTcl:prefs:saveLibs {} {
     set listbox [set ::prefs::libsListbox]
     set indices [$listbox curselection]
     if {$indices == ""} {
-        ## selection cannot be empty because
-        ## 1) at least one lib must be selected
-        ## 2) if the listbox is not in focus it will lose the selection
-        return
+	## selection cannot be empty because
+	## 1) at least one lib must be selected
+	## 2) if the listbox is not in focus it will lose the selection
+	return
     }
 
     set libs ""
     foreach index $indices {
-        lappend libs [$listbox get $index]
+	lappend libs [$listbox get $index]
     }
 
     set before [::vTcl::project::getLibrariesToLoad]
@@ -548,9 +548,9 @@ proc vTcl:prefs:saveLibs {} {
     set after [::vTcl::project::getLibrariesToLoad]
 
     if {$before != $after} {
-        ::vTcl::MessageBox -icon info \
-        -message "Library changes will be valid the next time you start vTcl." \
-            -title "Information" -type ok
+	::vTcl::MessageBox -icon info \
+	-message "Library changes will be valid the next time you start vTcl." \
+	    -title "Information" -type ok
     }
 }
 

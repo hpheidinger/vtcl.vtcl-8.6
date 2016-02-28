@@ -24,46 +24,46 @@
 
 bind _vTclBalloon <Enter> {
     namespace eval ::vTcl::balloon {
-        ## self defining balloon?
-        if {![info exists %W]} {
-            vTcl:FireEvent %W <<SetBalloon>>
-        }
-        set set 0
-        set first 1
-        set id [after 500 {vTcl:FireEvent %W <<vTclBalloon>>}]
+	## self defining balloon?
+	if {![info exists %W]} {
+	    vTcl:FireEvent %W <<SetBalloon>>
+	}
+	set set 0
+	set first 1
+	set id [after 500 {vTcl:FireEvent %W <<vTclBalloon>>}]
     }
 }
 
 bind _vTclBalloon <Motion> {
     namespace eval ::vTcl::balloon {
-        if {!$set} {
-            after cancel $id
-            set id [after 500 {vTcl:FireEvent %W <<vTclBalloon>>}]
-        }
+	if {!$set} {
+	    after cancel $id
+	    set id [after 500 {vTcl:FireEvent %W <<vTclBalloon>>}]
+	}
     }
 }
 
 bind _vTclBalloon <Button> {
     namespace eval ::vTcl::balloon {
-        set first 0
+	set first 0
     }
     vTcl:FireEvent %W <<KillBalloon>>
 }
 
 bind _vTclBalloon <Leave> {
     namespace eval ::vTcl::balloon {
-        set first 0
+	set first 0
     }
     vTcl:FireEvent %W <<KillBalloon>>
 }
 
 bind _vTclBalloon <<KillBalloon>> {
     namespace eval ::vTcl::balloon {
-        after cancel $id
-        if {[winfo exists .vTcl.balloon]} {
-            destroy .vTcl.balloon
-        }
-        set set 0
+	after cancel $id
+	if {[winfo exists .vTcl.balloon]} {
+	    destroy .vTcl.balloon
+	}
+	set set 0
     }
 }
 
@@ -71,22 +71,22 @@ bind _vTclBalloon <<vTclBalloon>> {
     if {$::vTcl::balloon::first != 1} {break}
 
     namespace eval ::vTcl::balloon {
-        set first 2
-        if {![winfo exists .vTcl]} {
-            toplevel .vTcl; wm withdraw .vTcl
-        }
-        if {![winfo exists .vTcl.balloon]} {
-            toplevel .vTcl.balloon -bg black
-        }
-        wm overrideredirect .vTcl.balloon 1
-        label .vTcl.balloon.l \
-            -text ${%W} -relief flat \
-            -bg #ffffaa -fg black -padx 2 -pady 0 -anchor w
-        pack .vTcl.balloon.l -side left -padx 1 -pady 1
-        wm geometry \
-            .vTcl.balloon \
-            +[expr {[winfo rootx %W]+[winfo width %W]/2}]+[expr {[winfo rooty %W]+[winfo height %W]+4}]
-        set set 1
+	set first 2
+	if {![winfo exists .vTcl]} {
+	    toplevel .vTcl; wm withdraw .vTcl
+	}
+	if {![winfo exists .vTcl.balloon]} {
+	    toplevel .vTcl.balloon -bg black
+	}
+	wm overrideredirect .vTcl.balloon 1
+	label .vTcl.balloon.l \
+	    -text ${%W} -relief flat \
+	    -bg #ffffaa -fg black -padx 2 -pady 0 -anchor w
+	pack .vTcl.balloon.l -side left -padx 1 -pady 1
+	wm geometry \
+	    .vTcl.balloon \
+	    +[expr {[winfo rootx %W]+[winfo width %W]/2}]+[expr {[winfo rooty %W]+[winfo height %W]+4}]
+	set set 1
     }
 }
 

@@ -36,7 +36,7 @@ proc vTcl:toolbar_create {args} {
     wm deiconify $base
     update
     wm protocol .vTcl.toolbar WM_DELETE_WINDOW {
-        vTcl:error "You cannot remove the toolbar"
+	vTcl:error "You cannot remove the toolbar"
     }
     
     set sbands [kpwidgets::SBands .vTcl.toolbar.sbands]
@@ -46,7 +46,7 @@ proc vTcl:toolbar_create {args} {
     frame $base.tframe -relief raise -bd 1 
 
     image create photo pointer \
-        -file [file join $vTcl(VTCL_HOME) images icon_pointer.gif]
+	-file [file join $vTcl(VTCL_HOME) images icon_pointer.gif]
     button $base.tframe.b -bd 1 -image pointer -relief sunken -command "
     	$base.tframe.b configure -relief sunken
     	vTcl:raise_last_button $base.tframe.b
@@ -95,9 +95,9 @@ proc vTcl:toolbar_add {band_name class name image cmd_add } {
 namespace eval ::vTcl {
     proc toolbar_header { band_name title } {
     	
-        if {![winfo exists $.vTcl.toolbar]} { vTcl:toolbar_create }
-        set base .vTcl.toolbar.sbands 
-        $base new_frame $band_name $title 
+	if {![winfo exists $.vTcl.toolbar]} { vTcl:toolbar_create }
+	set base .vTcl.toolbar.sbands 
+	$base new_frame $band_name $title 
     }
 }
 

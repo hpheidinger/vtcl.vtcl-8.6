@@ -157,15 +157,18 @@ proc vTcl:setup {} {
 
 #    set vTcl(version)   1.60	# old syle x.yy
 
-    #
+    #+
     # Newstyle versioning:
     #
     # 	x(x).y(y).z(z)
     #
     # i.e.: x/y/z can be 1 or 2 digits
     # but all 3 positions must be present
-    # i.e. for major vTcl version 9 is written: 9.0.0
-    #
+    # i.e. 
+    #	- for major vTcl version 9 is written: 9.0.0
+    #	- for an upcoming version 8.7 it is 8.7.0
+    #	  (a.s.o.)
+    #-
     set vTcl(version)   8.6.5
 
     if {$env(VTCL_HOME) == ""} {

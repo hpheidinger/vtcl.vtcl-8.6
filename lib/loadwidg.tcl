@@ -27,8 +27,8 @@ proc vTcl:LoadWidgets {dir} {
 
     set lib [file tail $dir]
     foreach file [lsort [glob -nocomplain [file join $dir *.wgt]]] {
-        set tmp(lib) $lib
-        vTcl:LoadWidget $tmp(lib) $file
+	set tmp(lib) $lib
+	vTcl:LoadWidget $tmp(lib) $file
     }
 
     set vTcl(libs) [vTcl:lrmdups $vTcl(libs)]
@@ -50,14 +50,14 @@ proc vTcl:LoadWidget {lib file} {
     uplevel #0 source [list $file]
 
     if {[info exists tmp(isSuperClass)]} {
-        if {![info exists tmp(typeCmd)]} {
-            return -code error "Must specify a TypeCmd in a super class"
-        }
+	if {![info exists tmp(typeCmd)]} {
+	    return -code error "Must specify a TypeCmd in a super class"
+	}
 
-        SetClassArray
+	SetClassArray
 
-        if {![info exists tmp(superClass)]} { unset tmp }
-        return
+	if {![info exists tmp(superClass)]} { unset tmp }
+	return
     }
 
     if {![info exists tmp(class)]} { unset tmp; return }
@@ -65,8 +65,8 @@ proc vTcl:LoadWidget {lib file} {
     SetClassArray
 
     if {[info exists tmp(isSuperClass)] && $tmp(isSuperClass)} {
-        unset tmp
-        return
+	unset tmp
+	return
     }
 
     lappend vTcl(libs) $tmp(lib)
@@ -80,70 +80,70 @@ proc SetClassArray {} {
     global vTcl tmp classes
 
     array set classes "
-        $tmp(class),lib             vtcl
-        $tmp(class),createCmd       [vTcl:lower_first $tmp(class)]
-        $tmp(class),resizable       1
-        $tmp(class),dumpChildren    1
-        $tmp(class),megaWidget      0
-        $tmp(class),dumpCmd         vTcl:dump_widget_opt
+	$tmp(class),lib	     vtcl
+	$tmp(class),createCmd       [vTcl:lower_first $tmp(class)]
+	$tmp(class),resizable       1
+	$tmp(class),dumpChildren    1
+	$tmp(class),megaWidget      0
+	$tmp(class),dumpCmd	 vTcl:dump_widget_opt
 	$tmp(class),dumpInfoCmd     vTcl:dump:widget_info
-        $tmp(class),compoundCmd     {}
-        $tmp(class),tagsCmd         {}
-        $tmp(class),options         {}
-        $tmp(class),defaultOptions  {}
-        $tmp(class),insertCmd       {}
-        $tmp(class),selectCmd       {}
-        $tmp(class),dblClickCmd     {}
-        $tmp(class),exportCmds      {}
-        $tmp(class),functionCmds    {}
-        $tmp(class),functionText    {}
-        $tmp(class),typeCmd         {}
-        $tmp(class),aliasPrefix     $tmp(class)
-        $tmp(class),widgetProc      vTcl:WidgetProc
-        $tmp(class),resizeCmd       vTcl:adjust_widget_size
-        $tmp(class),icon            icon_[vTcl:lower_first $tmp(class)].gif
-        $tmp(class),balloon         [string tolower $tmp(class)]
-        $tmp(class),addOptions      {}
-        $tmp(class),autoPlace       0
-        $tmp(class),treeLabel       $tmp(class)
-        $tmp(class),treeChildrenCmd {}
-        $tmp(class),deleteCmd       {}
-        $tmp(class),deleteSiteCmd   {}
-        $tmp(class),selectSiteCmd   {}
-        $tmp(class),defaultValues   {}
-        $tmp(class),dontSaveOptions {}
-        $tmp(class),ignoreLeftClk   0
-        $tmp(class),ignoreRightClk  0
+	$tmp(class),compoundCmd     {}
+	$tmp(class),tagsCmd	 {}
+	$tmp(class),options	 {}
+	$tmp(class),defaultOptions  {}
+	$tmp(class),insertCmd       {}
+	$tmp(class),selectCmd       {}
+	$tmp(class),dblClickCmd     {}
+	$tmp(class),exportCmds      {}
+	$tmp(class),functionCmds    {}
+	$tmp(class),functionText    {}
+	$tmp(class),typeCmd	 {}
+	$tmp(class),aliasPrefix     $tmp(class)
+	$tmp(class),widgetProc      vTcl:WidgetProc
+	$tmp(class),resizeCmd       vTcl:adjust_widget_size
+	$tmp(class),icon	    icon_[vTcl:lower_first $tmp(class)].gif
+	$tmp(class),balloon	 [string tolower $tmp(class)]
+	$tmp(class),addOptions      {}
+	$tmp(class),autoPlace       0
+	$tmp(class),treeLabel       $tmp(class)
+	$tmp(class),treeChildrenCmd {}
+	$tmp(class),deleteCmd       {}
+	$tmp(class),deleteSiteCmd   {}
+	$tmp(class),selectSiteCmd   {}
+	$tmp(class),defaultValues   {}
+	$tmp(class),dontSaveOptions {}
+	$tmp(class),ignoreLeftClk   0
+	$tmp(class),ignoreRightClk  0
     "
 
     foreach elem [array names classes $tmp(class),*] {
-        lassign [split $elem ,] name var
-        if {![info exists tmp($var)]} { continue }
-        set classes($elem) $tmp($var)
+	lassign [split $elem ,] name var
+	if {![info exists tmp($var)]} { continue }
+	set classes($elem) $tmp($var)
     }
 
     if {[info exists tmp(icon)]} {
-        ## Create the toolbar icon.
-        if {[vTcl:streq [string index $tmp(icon) 0] "@"]} {
-            set cmd [string range $tmp(icon) 1 end]
-            set icons [$cmd]
-        } else {
-            set icons $tmp(icon)
-        }
-        # FIXME: what's the reason for having more than one icon?
-        #   and where is this information found after the creation?
-        foreach i $icons {
-            set icon [file join $vTcl(VTCL_HOME) images $i]
-            if {![file exists $icon]} { continue }
-            image create photo $i -file $icon
-        }
+	## Create the toolbar icon.
+	if {[vTcl:streq [string index $tmp(icon) 0] "@"]} {
+	    set cmd [string range $tmp(icon) 1 end]
+	    set icons [$cmd]
+	} else {
+	    set icons $tmp(icon)
+	}
+	# FIXME: what's the reason for having more than one icon?
+	#   and where is this information found after the creation?
+	foreach i $icons {
+	    set icon [file join $vTcl(VTCL_HOME) images $i]
+	    if {![file exists $icon]} { continue }
+	    image create photo $i -file $icon
+	}
     } else {
-        if {[ensureImage icon_$classes($tmp(class),lib)_unknown.gif]} {
-            set classes($tmp(class),icon) icon_tix_unknown.gif
-        } else {
-            ensureImage icon_unknown.gif
-            set classes($tmp(class),icon) icon_unknown.gif
-        }
+	if {[ensureImage icon_$classes($tmp(class),lib)_unknown.gif]} {
+	    set classes($tmp(class),icon) icon_tix_unknown.gif
+	} else {
+	    ensureImage icon_unknown.gif
+	    set classes($tmp(class),icon) icon_unknown.gif
+	}
     }
 }
 
@@ -151,11 +151,11 @@ proc ensureImage {name} {
     global vTcl
 
     if {[catch {image type $name}]} {
-        set icon [file join $vTcl(VTCL_HOME) images $name]
-        if {![file exists $icon]} {
-            return 0
-        }
-        image create photo $name -file $icon
+	set icon [file join $vTcl(VTCL_HOME) images $name]
+	if {![file exists $icon]} {
+	    return 0
+	}
+	image create photo $name -file $icon
     }
 
     return 1
@@ -279,10 +279,10 @@ proc TreeLabel {args} {
 
 proc Export {name {c ""}} {
     if {$c == ""} {
-        global tmp
-        lappend tmp(exportCmds) $name
+	global tmp
+	lappend tmp(exportCmds) $name
     } else {
-        lappend ::classes($c,exportCmds) $name
+	lappend ::classes($c,exportCmds) $name
     }
 }
 
@@ -378,13 +378,13 @@ proc SpecialOpt {args} {
 proc AdditionalClasses {args} {
 
     foreach arg $args {
-        lappend ::vTcl(classes) $arg
-        set ::classes($args,treeChildrenCmd) {}
-        set ::classes($args,megaWidget) 0
-        set ::classes($args,ignoreLeftClk) 0
-        set ::classes($args,ignoreRightClk) 0
-        set ::classes($args,functionCmds) {}
-        set ::classes($args,lib) $::tmp(lib)
+	lappend ::vTcl(classes) $arg
+	set ::classes($args,treeChildrenCmd) {}
+	set ::classes($args,megaWidget) 0
+	set ::classes($args,ignoreLeftClk) 0
+	set ::classes($args,ignoreRightClk) 0
+	set ::classes($args,functionCmds) {}
+	set ::classes($args,lib) $::tmp(lib)
     }
 }
 
@@ -413,9 +413,9 @@ proc GetFontsCmd {cmd} {
 
 proc InsertChildCmd {cmd {c ""}} {
     if {$c == ""} {
-        set ::classes($::tmp(class),insertChildCmd) $cmd
+	set ::classes($::tmp(class),insertChildCmd) $cmd
     } else {
-        set ::classes($c,insertChildCmd) $cmd
+	set ::classes($c,insertChildCmd) $cmd
     }
 }
 
@@ -437,7 +437,7 @@ proc NoEncaseOptionWhen {option proc} {
 
 proc Insertable {{c ""}} {
     if {$c == ""} {
-        set c $::tmp(class)
+	set c $::tmp(class)
     }
     set ::classes($c,insertable) 1
 }

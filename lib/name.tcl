@@ -31,10 +31,10 @@ proc vTcl:get_name {type} {
     wm title .vTcl.name "Naming new $type"
     tkwait window .vTcl.name
     if {[string first . $vTcl(x)] != -1} {
-        vTcl:error "Invalid widget name"
-        return ""
+	vTcl:error "Invalid widget name"
+	return ""
     } else {
-        return $vTcl(x)
+	return $vTcl(x)
     }
 }
 
@@ -48,7 +48,7 @@ proc vTcl:ok_new_widget {} {
 proc vTclWindow.vTcl.name {args} {
     set base .vTcl.name
     if {[winfo exists .vTcl.name]} {
-        wm deiconify .vTcl.name; return
+	wm deiconify .vTcl.name; return
     }
     toplevel .vTcl.name
     wm focusmodel .vTcl.name passive
@@ -60,37 +60,37 @@ proc vTclWindow.vTcl.name {args} {
     wm deiconify .vTcl.name
     wm title .vTcl.name "Name Widget"
     bind .vTcl.name <Key-Return> {
-        vTcl:ok_new_widget
+	vTcl:ok_new_widget
     }
     vTcl:entry .vTcl.name.ent18 \
-        -cursor {}  
+	-cursor {}  
     pack .vTcl.name.ent18 \
-        -in .vTcl.name -anchor center -expand 0 -fill x -ipadx 0 -ipady 0 \
-        -padx 0 -pady 0 -side top 
+	-in .vTcl.name -anchor center -expand 0 -fill x -ipadx 0 -ipady 0 \
+	-padx 0 -pady 0 -side top 
     frame .vTcl.name.fra19 \
-        -borderwidth 1 -height 30 -relief sunken -width 30 
+	-borderwidth 1 -height 30 -relief sunken -width 30 
     pack .vTcl.name.fra19 \
-        -in .vTcl.name -anchor center -expand 1 -fill both -ipadx 0 -ipady 0 \
-        -padx 0 -pady 0 -side top 
+	-in .vTcl.name -anchor center -expand 1 -fill both -ipadx 0 -ipady 0 \
+	-padx 0 -pady 0 -side top 
     button .vTcl.name.fra19.but20 \
-        -command {
-            vTcl:ok_new_widget
-        } \
-         -padx 9 \
-        -pady 3 -text OK -width 5 
+	-command {
+	    vTcl:ok_new_widget
+	} \
+	 -padx 9 \
+	-pady 3 -text OK -width 5 
     pack .vTcl.name.fra19.but20 \
-        -in .vTcl.name.fra19 -anchor center -expand 1 -fill x -ipadx 0 \
-        -ipady 0 -padx 0 -pady 0 -side left 
+	-in .vTcl.name.fra19 -anchor center -expand 1 -fill x -ipadx 0 \
+	-ipady 0 -padx 0 -pady 0 -side left 
     button .vTcl.name.fra19.but21 \
-        -command {
-            grab release .vTcl.name
-            destroy .vTcl.name
-        } \
-         -padx 9 \
-        -pady 3 -text Cancel -width 5 
+	-command {
+	    grab release .vTcl.name
+	    destroy .vTcl.name
+	} \
+	 -padx 9 \
+	-pady 3 -text Cancel -width 5 
     pack .vTcl.name.fra19.but21 \
-        -in .vTcl.name.fra19 -anchor center -expand 1 -fill x -ipadx 0 \
-        -ipady 0 -padx 0 -pady 0 -side left 
+	-in .vTcl.name.fra19 -anchor center -expand 1 -fill x -ipadx 0 \
+	-ipady 0 -padx 0 -pady 0 -side left 
 }
 
 

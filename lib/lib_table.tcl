@@ -23,8 +23,8 @@ proc vTcl:lib_table:init {} {
     global vTcl
 
     if {[catch {package require Tktable} erg]} {
-        lappend vTcl(libNames) {(not detected) tkTable Widgets Support Library}
-        return 0
+	lappend vTcl(libNames) {(not detected) tkTable Widgets Support Library}
+	return 0
     }
 
     lappend vTcl(libNames) {tkTable Widgets Support Library}
@@ -39,10 +39,10 @@ proc vTcl:widget:lib:lib_table {args} {
     vTcl:lib:add_widgets_to_toolbar $order TkTable "TkTable widget"
 
     append vTcl(head,TkTable,importheader) {
-        # Check if Tktable is available
-        if {[lsearch -exact $packageNames Tktable] != -1} {
-            package require Tktable
-        }
+	# Check if Tktable is available
+	if {[lsearch -exact $packageNames Tktable] != -1} {
+	    package require Tktable
+	}
     }
 }
 

@@ -54,7 +54,7 @@ proc vTcl:delete {recipient {w ""}} {
     global vTcl classes
 
     if {$w == ""} {
-        set w $vTcl(w,widget)
+	set w $vTcl(w,widget)
     }
 
     if {[lempty $w]} { return }
@@ -63,11 +63,11 @@ proc vTcl:delete {recipient {w ""}} {
     set class [winfo class $w]
 
     if {[vTcl:streq $class "Toplevel"] && ![lempty [vTcl:get_children $w]]} {
-        set result [::vTcl::MessageBox -type yesno \
-            -title "Visual Tcl" \
-            -message "Are you sure you want to delete top-level window $w ?"]
+	set result [::vTcl::MessageBox -type yesno \
+	    -title "Visual Tcl" \
+	    -message "Are you sure you want to delete top-level window $w ?"]
 
-        if {$result == "no"} { return 0 }
+	if {$result == "no"} { return 0 }
     }
 
     vTcl:destroy_handles
@@ -81,11 +81,11 @@ proc vTcl:delete {recipient {w ""}} {
     set do ""
     set destroy_cmd "destroy"
     foreach child $children {
-        append do "vTcl:unset_alias $child; "
-        append do "::vTcl::notify::publish delete_widget $child; "
+	append do "vTcl:unset_alias $child; "
+	append do "::vTcl::notify::publish delete_widget $child; "
     }
     if {$classes($class,deleteCmd) != ""} {
-        set destroy_cmd $classes($class,deleteCmd)
+	set destroy_cmd $classes($class,deleteCmd)
     }
     append do "vTcl:unset_alias $w; "
     append do "::vTcl::notify::publish delete_widget $w; "
@@ -96,7 +96,7 @@ proc vTcl:delete {recipient {w ""}} {
     set opts ""
     set mgr [winfo manager $w]
     if {$mgr != "wm" && $mgr != "canvas"} {
-        set opts [[winfo manager $w] info $w]
+	set opts [[winfo manager $w] info $w]
     }
     set undo "$buffer; ::vTcl::compounds::insertCompoundDirect $w temp scrap $vTcl(w,def_mgr) [list $opts]; "
     append undo "::vTcl::compounds::deleteCompound temp scrap; "
@@ -107,16 +107,16 @@ proc vTcl:delete {recipient {w ""}} {
     ## all it's subwidgets
     set namespaces [vTcl:namespace_tree ::widgets]
     foreach namespace $namespaces {
-        if {[string match ::widgets::$w* $namespace]} {
-            catch {namespace delete $namespace} error
-        }
+	if {[string match ::widgets::$w* $namespace]} {
+	    catch {namespace delete $namespace} error
+	}
     }
 
     ## If it's a toplevel window, remove it from the tops list.
     if {$class == "Toplevel"} {
-        if {[info procs vTclWindow$w] != ""} {
-            rename vTclWindow$w {}
-        }
+	if {[info procs vTclWindow$w] != ""} {
+	    rename vTclWindow$w {}
+	}
     }
 
     if {![info exists vTcl(widgets,$top)]} { set vTcl(widgets,$top) {} }
@@ -127,9 +127,9 @@ proc vTcl:delete {recipient {w ""}} {
     eval lremove vTcl(widgets,$top) $w $children
 
     if {$s > 0} {
-        set n [lindex $vTcl(widgets,$top) [expr $s - 1]]
+	set n [lindex $vTcl(widgets,$top) [expr $s - 1]]
     } else {
-        set n [lindex $vTcl(widgets,$top) end]
+	set n [lindex $vTcl(widgets,$top) end]
     }
 
     if {[lempty $vTcl(widgets,$top)] || ![winfo exists $n]} { set n $parent }
@@ -139,9 +139,9 @@ proc vTcl:delete {recipient {w ""}} {
     after idle {vTcl:init_wtree}
 
     if {[vTcl:streq $n "."]} {
-        vTcl:prop:clear
-        ::widgets_bindings::init_ui
-        return
+	vTcl:prop:clear
+	::widgets_bindings::init_ui
+	return
     }
 
     if {[winfo exists $n]} { vTcl:active_widget $n }
@@ -154,20 +154,20 @@ proc vTcl:paste {{fromMouse ""} {w ""}} {
     global vTcl
 
     if {[lempty [vTcl::compounds::enumerateCompounds clipboard]]} {
-        return
+	return
     }
 
     set mgr $vTcl(w,def_mgr)
     set opts {}
     if {$fromMouse == "-mouse" && $mgr == "place"} {
-         set opts "-x $vTcl(mouse,x) -y $vTcl(mouse,y)"
+	 set opts "-x $vTcl(mouse,x) -y $vTcl(mouse,y)"
     } elseif {$mgr == "place"} {
-         set opts "-x 0 -y 0"
+	 set opts "-x 0 -y 0"
     }
 
     if {[vTcl::compounds::getClass clipboard scrap] == "Toplevel"} {
-        set mgr "wm"
-        set opts ""
+	set mgr "wm"
+	set opts ""
     }
 
     vTcl::compounds::autoPlaceCompound clipboard scrap $mgr $opts
@@ -215,48 +215,48 @@ proc ::vTcl::findReplace::window {{newBase ""}} {
 
     frame $base.fra22
     label $base.fra22.labelFindWhat \
-        -pady 1 -text {Find what:} -underline 2
+	-pady 1 -text {Find what:} -underline 2
     label $base.fra22.labelReplaceWith \
-        -pady 1 -text {Replace with:} -underline 1
+	-pady 1 -text {Replace with:} -underline 1
     entry $base.fra22.findEnt -width 40 -background white
     entry $base.fra22.replaceEnt -width 40 -background white
     button $base.findBut \
-        -padx 3m -pady 1 -text {Find Next} \
-        -underline 0 -command ::vTcl::findReplace::find
+	-padx 3m -pady 1 -text {Find Next} \
+	-underline 0 -command ::vTcl::findReplace::find
     button $base.cancelBut \
-        -padx 3m -pady 1 -text Cancel -underline 0 \
-        -command ::vTcl::findReplace::cancel
+	-padx 3m -pady 1 -text Cancel -underline 0 \
+	-command ::vTcl::findReplace::cancel
     button $base.replaceBut \
-        -padx 3m -pady 1 -text Replace -underline 0 \
-        -command ::vTcl::findReplace::replace
+	-padx 3m -pady 1 -text Replace -underline 0 \
+	-command ::vTcl::findReplace::replace
     button $base.replaceAllBut \
-        -padx 3m -pady 1 -text {Replace All} -underline 8 \
-        -command ::vTcl::findReplace::replaceAll
+	-padx 3m -pady 1 -text {Replace All} -underline 8 \
+	-command ::vTcl::findReplace::replaceAll
     frame $base.bottomFrame
     frame $base.bottomFrame.frameDirection \
-        -borderwidth 2
+	-borderwidth 2
     frame $base.bottomFrame.frameDirection.frameUpDown \
-        -relief groove -borderwidth 2
+	-relief groove -borderwidth 2
     radiobutton $base.bottomFrame.frameDirection.frameUpDown.upRadio \
-        -pady 0 -text Up -underline 0 -value up \
-        -variable ::vTcl::findReplace::dir
+	-pady 0 -text Up -underline 0 -value up \
+	-variable ::vTcl::findReplace::dir
     radiobutton $base.bottomFrame.frameDirection.frameUpDown.downRadio \
-        -pady 0 -text Down -underline 0 -value down \
-        -variable ::vTcl::findReplace::dir
+	-pady 0 -text Down -underline 0 -value down \
+	-variable ::vTcl::findReplace::dir
     frame $base.bottomFrame.frameDirection.frameUpDown.frameSpacing \
-        -height 10
+	-height 10
     label $base.bottomFrame.frameDirection.labelDirection \
-        -text Direction
+	-text Direction
     frame $base.bottomFrame.frameOptions
     checkbutton $base.bottomFrame.frameOptions.caseCheck \
-        -anchor w -pady 0 -text {Match case} -underline 0  \
-        -variable ::vTcl::findReplace::case
+	-anchor w -pady 0 -text {Match case} -underline 0  \
+	-variable ::vTcl::findReplace::case
     checkbutton $base.bottomFrame.frameOptions.wildCheck \
-        -anchor w -pady 0 -text {Use wildcards} -underline 4 \
-        -variable ::vTcl::findReplace::wild
+	-anchor w -pady 0 -text {Use wildcards} -underline 4 \
+	-variable ::vTcl::findReplace::wild
     checkbutton $base.bottomFrame.frameOptions.regexpCheck \
-        -anchor w -pady 0 -text {Regular expression} -underline 2 \
-        -variable ::vTcl::findReplace::regexp
+	-anchor w -pady 0 -text {Regular expression} -underline 2 \
+	-variable ::vTcl::findReplace::regexp
 
     focus $base.fra22.findEnt
 
@@ -283,71 +283,71 @@ proc ::vTcl::findReplace::window {{newBase ""}} {
     grid columnconf $base 0 -weight 1
     grid rowconf $base 4 -weight 1
     grid $base.fra22 \
-        -in $base -column 0 -row 0 -columnspan 1 -rowspan 4 -pady 5 \
-        -sticky nesw
+	-in $base -column 0 -row 0 -columnspan 1 -rowspan 4 -pady 5 \
+	-sticky nesw
     grid columnconf $base.fra22 1 -weight 1
     grid rowconf $base.fra22 0 -weight 1
     grid rowconf $base.fra22 1 -weight 1
     grid $base.fra22.labelFindWhat \
-        -in $base.fra22 -column 0 -row 0 -columnspan 1 -rowspan 1 -sticky nw
+	-in $base.fra22 -column 0 -row 0 -columnspan 1 -rowspan 1 -sticky nw
     grid $base.fra22.labelReplaceWith \
-        -in $base.fra22 -column 0 -row 1 -columnspan 1 -rowspan 1 -sticky nw
+	-in $base.fra22 -column 0 -row 1 -columnspan 1 -rowspan 1 -sticky nw
     grid $base.fra22.findEnt \
-        -in $base.fra22 -column 1 -row 0 -columnspan 1 -rowspan 1 -padx 3 \
-        -sticky new
+	-in $base.fra22 -column 1 -row 0 -columnspan 1 -rowspan 1 -padx 3 \
+	-sticky new
     grid $base.fra22.replaceEnt \
-        -in $base.fra22 -column 1 -row 1 -columnspan 1 -rowspan 1 -padx 3 \
-        -sticky new
+	-in $base.fra22 -column 1 -row 1 -columnspan 1 -rowspan 1 -padx 3 \
+	-sticky new
     grid $base.findBut \
-        -in $base -column 1 -row 0 -columnspan 1 -rowspan 1 -padx 3 -pady 2 \
-        -sticky new
+	-in $base -column 1 -row 0 -columnspan 1 -rowspan 1 -padx 3 -pady 2 \
+	-sticky new
     grid $base.cancelBut \
-        -in $base -column 1 -row 1 -columnspan 1 -rowspan 1 -padx 3 -pady 2 \
-        -sticky new
+	-in $base -column 1 -row 1 -columnspan 1 -rowspan 1 -padx 3 -pady 2 \
+	-sticky new
     grid $base.replaceBut \
-        -in $base -column 1 -row 2 -columnspan 1 -rowspan 1 -padx 3 -pady 2 \
-        -sticky new
+	-in $base -column 1 -row 2 -columnspan 1 -rowspan 1 -padx 3 -pady 2 \
+	-sticky new
     grid $base.replaceAllBut \
-        -in $base -column 1 -row 3 -columnspan 1 -rowspan 1 -padx 3 -pady 2 \
-        -sticky new
+	-in $base -column 1 -row 3 -columnspan 1 -rowspan 1 -padx 3 -pady 2 \
+	-sticky new
     grid $base.bottomFrame \
-        -in $base -column 0 -row 4 -columnspan 1 -rowspan 1 -sticky nesw
+	-in $base -column 0 -row 4 -columnspan 1 -rowspan 1 -sticky nesw
     grid columnconf $base.bottomFrame 0 -weight 1
     grid columnconf $base.bottomFrame 1 -weight 1
     grid rowconf $base.bottomFrame 0 -weight 1
     grid $base.bottomFrame.frameDirection \
-        -in $base.bottomFrame -column 1 -row 0 -columnspan 1 -rowspan 1 \
-        -sticky new
+	-in $base.bottomFrame -column 1 -row 0 -columnspan 1 -rowspan 1 \
+	-sticky new
     grid columnconf $base.bottomFrame.frameDirection 0 -weight 1
     grid rowconf $base.bottomFrame.frameDirection 0 -weight 1
     grid $base.bottomFrame.frameDirection.frameUpDown \
-        -in $base.bottomFrame.frameDirection -column 0 -row 0 -columnspan 1 \
-        -rowspan 1 -pady 5 -sticky nesw
+	-in $base.bottomFrame.frameDirection -column 0 -row 0 -columnspan 1 \
+	-rowspan 1 -pady 5 -sticky nesw
     grid columnconf $base.bottomFrame.frameDirection.frameUpDown 0 -weight 1
     grid $base.bottomFrame.frameDirection.frameUpDown.upRadio \
-        -in $base.bottomFrame.frameDirection.frameUpDown -column 0 -row 1 \
-        -columnspan 1 -rowspan 1 -sticky w
+	-in $base.bottomFrame.frameDirection.frameUpDown -column 0 -row 1 \
+	-columnspan 1 -rowspan 1 -sticky w
     grid $base.bottomFrame.frameDirection.frameUpDown.downRadio \
-        -in $base.bottomFrame.frameDirection.frameUpDown -column 0 -row 2 \
-        -columnspan 1 -rowspan 1 -sticky w
+	-in $base.bottomFrame.frameDirection.frameUpDown -column 0 -row 2 \
+	-columnspan 1 -rowspan 1 -sticky w
     grid $base.bottomFrame.frameDirection.frameUpDown.frameSpacing \
-        -in $base.bottomFrame.frameDirection.frameUpDown -column 0 -row 0 \
-        -columnspan 1 -rowspan 1
+	-in $base.bottomFrame.frameDirection.frameUpDown -column 0 -row 0 \
+	-columnspan 1 -rowspan 1
     place $base.bottomFrame.frameDirection.labelDirection \
-        -x 10 -y 0 -anchor nw -bordermode ignore
+	-x 10 -y 0 -anchor nw -bordermode ignore
     grid $base.bottomFrame.frameOptions \
-        -in $base.bottomFrame -column 0 -row 0 -columnspan 1 -rowspan 1 \
-        -sticky new
+	-in $base.bottomFrame -column 0 -row 0 -columnspan 1 -rowspan 1 \
+	-sticky new
     grid columnconf $base.bottomFrame.frameOptions 0 -weight 1
     grid $base.bottomFrame.frameOptions.caseCheck \
-        -in $base.bottomFrame.frameOptions -column 0 -row 0 -columnspan 1 \
-        -rowspan 1 -sticky ew
+	-in $base.bottomFrame.frameOptions -column 0 -row 0 -columnspan 1 \
+	-rowspan 1 -sticky ew
     grid $base.bottomFrame.frameOptions.wildCheck \
-        -in $base.bottomFrame.frameOptions -column 0 -row 1 -columnspan 1 \
-        -rowspan 1 -sticky ew
+	-in $base.bottomFrame.frameOptions -column 0 -row 1 -columnspan 1 \
+	-rowspan 1 -sticky ew
     grid $base.bottomFrame.frameOptions.regexpCheck \
-        -in $base.bottomFrame.frameOptions -column 0 -row 2 -columnspan 1 \
-        -rowspan 1 -sticky ew
+	-in $base.bottomFrame.frameOptions -column 0 -row 2 -columnspan 1 \
+	-rowspan 1 -sticky ew
 }
 
 proc ::vTcl::findReplace::show {textWidget changeCmdParam} {
@@ -430,7 +430,7 @@ proc ::vTcl::findReplace::notifyChange {} {
 
     ## the buffer has changed, notify
     if {$changeCmd != ""} {
-        uplevel #0 $changeCmd
+	uplevel #0 $changeCmd
     }
 }
 
@@ -452,23 +452,26 @@ proc ::vTcl::findReplace::replace {} {
 	set x [::vTcl::MessageBox -title "Match found" -parent $base \
 		-type yesnocancel \
 	       -message "Match found on line $ln\nReplace this instance?" \
-               -icon question]
+	       -icon question]
 
 	if {$x != "yes"} { continue }
 
 	$txtbox delete $selFirst $selLast
 	$txtbox insert $selFirst $text
 
-      ## buffer has changed
-      notifyChange
+	#
+	# Buffer has changed
+	#
+	notifyChange
 
-      ## advances the current index to avoid recursively replacing the
-      ## same pattern
-      set index [$txtbox index "$index + [llength $text] chars"]
+	## advances the current index to avoid recursively replacing the
+	## same pattern
+	set index [$txtbox index "$index + [llength $text] chars"]
     }
 
     set index 0.0
     set start top
+
     if {[string compare $dir "up"]} {
 	set index end
 	set start bottom
@@ -524,8 +527,3 @@ proc ::vTcl::findReplace::cancel {} {
     wm withdraw $base
     focus $txtbox
 }
-
-
-
-
-

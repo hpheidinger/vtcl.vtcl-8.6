@@ -262,6 +262,7 @@ proc vTclWindow.vTcl.proclist {args} {
             vTcl:show_proc [.vTcl.proclist.f2.list get $vTcl(x)]
         }
     }
+    
     pack $base.f2.list \
         -anchor center -expand 1 -fill both -ipadx 0 -ipady 0 -padx 0 -pady 0 \
         -side left

@@ -25,10 +25,10 @@
 proc vTcl:destroy_handles {} {
     global vTcl
     if {$vTcl(h,exist) && [winfo exists $vTcl(h,n)]} {
-        destroy $vTcl(h,n)  $vTcl(h,e)
-        destroy $vTcl(h,s)  $vTcl(h,w) 
-        destroy $vTcl(h,nw) $vTcl(h,ne)
-        destroy $vTcl(h,se) $vTcl(h,sw) 
+	destroy $vTcl(h,n)  $vTcl(h,e)
+	destroy $vTcl(h,s)  $vTcl(h,w) 
+	destroy $vTcl(h,nw) $vTcl(h,ne)
+	destroy $vTcl(h,se) $vTcl(h,sw) 
     }
     set vTcl(h,exist) 0
 }
@@ -54,15 +54,15 @@ proc vTcl:create_handles {target} {
 	{se bottom_right_corner}
     }
     foreach i $handles {
-        set a [lindex $i 0]
-        set b [lindex $i 1]
-        set vTcl(h,$a) "$parent.vTH_${a}"
-        frame $vTcl(h,$a) \
-            -width $s -height $s -bg gray30 -bd 0 -relief flat \
-            -highlightthickness 0 -cursor $b
-        bind $vTcl(h,$a) <B1-Motion>       "vTcl:grab_resize %X %Y $a"
-        bind $vTcl(h,$a) <Button-1>        "vTcl:grab %W %X %Y"
-        bind $vTcl(h,$a) <ButtonRelease-1> "vTcl:grab_release %W"
+	set a [lindex $i 0]
+	set b [lindex $i 1]
+	set vTcl(h,$a) "$parent.vTH_${a}"
+	frame $vTcl(h,$a) \
+	    -width $s -height $s -bg gray30 -bd 0 -relief flat \
+	    -highlightthickness 0 -cursor $b
+	bind $vTcl(h,$a) <B1-Motion>       "vTcl:grab_resize %X %Y $a"
+	bind $vTcl(h,$a) <Button-1>	"vTcl:grab %W %X %Y"
+	bind $vTcl(h,$a) <ButtonRelease-1> "vTcl:grab_release %W"
     }
     vTcl:place_handles $target
 }
@@ -78,31 +78,31 @@ proc vTcl:place_handles {target} {
     }
 
     if {$vTcl(h,exist) && [winfo exists $vTcl(h,n)]} {
-        update idletasks
-        set s $vTcl(h,size)
-        set x [winfo x $target]
-        set y [winfo y $target]
-        set w1 [winfo width $target]
-        set w2 [expr $w1 / 2]
-        set h1 [winfo height $target]
-        set h2 [expr $h1 / 2]
-        place $vTcl(h,n)  \
-            -x [expr $x + $w2 - $s] -y [expr $y - $s]       -bordermode ignore
-        place $vTcl(h,e)  \
-            -x [expr $x + $w1 - $s] -y [expr $y + $h2 - $s] -bordermode ignore
-        place $vTcl(h,s)  \
-            -x [expr $x + $w2 - $s] -y [expr $y + $h1 - $s] -bordermode ignore
-        place $vTcl(h,w)  \
-            -x [expr $x - $s]       -y [expr $y + $h2 - $s] -bordermode ignore
-        place $vTcl(h,nw) \
-            -x [expr $x - $s]       -y [expr $y - $s]       -bordermode ignore
-        place $vTcl(h,ne) \
-            -x [expr $x + $w1 - $s] -y [expr $y - $s]       -bordermode ignore
-        place $vTcl(h,se) \
-            -x [expr $x + $w1 - $s] -y [expr $y + $h1 - $s] -bordermode ignore
-        place $vTcl(h,sw) \
-            -x [expr $x - $s]       -y [expr $y + $h1 - $s] -bordermode ignore
+	update idletasks
+	set s $vTcl(h,size)
+	set x [winfo x $target]
+	set y [winfo y $target]
+	set w1 [winfo width $target]
+	set w2 [expr $w1 / 2]
+	set h1 [winfo height $target]
+	set h2 [expr $h1 / 2]
+	place $vTcl(h,n)  \
+	    -x [expr $x + $w2 - $s] -y [expr $y - $s]       -bordermode ignore
+	place $vTcl(h,e)  \
+	    -x [expr $x + $w1 - $s] -y [expr $y + $h2 - $s] -bordermode ignore
+	place $vTcl(h,s)  \
+	    -x [expr $x + $w2 - $s] -y [expr $y + $h1 - $s] -bordermode ignore
+	place $vTcl(h,w)  \
+	    -x [expr $x - $s]       -y [expr $y + $h2 - $s] -bordermode ignore
+	place $vTcl(h,nw) \
+	    -x [expr $x - $s]       -y [expr $y - $s]       -bordermode ignore
+	place $vTcl(h,ne) \
+	    -x [expr $x + $w1 - $s] -y [expr $y - $s]       -bordermode ignore
+	place $vTcl(h,se) \
+	    -x [expr $x + $w1 - $s] -y [expr $y + $h1 - $s] -bordermode ignore
+	place $vTcl(h,sw) \
+	    -x [expr $x - $s]       -y [expr $y + $h1 - $s] -bordermode ignore
     } else {
-        vTcl:create_handles $target
+	vTcl:create_handles $target
     }
 }

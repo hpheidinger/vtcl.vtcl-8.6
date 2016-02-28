@@ -27,7 +27,7 @@ proc vTclWindow.vTcl.about {args} {
     set base .vTcl.about
 
     if {[winfo exists $base]} {
-        wm deiconify $base; return
+	wm deiconify $base; return
     }
 
     ###################
@@ -45,36 +45,38 @@ proc vTclWindow.vTcl.about {args} {
     bind $base <Key-Return> "$base.fra30.but31 invoke"
 
     label $base.lab28 \
-        -background #000000 -borderwidth 1 -image title -relief groove \
-        -text label
+	-background #000000 -borderwidth 1 -image title -relief groove \
+	-text label
     frame $base.fra30 \
-        -borderwidth 2 -height 75 -width 125 -background black
+	-borderwidth 2 -height 75 -width 125 -background black
     button $base.fra30.but31 \
-        -text Close -width 8 \
-        -command "Window hide $base" \
-        -borderwidth 1 -font [vTcl:font:get_font "vTcl:font5"]
+	-text Close -width 8 \
+	-command "Window hide $base" \
+	-borderwidth 1 -font [vTcl:font:get_font "vTcl:font5"]
     button $base.fra30.but32 \
-        -command "Window hide $base; Window show .vTcl.credits" \
-        -text Credits... -width 8 \
-        -borderwidth 1 -font [vTcl:font:get_font "vTcl:font5"]
+	-command "Window hide $base; Window show .vTcl.credits" \
+	-text Credits... -width 8 \
+	-borderwidth 1 -font [vTcl:font:get_font "vTcl:font5"]
     label $base.lab21 \
-        -borderwidth 1 -font [vTcl:font:get_font "vTcl:font5"] \
-        -text {Version 1.6.x-development} -foreground white -background black
+	-borderwidth 1 -font [vTcl:font:get_font "vTcl:font5"] \
+	-text {Version 1.6.x-development} -foreground white -background black
+
+
     ###################
     # SETTING GEOMETRY
     ###################
     pack $base.lab28 \
-        -in $base -anchor center -expand 1 -fill both -side top
+	-in $base -anchor center -expand 1 -fill both -side top
     pack $base.fra30 \
-        -in $base -anchor center -expand 0 -fill none -side bottom
+	-in $base -anchor center -expand 0 -fill none -side bottom
     pack $base.fra30.but31 \
-        -in $base.fra30 -anchor center -expand 0 -fill none -padx 5 -pady 5 \
-        -side right
+	-in $base.fra30 -anchor center -expand 0 -fill none -padx 5 -pady 5 \
+	-side right
     pack $base.fra30.but32 \
-        -in $base.fra30 -anchor center -expand 0 -fill none -padx 5 \
-        -side left
+	-in $base.fra30 -anchor center -expand 0 -fill none -padx 5 \
+	-side left
     pack $base.lab21 \
-        -in $base -anchor center -expand 0 -fill none -pady 2 -side top
+	-in $base -anchor center -expand 0 -fill none -pady 2 -side top
 
     update idletasks
 
@@ -92,7 +94,7 @@ proc vTcl:fill_credits {} {
     ::ttd::insert [CreditsText] $contents
 
     CreditsText insert end \
-        "\nTcl version $tcl_version\nTk version $tk_version"
+	"\nTcl version $tcl_version\nTk version $tk_version"
     CreditsText configure -state disabled
     close $inID
 }
@@ -100,10 +102,10 @@ proc vTcl:fill_credits {} {
 proc vTclWindow.vTcl.credits {base} {
 
     if {$base == ""} {
-        set base .vTcl.credits
+	set base .vTcl.credits
     }
     if {[winfo exists $base]} {
-        wm deiconify $base; return
+	wm deiconify $base; return
     }
 
     global widget tcl_version tk_version
@@ -124,17 +126,17 @@ proc vTclWindow.vTcl.credits {base} {
     wm title $base "Visual Tcl Credits"
     bind $base <Key-Escape> "$base.but23 invoke"
     bind $base <<Ready>> {
-        vTcl:fill_credits
-        wm geometry %W 500x420
-        vTcl:center %W 500 420
-        wm deiconify %W
+	vTcl:fill_credits
+	wm geometry %W 800x600
+	vTcl:center %W 800 600
+	wm deiconify %W
     }
 
     ::vTcl::OkButton $base.but23 -command "Window hide $base"
     ScrolledWindow $base.cpd24 -auto vertical
     text $base.cpd24.03 -height 1 -background white \
-        -font {-family helvetica -size 12} \
-        -width 8 -wrap word
+	-font {-family helvetica -size 12} \
+	-width 8 -wrap word
     $base.cpd24 setwidget $base.cpd24.03
     bind $base.cpd24.03 <KeyRelease> "break"
 
@@ -142,13 +144,10 @@ proc vTclWindow.vTcl.credits {base} {
     # SETTING GEOMETRY
     ###################
     pack $base.but23 \
-        -in $base -anchor e -expand 0 -fill none -pady 5 -side top
+	-in $base -anchor e -expand 0 -fill none -pady 5 -side top
     pack $base.cpd24 \
-        -in $base -anchor center -expand 1 -fill both -side top
+	-in $base -anchor center -expand 1 -fill both -side top
     pack $base.cpd24.03
 
     vTcl:FireEvent $base <<Ready>>
 }
-
-
-

@@ -53,15 +53,15 @@ proc vTcl:widget:lib:lib_bwidget {args} {
 	ArrowButton
 	LabelEntry
 	LabelFrame
-        SpinBox
-        ComboBox
-        ListBox
+	SpinBox
+	ComboBox
+	ListBox
 	NoteBook
-        PagesManager
-        PanedWindow
+	PagesManager
+	PanedWindow
 	ProgressBar
 	ScrolledWindow
-        ScrollableFrame
+	ScrollableFrame
 	Separator
 	TitleFrame
 	Tree
@@ -97,19 +97,19 @@ proc vTcl:widget:lib:lib_bwidget {args} {
 namespace eval vTcl::widgets::bwidgets {
 
     proc update_pages {target var} {
-        ## there is a trace on var to update the combobox
-        ## first item in the list is the current index
-        set sites [$target pages]
-        set current [$target index [$target raise]]
-        set num_pages [llength $sites]
-        set values $current
-        for {set i 0} {$i < $num_pages} {incr i} {
-            set label_opt [$target itemconfigure [lindex $sites $i] -text]
-            lappend values [lindex $label_opt 4]
-        }
+	## there is a trace on var to update the combobox
+	## first item in the list is the current index
+	set sites [$target pages]
+	set current [$target index [$target raise]]
+	set num_pages [llength $sites]
+	set values $current
+	for {set i 0} {$i < $num_pages} {incr i} {
+	    set label_opt [$target itemconfigure [lindex $sites $i] -text]
+	    lappend values [lindex $label_opt 4]
+	}
 
-        ## this will trigger the trace
-        set ::$var $values
+	## this will trigger the trace
+	set ::$var $values
     }
 
     proc config_pages {target var} {
@@ -119,7 +119,7 @@ namespace eval vTcl::widgets::bwidgets {
     }
 
     proc select_page {target index} {
-        $target raise [$target pages $index]
+	$target raise [$target pages $index]
     }
 
     ## Utility proc.  Dump a megawidget's children, but not those that are
@@ -128,34 +128,34 @@ namespace eval vTcl::widgets::bwidgets {
     ## itself (`vTcl:dump:widgets $subwidget' doesn't do the right thing if
     ## the grid geometry manager is used to manage children of $subwidget.
     proc dump_subwidgets {subwidget {sitebasename {}}} {
-        global vTcl basenames classes
-        set output ""
-        set geometry ""
-        set widget_tree [vTcl:get_children $subwidget]
-        set length      [string length $subwidget]
-        set basenames($subwidget) $sitebasename
+	global vTcl basenames classes
+	set output ""
+	set geometry ""
+	set widget_tree [vTcl:get_children $subwidget]
+	set length      [string length $subwidget]
+	set basenames($subwidget) $sitebasename
 
-        foreach i $widget_tree {
+	foreach i $widget_tree {
 
-            set basename [vTcl:base_name $i]
+	    set basename [vTcl:base_name $i]
 
-            ## don't try to dump subwidget itself
-            if {"$i" != "$subwidget"} {
-                set basenames($i) $basename
-                set class [vTcl:get_class $i]
-                append output [$classes($class,dumpCmd) $i $basename]
-                append geometry [vTcl:dump_widget_geom $i $basename]
-                catch {unset basenames($i)}
-            }
-        }
+	    ## don't try to dump subwidget itself
+	    if {"$i" != "$subwidget"} {
+		set basenames($i) $basename
+		set class [vTcl:get_class $i]
+		append output [$classes($class,dumpCmd) $i $basename]
+		append geometry [vTcl:dump_widget_geom $i $basename]
+		catch {unset basenames($i)}
+	    }
+	}
 
-        ## don't forget to dump grid geometry though
-        append geometry [vTcl:dump_grid_geom $subwidget $sitebasename]
+	## don't forget to dump grid geometry though
+	append geometry [vTcl:dump_grid_geom $subwidget $sitebasename]
 
-        append output $geometry
+	append output $geometry
 
-        catch {unset basenames($subwidget)}
-        return $output
+	catch {unset basenames($subwidget)}
+	return $output
     }
 }
 

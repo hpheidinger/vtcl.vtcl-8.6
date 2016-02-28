@@ -40,23 +40,23 @@ proc vTclWindow.vTcl.help {args} {
 
     ScrolledWindow $base.fra18
     text $base.fra18.tex22 \
-        -height 15 -width 80 -background white -wrap word -font {Arial 8}
+	-height 15 -width 80 -background white -wrap word -font {Arial 8}
     $base.fra18 setwidget $base.fra18.tex22
 
     ::vTcl::OkButton $base.but21 -command "Window hide $base"
     pack $base.but21 \
-        -anchor e -expand 0 -fill none -padx 2 -pady 2 -side top 
+	-anchor e -expand 0 -fill none -padx 2 -pady 2 -side top 
     pack $base.fra18 \
-        -anchor center -expand 1 -fill both -padx 5 -pady 5 -side top 
+	-anchor center -expand 1 -fill both -padx 5 -pady 5 -side top 
     pack $base.fra18.tex22
 
     set fileName [file join $vTcl(VTCL_HOME) lib Help reference.ttd]
     if {[file exists $fileName]} {
-        set inID [open $fileName]
-        set contents [read $inID]
-        $base.fra18.tex22 delete 0.0 end
-        ::ttd::insert $base.fra18.tex22 $contents
-        close $inID
+	set inID [open $fileName]
+	set contents [read $inID]
+	$base.fra18.tex22 delete 0.0 end
+	::ttd::insert $base.fra18.tex22 $contents
+	close $inID
     }
 
     $base.fra18.tex22 configure -state disabled
@@ -110,14 +110,14 @@ proc vTclWindow.vTcl.tip {base} {
     global vTcl
 
     if {$base == ""} {
-        set base .vTcl.tip
+	set base .vTcl.tip
     }
     if {[winfo exists $base]} {
-        wm deiconify $base; return
+	wm deiconify $base; return
     }
 
     image create photo light_bulb -file \
-        [file join $vTcl(VTCL_HOME) images tip.gif]
+	[file join $vTcl(VTCL_HOME) images tip.gif]
 
     global widget
     vTcl:DefineAlias $base TipWindow vTcl:TopLevel:WidgetProc "" 1
@@ -125,10 +125,10 @@ proc vTclWindow.vTcl.tip {base} {
     vTcl:DefineAlias $base.fra20.che26 DontShowTips vTcl:WidgetProc TipWindow 1
 
     if {[info exists vTcl(pr,dontshowtips)]} {
-        set ::tip::dontshow $vTcl(pr,dontshowtips)
+	set ::tip::dontshow $vTcl(pr,dontshowtips)
     }
     if {[info exists vTcl(pr,tipindex)]} {
-        set ::tip::Index $vTcl(pr,tipindex)
+	set ::tip::Index $vTcl(pr,tipindex)
     }
 
     ###################
@@ -143,83 +143,83 @@ proc vTclWindow.vTcl.tip {base} {
     wm resizable $base 1 1
     wm title $base "Tip of the day"
     wm protocol $base WM_DELETE_WINDOW {
-         Window hide .vTcl.tip
-         set vTcl(pr,dontshowtips) $::tip::dontshow
-         set vTcl(pr,tipindex)     $::tip::Index
+	 Window hide .vTcl.tip
+	 set vTcl(pr,dontshowtips) $::tip::dontshow
+	 set vTcl(pr,tipindex)     $::tip::Index
     }
 
     frame $base.fra20 \
-        -borderwidth 2 -height 75 -width 125 
+	-borderwidth 2 -height 75 -width 125 
     button $base.fra20.but22 \
-        -text Close -width 8 \
-        -command {
-             Window hide .vTcl.tip
-             set vTcl(pr,dontshowtips) $::tip::dontshow
-             set vTcl(pr,tipindex)     $::tip::Index
-         }
+	-text Close -width 8 \
+	-command {
+	     Window hide .vTcl.tip
+	     set vTcl(pr,dontshowtips) $::tip::dontshow
+	     set vTcl(pr,tipindex)     $::tip::Index
+	 }
     checkbutton $base.fra20.che26 \
-        -text {Don't show tips on startup} -variable ::tip::dontshow 
+	-text {Don't show tips on startup} -variable ::tip::dontshow 
     button $base.fra20.but19 \
-        \
-        -command {
-             TipWindow.TipText configure -state normal
-             TipWindow.TipText delete 0.0 end
-             TipWindow.TipText insert end [::tip::get_next_tip]
-             TipWindow.TipText configure -state disabled
-        } \
-        -text {Next >} -width 8 
+	\
+	-command {
+	     TipWindow.TipText configure -state normal
+	     TipWindow.TipText delete 0.0 end
+	     TipWindow.TipText insert end [::tip::get_next_tip]
+	     TipWindow.TipText configure -state disabled
+	} \
+	-text {Next >} -width 8 
     
-    button $base.fra20.but20        -command {
-                  TipWindow.TipText configure -state normal
-                  TipWindow.TipText delete 0.0 end
-                  TipWindow.TipText insert end	[::tip::get_previous_tip]
-                  TipWindow.TipText configure -state disabled
-             }     -text {< Previous} -width 8
+    button $base.fra20.but20	-command {
+		  TipWindow.TipText configure -state normal
+		  TipWindow.TipText delete 0.0 end
+		  TipWindow.TipText insert end	[::tip::get_previous_tip]
+		  TipWindow.TipText configure -state disabled
+	     }     -text {< Previous} -width 8
     		     
     frame $base.fra23 \
-        -borderwidth 2 
+	-borderwidth 2 
     label $base.fra23.lab24 \
-        -borderwidth 1 \
-        -image light_bulb \
-        -relief raised -text label 
+	-borderwidth 1 \
+	-image light_bulb \
+	-relief raised -text label 
 
     ScrolledWindow $base.cpd25
     text $base.cpd25.03 -background white \
-        -font -Adobe-Helvetica-Medium-R-Normal-*-*-120-*-*-*-*-*-* -height 1
+	-font -Adobe-Helvetica-Medium-R-Normal-*-*-120-*-*-*-*-*-* -height 1
     $base.cpd25 setwidget $base.cpd25.03
 
     label $base.lab19 \
-        -borderwidth 1 -font [vTcl:font:get_font "vTcl:font8"] \
-        -text {Did you know ...?} 
+	-borderwidth 1 -font [vTcl:font:get_font "vTcl:font8"] \
+	-text {Did you know ...?} 
     ###################
     # SETTING GEOMETRY
     ###################
     pack $base.fra20 \
-        -in $base -anchor e -expand 0 -fill x -side bottom 
+	-in $base -anchor e -expand 0 -fill x -side bottom 
     pack $base.fra20.but22 \
-        -in $base.fra20 -anchor center -expand 0 -fill none -padx 5 -pady 5 \
-        -side right 
+	-in $base.fra20 -anchor center -expand 0 -fill none -padx 5 -pady 5 \
+	-side right 
     pack $base.fra20.che26 \
-        -in $base.fra20 -anchor center -expand 0 -fill none -side left 
+	-in $base.fra20 -anchor center -expand 0 -fill none -side left 
    
    pack $base.fra20.but19 \
-        -in $base.fra20 -anchor center -expand 0 -fill none -padx 5 -pady 5 \
-        -side right 
+	-in $base.fra20 -anchor center -expand 0 -fill none -padx 5 -pady 5 \
+	-side right 
    pack $base.fra20.but20 \
-        -in $base.fra20 -anchor center -expand 0 -fill none -padx 5 -pady 5 \
-        -side right
+	-in $base.fra20 -anchor center -expand 0 -fill none -padx 5 -pady 5 \
+	-side right
    	
     pack $base.fra23 \
-        -in $base -anchor center -expand 0 -fill y -side left
+	-in $base -anchor center -expand 0 -fill y -side left
     pack $base.fra23.lab24 \
-        -in $base.fra23 -anchor center -expand 0 -fill none -padx 5 \
-        -side left 
+	-in $base.fra23 -anchor center -expand 0 -fill none -padx 5 \
+	-side left 
     pack $base.cpd25 \
-        -in $base -anchor center -expand 1 -fill both -padx 5 -pady 5 \
-        -side bottom 
+	-in $base -anchor center -expand 1 -fill both -padx 5 -pady 5 \
+	-side bottom 
     pack $base.cpd25.03
     pack $base.lab19 \
-        -in $base -anchor center -expand 0 -fill none -side top 
+	-in $base -anchor center -expand 0 -fill none -side top 
 
     wm geometry $base 506x292
     update
@@ -235,7 +235,7 @@ namespace eval ::tip {
 
     proc {::tip::get_next_tip} {} {
 	variable Tips
-        variable Index
+	variable Index
 
 	if {[lempty $Tips]} {
 	    global vTcl
@@ -245,10 +245,10 @@ namespace eval ::tip {
 	    }
 	}
    
-        set length [llength $Tips]
-        set Index  [expr ($Index + 1) % $length]
+	set length [llength $Tips]
+	set Index  [expr ($Index + 1) % $length]
 
-        return [lindex $Tips $Index]
+	return [lindex $Tips $Index]
     }
     proc {::tip::get_previous_tip} {} {
     	variable Tips
@@ -266,7 +266,7 @@ namespace eval ::vTcl::news {
 
     proc ::vTcl::news::Init {} {
 	variable http
-        if {[catch {package require http} error]} { return 0 }
+	if {[catch {package require http} error]} { return 0 }
 
 	set http ::http::geturl
 	if {$error < 2.3} { set http http_get }
@@ -289,9 +289,9 @@ namespace eval ::vTcl::news {
 	    } token]} {
 	    vTcl:status
 
-            ## too bad, we couldn't show news, so we won't bother the user
-            ## again on the next startup
-            set vTcl(pr,dontshownews) 1
+	    ## too bad, we couldn't show news, so we won't bother the user
+	    ## again on the next startup
+	    set vTcl(pr,dontshownews) 1
 	}
     }
 
@@ -333,8 +333,8 @@ namespace eval ::vTcl::news {
 	::vTcl::OkButton $base.b -anchor center -command "Window hide $base"
 
 	label $base.l -anchor w
-        checkbutton $base.dontshow -text "Do not show news on startup" \
-            -anchor w -variable vTcl(pr,dontshownews)
+	checkbutton $base.dontshow -text "Do not show news on startup" \
+	    -anchor w -variable vTcl(pr,dontshownews)
 
 	###################
 	# SETTING GEOMETRY
@@ -344,7 +344,7 @@ namespace eval ::vTcl::news {
 	pack $base.f \
 	    -in $base -anchor center -expand 1 -fill both -side top
 	pack $base.f.t
-        pack $base.dontshow -side bottom -fill x
+	pack $base.dontshow -side bottom -fill x
 	pack $base.l -side bottom -fill x
 
 	wm protocol $base WM_DELETE_WINDOW "$base.b invoke"
@@ -391,18 +391,18 @@ namespace eval ::vTcl::news {
 proc vTclWindow.vTcl.infolibs {{base ""}} {
 
     if {$base == ""} {
-        set base .vTcl.infolibs
+	set base .vTcl.infolibs
     }
     if {[winfo exists $base]} {
-        wm deiconify $base; return
+	wm deiconify $base; return
     }
 
     global vTcl
 
     # let's keep widget local
-    set widget(libraries_close)         "$base.but40"
+    set widget(libraries_close)	 "$base.but40"
     set widget(libraries_frame_listbox) "$base.cpd39"
-    set widget(libraries_header)        "$base.lab38"
+    set widget(libraries_header)	"$base.lab38"
     set widget(libraries_listbox)       "$base.cpd39.01"
 
     ###################
@@ -419,7 +419,7 @@ proc vTclWindow.vTcl.infolibs {{base ""}} {
     wm title $base "Visual Tcl Libraries"
     
     label $base.lab38 \
-        -borderwidth 1 -text {The following libraries are available:}
+	-borderwidth 1 -text {The following libraries are available:}
 
     ScrolledWindow $base.cpd39
     listbox $base.cpd39.01 -width 0
@@ -431,17 +431,17 @@ proc vTclWindow.vTcl.infolibs {{base ""}} {
     # SETTING GEOMETRY
     ###################
     pack $base.but40 \
-        -in $base -anchor center -expand 0 -fill none -side top -anchor e
+	-in $base -anchor center -expand 0 -fill none -side top -anchor e
     pack $base.lab38 \
-        -in $base -anchor center -expand 0 -fill x -ipadx 1 -side top
+	-in $base -anchor center -expand 0 -fill x -ipadx 1 -side top
     pack $base.cpd39 \
-        -in $base -anchor center -expand 1 -fill both -side top
+	-in $base -anchor center -expand 1 -fill both -side top
     pack $base.cpd39.01
 
     $widget(libraries_listbox) delete 0 end
 
     foreach name [lsort $vTcl(libNames)] {
-        $widget(libraries_listbox) insert end $name
+	$widget(libraries_listbox) insert end $name
     }
 
     wm geometry $base 446x322

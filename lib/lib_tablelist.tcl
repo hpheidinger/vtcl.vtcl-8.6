@@ -25,8 +25,8 @@ proc vTcl:lib_tablelist:init {} {
     global vTcl
 
     if {[catch {package require tablelist} erg]} {
-        lappend vTcl(libNames) {(not detected) tablelist Widget Support Library}
-        return 0
+	lappend vTcl(libNames) {(not detected) tablelist Widget Support Library}
+	return 0
     }
 
     lappend vTcl(libNames) {tablelist Widget Support Library}
@@ -41,8 +41,8 @@ proc vTcl:widget:lib:lib_tablelist {args} {
     vTcl:lib:add_widgets_to_toolbar $order TableList "Tablelist widget"
 
     append vTcl(head,tablelist,importheader) {
-        # tablelist is required
-        package require tablelist
+	# tablelist is required
+	package require tablelist
     }
 }
 

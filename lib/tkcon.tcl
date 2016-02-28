@@ -65,7 +65,7 @@ if {![llength [info globals tkPriv]]} {
 }
 foreach cmd {SetCursor UpDownLine Transpose ScrollPages} {
     if {![llength [info commands tkText$cmd]]} {
-        ::tk::unsupported::ExposePrivateCommand tkText$cmd
+	::tk::unsupported::ExposePrivateCommand tkText$cmd
     }
 }
 
@@ -110,12 +110,12 @@ proc ::tkcon::Init {args} {
 
     # bg == {} will get bg color from the main toplevel (in InitUI)
     foreach {key default} {
-	bg		{}
+	bg			{}
 	blink		\#FFFF00
 	cursor		\#000000
 	disabled	\#4D4D4D
 	proc		\#008800
-	var		\#FFC0D0
+	var			\#FFC0D0
 	prompt		\#8F4433
 	stdin		\#000000
 	stdout		\#0000FF
@@ -166,11 +166,11 @@ proc ::tkcon::Init {args} {
     }
 
     foreach {key default} {
-	app		{}
+	app			{}
 	appname		{}
 	apptype		slave
 	namesp		::
-	cmd		{}
+	cmd			{}
 	cmdbuf		{}
 	cmdsave		{}
 	event		1
@@ -4739,24 +4739,24 @@ proc unknown args {
     }
 
     foreach handler $unknown_handler_order {
-        set status [catch {uplevel 1 $unknown_handlers($handler) $args} result]
+	set status [catch {uplevel 1 $unknown_handlers($handler) $args} result]
 
-        if {$status == 1} {
-            #
-            # Strip the last five lines off the error stack (they're
-            # from the "uplevel" command).
-            #
-            set new [split $errorInfo \n]
-            set new [join [lrange $new 0 [expr {[llength $new]-6}]] \n]
-            return -code $status -errorcode $errorCode \
-                -errorinfo $new $result
+	if {$status == 1} {
+	    #
+	    # Strip the last five lines off the error stack (they're
+	    # from the "uplevel" command).
+	    #
+	    set new [split $errorInfo \n]
+	    set new [join [lrange $new 0 [expr {[llength $new]-6}]] \n]
+	    return -code $status -errorcode $errorCode \
+		-errorinfo $new $result
 
-        } elseif {$status != 4} {
-            return -code $status $result
-        }
+	} elseif {$status != 4} {
+	    return -code $status $result
+	}
 
-        set errorCode $savedErrorCode
-        set errorInfo $savedErrorInfo
+	set errorCode $savedErrorCode
+	set errorInfo $savedErrorInfo
     }
 
     set name [lindex $args 0]
@@ -4792,13 +4792,13 @@ proc tcl_unknown args {
     set cmd [lindex $args 0]
     if {[regexp "^:*namespace\[ \t\n\]+inscope" $cmd] \
 	    && [llength $cmd] == 4} {
-        set arglist [lrange $args 1 end]
+	set arglist [lrange $args 1 end]
 	set ret [catch {uplevel 1 $cmd $arglist} result]
-        if {$ret == 0} {
-            return $result
-        } else {
+	if {$ret == 0} {
+	    return $result
+	} else {
 	    return -code $ret -errorcode $errorCode $result
-        }
+	}
     }
 
     # Save the values of errorCode and errorInfo variables, since they
@@ -5999,13 +5999,13 @@ proc ::tkcon::RetrieveFilter {host} {
 proc ::tkcon::RetrieveAuthentication {} {
     package require Tk
     if {[catch {package require base64}]} {
-        if {[catch {package require Trf}]} {
-            error "base64 support not available"
-        } else {
-            set local64 "base64 -mode enc"
-        }
+	if {[catch {package require Trf}]} {
+	    error "base64 support not available"
+	} else {
+	    set local64 "base64 -mode enc"
+	}
     } else {
-        set local64 "base64::encode"
+	set local64 "base64::encode"
     }
 
     set dlg [toplevel .auth]

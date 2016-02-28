@@ -29,10 +29,10 @@ proc vTcl:store_cursor {target} {
 
     ## only store cursor once
     if {$vTcl(cursor,w) == ""} {
-        #puts "Store cursor: $target $vTcl(cursor,last)"
-        set vTcl(cursor,last) ""
-        catch {set vTcl(cursor,last) [$target cget -cursor]}
-        set vTcl(cursor,w) $target
+	#puts "Store cursor: $target $vTcl(cursor,last)"
+	set vTcl(cursor,last) ""
+	catch {set vTcl(cursor,last) [$target cget -cursor]}
+	set vTcl(cursor,w) $target
     }
 }
 
@@ -41,8 +41,8 @@ proc vTcl:restore_cursor {target} {
 
     ## only restore cursor once
     if {$vTcl(cursor,w) != "" && [winfo exists $vTcl(cursor,w)]} {
-        #puts "Restore cursor: $vTcl(cursor,w) $vTcl(cursor,last)"
-        catch {$vTcl(cursor,w) configure -cursor $vTcl(cursor,last)}
+	#puts "Restore cursor: $vTcl(cursor,w) $vTcl(cursor,last)"
+	catch {$vTcl(cursor,w) configure -cursor $vTcl(cursor,last)}
     }
 
     set vTcl(cursor,w) ""
@@ -67,10 +67,10 @@ proc vTcl:bind_button_1 {target X Y x y} {
 
     if {$parent != "." && [winfo class $parent] != "Toplevel"} {
 	vTcl:grab $target $X $Y
-        vTcl:store_cursor $target
+	vTcl:store_cursor $target
 	catch {$target configure -cursor fleur}
     } else {
-        vTcl:store_cursor $target
+	vTcl:store_cursor $target
     }
 
     # puts "end click button 1: $target"
@@ -90,11 +90,11 @@ proc vTcl:bind_button_2 {target X Y x y} {
     vTcl:active_widget $parent
 
     if {$vTcl(w,widget) != "." && \
-        [winfo class $vTcl(w,widget)] != "Toplevel" && \
-        $vTcl(w,widget) != ""} {
+	[winfo class $vTcl(w,widget)] != "Toplevel" && \
+	$vTcl(w,widget) != ""} {
 
 	vTcl:grab $target $X $Y
-        vTcl:store_cursor $target
+	vTcl:store_cursor $target
 	catch {$target configure -cursor fleur}
     }
 }
@@ -102,7 +102,7 @@ proc vTcl:bind_button_2 {target X Y x y} {
 proc vTcl:bind_motion {W x y} {
     global vTcl
     if {$vTcl(w,widget) != "." && $vTcl(w,class) != "Toplevel"} {
-        vTcl:grab_motion $vTcl(w,widget) $W $x $y
+	vTcl:grab_motion $vTcl(w,widget) $W $x $y
     }
 }
 
@@ -110,11 +110,11 @@ proc vTcl:bind_release {W X Y x y} {
     global vTcl
 
     if {[info exist vTcl(cursor,inside_button_1)] &&
-        $vTcl(cursor,inside_button_1)} {
+	$vTcl(cursor,inside_button_1)} {
 
-        # puts "oops: release button 1: $W"
-        after 500 "vTcl:bind_release $W $X $Y $x $y"
-        return
+	# puts "oops: release button 1: $W"
+	after 500 "vTcl:bind_release $W $X $Y $x $y"
+	return
     }
 
     # puts "release button 1: $W"
@@ -147,11 +147,11 @@ proc vTcl:grab_motion {parent widget absX absY} {
     # workaround for Tix
     if { $vTcl(w,grabbed) == 0 } { vTcl:grab $widget $absX $absY }
     if { $vTcl(w,manager) == "place" } {
-        place $parent \
-            -x [vTcl:grid_snap x \
-                [expr {$absX-$vTcl(grab,startX)+$vTcl(w,x)}]] \
-            -y [vTcl:grid_snap y \
-                [expr {$absY-$vTcl(grab,startY)+$vTcl(w,y)}]]
+	place $parent \
+	    -x [vTcl:grid_snap x \
+		[expr {$absX-$vTcl(grab,startX)+$vTcl(w,x)}]] \
+	    -y [vTcl:grid_snap y \
+		[expr {$absY-$vTcl(grab,startY)+$vTcl(w,y)}]]
     }
     vTcl:place_handles $parent
 }
@@ -161,8 +161,8 @@ proc vTcl:grab_release {widget} {
     grab release $widget
 	set vTcl(w,grabbed) 0
     if { $vTcl(w,didmove) == 1 } {
-        set vTcl(undo) [vTcl:dump_widget_quick $vTcl(w,widget)]
-        vTcl:passive_push_action $vTcl(undo) $vTcl(redo)
+	set vTcl(undo) [vTcl:dump_widget_quick $vTcl(w,widget)]
+	vTcl:passive_push_action $vTcl(undo) $vTcl(redo)
     }
     # puts "grab_release: $widget"
 }
@@ -187,33 +187,33 @@ proc vTcl:grab_resize {absX absY handle} {
     set newW $vTcl(w,width)
     set newH $vTcl(w,height)
     switch $vTcl(w,manager) {
-        place {
-            switch $handle {
-                n {
-                    set newX $vTcl(w,x)
-                    set newY [expr {$vTcl(w,y) + $deltaY}]
-                    set newW $vTcl(w,width)
-                    set newH [expr {$vTcl(w,height) - $deltaY}]
-                }
-                e {
-                    set newX $vTcl(w,x)
-                    set newY $vTcl(w,y)
-                    set newW [expr {$vTcl(w,width) + $deltaX}]
-                    set newH $vTcl(w,height)
-                }
-                s {
-                    set newX $vTcl(w,x)
-                    set newY $vTcl(w,y)
-                    set newW $vTcl(w,width)
-                    set newH [expr {$vTcl(w,height) + $deltaY}]
-                }
-                w {
-                    set newX [expr {$vTcl(w,x) + $deltaX}]
-                    set newY $vTcl(w,y)
-                    set newW [expr {$vTcl(w,width) - $deltaX}]
-                    set newH $vTcl(w,height)
-                }
-                nw {
+	place {
+	    switch $handle {
+		n {
+		    set newX $vTcl(w,x)
+		    set newY [expr {$vTcl(w,y) + $deltaY}]
+		    set newW $vTcl(w,width)
+		    set newH [expr {$vTcl(w,height) - $deltaY}]
+		}
+		e {
+		    set newX $vTcl(w,x)
+		    set newY $vTcl(w,y)
+		    set newW [expr {$vTcl(w,width) + $deltaX}]
+		    set newH $vTcl(w,height)
+		}
+		s {
+		    set newX $vTcl(w,x)
+		    set newY $vTcl(w,y)
+		    set newW $vTcl(w,width)
+		    set newH [expr {$vTcl(w,height) + $deltaY}]
+		}
+		w {
+		    set newX [expr {$vTcl(w,x) + $deltaX}]
+		    set newY $vTcl(w,y)
+		    set newW [expr {$vTcl(w,width) - $deltaX}]
+		    set newH $vTcl(w,height)
+		}
+		nw {
 		    if {$can == 1 || $can == 2} {
 			set newX [expr {$vTcl(w,x) + $deltaX}]
 			set newW [expr {$vTcl(w,width) - $deltaX}]
@@ -223,8 +223,8 @@ proc vTcl:grab_resize {absX absY handle} {
 			set newY [expr {$vTcl(w,y) + $deltaY}]
 			set newH [expr {$vTcl(w,height) - $deltaY}]
 		    }
-                }
-                ne {
+		}
+		ne {
 		    if {$can == 1 || $can == 2} {
 			set newX $vTcl(w,x)
 			set newW [expr {$vTcl(w,width) + $deltaX}]
@@ -234,8 +234,8 @@ proc vTcl:grab_resize {absX absY handle} {
 			set newY [expr {$vTcl(w,y) + $deltaY}]
 			set newH [expr {$vTcl(w,height) - $deltaY}]
 		    }
-                }
-                se {
+		}
+		se {
 		    if {$can == 1 || $can == 2} {
 			set newX $vTcl(w,x)
 			set newW [expr {$vTcl(w,width) + $deltaX}]
@@ -245,8 +245,8 @@ proc vTcl:grab_resize {absX absY handle} {
 			set newY $vTcl(w,y)
 			set newH [expr {$vTcl(w,height) + $deltaY}]
 		    }
-                }
-                sw {
+		}
+		sw {
 		    if {$can == 1 || $can == 2} {
 			set newX [expr {$vTcl(w,x) + $deltaX}]
 			set newW [expr {$vTcl(w,width) - $deltaX}]
@@ -256,61 +256,61 @@ proc vTcl:grab_resize {absX absY handle} {
 			set newY $vTcl(w,y)
 			set newH [expr {$vTcl(w,height) + $deltaY}]
 		    }
-                }
-            }
-            place $widget -x $newX -y $newY -width $newW -height $newH
-        }
-        grid -
-        pack {
-            switch $vTcl(w,class) {
-                Label -
-                Entry -
-                Message -
-                Scrollbar -
-                Scale {
-#                    set vTcl(w,opt,-height) ""
-                }
-            }
-                     
-            switch $handle {
-                n {
-                    set newW $vTcl(w,opt,-width)
-                    set newH [expr {$vTcl(w,opt,-height) - $deltaY}]
-                }
-                e {
-                    set newW [expr {$vTcl(w,opt,-width) + $deltaX}]
-                    set newH $vTcl(w,opt,-height)
-                }
-                s {
-                    set newW $vTcl(w,opt,-width)
-                    set newH [expr {$vTcl(w,opt,-height) + $deltaY}]
-                }
-                w {
-                    set newW [expr {$vTcl(w,opt,-width) - $deltaX}]
-                    set newH $vTcl(w,opt,-height)
-                }
-                nw {
-                    set newW [expr {$vTcl(w,opt,-width) - $deltaX}]
-                    set newH [expr {$vTcl(w,opt,-height) - $deltaY}]
-                }
-                ne {
-                    set newW [expr {$vTcl(w,opt,-width) + $deltaX}]
-                    set newH [expr {$vTcl(w,opt,-height) - $deltaY}]
-                }
-                se {
-                    set newW [expr {$vTcl(w,opt,-width) + $deltaX}]
-                    set newH [expr {$vTcl(w,opt,-height) + $deltaY}]
-                }
-                sw {
-                    set newW [expr {$vTcl(w,opt,-width) - $deltaX}]
-                    set newH [expr {$vTcl(w,opt,-height) + $deltaY}]
-                }
-            }
-            if { $newW < 0 } { set newW 0 }
-            if { $newH < 0 } { set newH 0 }
+		}
+	    }
+	    place $widget -x $newX -y $newY -width $newW -height $newH
+	}
+	grid -
+	pack {
+	    switch $vTcl(w,class) {
+		Label -
+		Entry -
+		Message -
+		Scrollbar -
+		Scale {
+#		    set vTcl(w,opt,-height) ""
+		}
+	    }
+		     
+	    switch $handle {
+		n {
+		    set newW $vTcl(w,opt,-width)
+		    set newH [expr {$vTcl(w,opt,-height) - $deltaY}]
+		}
+		e {
+		    set newW [expr {$vTcl(w,opt,-width) + $deltaX}]
+		    set newH $vTcl(w,opt,-height)
+		}
+		s {
+		    set newW $vTcl(w,opt,-width)
+		    set newH [expr {$vTcl(w,opt,-height) + $deltaY}]
+		}
+		w {
+		    set newW [expr {$vTcl(w,opt,-width) - $deltaX}]
+		    set newH $vTcl(w,opt,-height)
+		}
+		nw {
+		    set newW [expr {$vTcl(w,opt,-width) - $deltaX}]
+		    set newH [expr {$vTcl(w,opt,-height) - $deltaY}]
+		}
+		ne {
+		    set newW [expr {$vTcl(w,opt,-width) + $deltaX}]
+		    set newH [expr {$vTcl(w,opt,-height) - $deltaY}]
+		}
+		se {
+		    set newW [expr {$vTcl(w,opt,-width) + $deltaX}]
+		    set newH [expr {$vTcl(w,opt,-height) + $deltaY}]
+		}
+		sw {
+		    set newW [expr {$vTcl(w,opt,-width) - $deltaX}]
+		    set newH [expr {$vTcl(w,opt,-height) + $deltaY}]
+		}
+	    }
+	    if { $newW < 0 } { set newW 0 }
+	    if { $newH < 0 } { set newH 0 }
 	}
     }
-            
+	    
     $classes($vTcl(w,class),resizeCmd) $widget $newW $newH
     vTcl:place_handles $widget
 }

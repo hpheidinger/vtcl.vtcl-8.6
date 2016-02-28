@@ -60,9 +60,9 @@ proc vTcl:file_source {} {
     global vTcl
     set file [vTcl:get_file open "Source File"]
     if {$file != ""} {
-        vTcl:source $file newprocs
-        vTcl:list add $newprocs vTcl(procs)
-        vTcl:update_proc_list
+	vTcl:source $file newprocs
+	vTcl:list add $newprocs vTcl(procs)
+	vTcl:update_proc_list
     }
 }
 
@@ -76,42 +76,73 @@ proc vTcl:is_vtcl_prj {file} {
     set found 0
     set vmajor ""
     set vminor ""
-    # hph #
+  
+    # added, 2016-02-21/hph #
+    set maintr ""
     set patchl ""
 
     #
-    # Don't be too picky here .. or you mess the hole thing
+    # Don't be too picky here .. or you mess the whole thing
     #
     foreach line [split $contents \n] {
-	if [regexp {# Visual Tcl [vV](.?.?)\.(.?.?)\.(.?.?) Project} $line \
-	    matchAll vmajor vminor patchl] {
-	    set found 1
+	#
+	# Old Versioning: R.ss (Relase/Subrelease)
+	# ... for compatibility
+	#
+	if [regexp {# Visual Tcl v(.?)\.(.?.?) Project} $line \
+		matchAll vmajor vminor] {
+		set found 1
+
+	#
+	# Maybe new style versioning, if the above not succeeded
+	# ... see for a patchlevel first, numbered MM.RR.mm.pppp
+	# ... not for production at all
+	#
+	} elseif [regexp {# Visual Tcl v([1-9]+[0-9]*)\.([0-9]*[0-9]+)\.([0-9]+)\.([0-9]+) Project} $line \
+			matchAll vmajor vminor maintr patchl] {
+		set found 1
+		set vTcl(Patchlevel)	[join [list $vmajor $vminor $maintr $patchl] "."]
+		set vTcl(Maintrelease)  ''
+	#
+	# Maybe a maintenance release or a baselevel with mm=0? 
+	# numbered: MM.RR.mm
+	# e.g. 8.6.5 or 8.7.0 (baselevel 8.7)
+	#
+	} elseif [regexp {# Visual Tcl v([1-9]+[0-9]*)\.([0-9]*[0-9]+)\.([0-9]+) Project} $line \
+			matchAll vmajor vminor maintr] {
+		set found 1
+		set vTcl(Patchlevel)	''
+		set vTcl(Maintrelease)  [join [list $vmajor $vminor $maintr] "."]
 	}
     }
 
+
+    #
+    # Not found ! Curious thing ...
+    #
     if !$found {
-	::vTcl::MessageBox -title "Error loading file" \
-	              -message "This is not a vTcl project!" \
-	              -icon error \
-	              -type ok
+	::vTcl::MessageBox -title "Error loading file"	\
+		-message "This is not a vTcl project!\n $line" \
+		-icon error \
+		-type ok
 
 	return 0
     }
 
     set versions [split $vTcl(version) .]
-    set actual_major [lindex $versions 0]
-    set actual_minor [lindex $versions 1]
+    set actual_major  [lindex $versions 0]
+    set actual_minor  [lindex $versions 1]
 
     if {$vmajor != "" && $vminor != ""} {
 
     	if {$vmajor > $actual_major ||
     	    ($vmajor == $actual_major && $vminor > $actual_minor)} {
 		::vTcl::MessageBox -title "Error loading file" \
-		              -message "You are trying to load a project created using Visual Tcl v$vmajor.$vminor\n\nPlease update to vTcl $vmajor.$vminor and try again." \
-	              -icon error \
-	              -type ok
+			      -message "You are trying to load a project created using Visual Tcl v$vmajor.$vminor\n\nPlease update to vTcl $vmajor.$vminor and try again." \
+		      -icon error \
+		      -type ok
 
-	        return 0
+		return 0
     	}
     }
 
@@ -129,21 +160,22 @@ proc vTcl:source {file newprocs} {
     foreach context [vTcl:namespace_tree] {
 		if {$context == "::tcl::dict"} continue
 		if {$context == "::itcl::builtin"} continue	#hph,2016-02-04
-        set cop [namespace eval $context {info procs}]
 
-        foreach procname $cop {
-            if {$context == "::"} {
-               lappend op $procname
-            } else {
-               lappend op ${context}::$procname
-            }
-        }
+	set cop [namespace eval $context {info procs}]
+
+	foreach procname $cop {
+	    if {$context == "::"} {
+	       lappend op $procname
+	    } else {
+	       lappend op ${context}::$procname
+	    }
+	}
     }
 
     vTcl:statbar 20
     if [catch {uplevel #0 [list source $file]} err] {
-        ::vTcl::MessageBox -icon error -message "Error Sourcing Project\n$err" \
-            -title "File Error!"
+	::vTcl::MessageBox -icon error -message "Error Sourcing Project\n$err" \
+	    -title "File Error!"
 	global errorInfo
     }
     vTcl:statbar 35
@@ -154,17 +186,17 @@ proc vTcl:source {file newprocs} {
 		if {$context == "::tcl::dict"} continue
 		if {$context == "::itcl::builtin"} continue	#hph,2016-02-04
 		
-        set cop [namespace eval $context {info procs}]
+	set cop [namespace eval $context {info procs}]
 
-        foreach procname $cop {
-            if {[vTcl:ignore_procname_when_sourcing $procname] == 0 &&
-                [vTcl:ignore_procname_when_sourcing ${context}::$procname] == 0} {
-               if {$context == "::"} {
-                   lappend np $procname
-               } else {
-                   lappend np ${context}::$procname
-               }
-            }
+	foreach procname $cop {
+	    if {[vTcl:ignore_procname_when_sourcing $procname] == 0 &&
+		[vTcl:ignore_procname_when_sourcing ${context}::$procname] == 0} {
+	       if {$context == "::"} {
+		   lappend np $procname
+	       } else {
+		   lappend np ${context}::$procname
+	       }
+	    }
        }
     }
 
@@ -178,9 +210,9 @@ proc vTcl:open {{file ""}} {
     global vTcl argc argv
     if { [vTcl:close] == -1 } { return }
     if {$file == ""} {
-        set file [vTcl:get_file open "Open Project"]
+	set file [vTcl:get_file open "Open Project"]
     } else {
-        if ![file exists $file] {return}
+	if ![file exists $file] {return}
     }
 
     if {![info exists vTcl(rcFiles)]} { set vTcl(rcFiles) {} }
@@ -195,26 +227,26 @@ proc vTcl:open {{file ""}} {
     vTcl:addRcFile $file
 
     set vTcl(file,mode) ""
-    vTcl:load_lib vtclib.tcl;            vTcl:statbar 10
+    vTcl:load_lib vtclib.tcl;	    vTcl:statbar 10
     set vTcl(tops) ""
     set vTcl(vars) ""
     set vTcl(procs) ""
     proc vTcl:project:info {} {}
 
     vTcl:status "Loading Project"
-    vTcl:source $file newprocs;          vTcl:statbar 55
+    vTcl:source $file newprocs;	  vTcl:statbar 55
 
     # make sure the 'Window' procedure is the latest
-    vTcl:load_lib vtclib.tcl;            vTcl:statbar 60
+    vTcl:load_lib vtclib.tcl;	    vTcl:statbar 60
 
     vTcl:status "Updating top list"
-    vTcl:update_top_list;                vTcl:statbar 68
+    vTcl:update_top_list;		vTcl:statbar 68
 
     ## convert older projects
     vTcl:convert_tops
 
     vTcl:status "Updating aliases"
-    vTcl:update_aliases;                 vTcl:statbar 75
+    vTcl:update_aliases;		 vTcl:statbar 75
 
     vTcl:status "Loading Project Info";  vTcl:statbar 80
 
@@ -238,20 +270,20 @@ proc vTcl:open {{file ""}} {
     ## Setup the bind tree after we have loaded project info, so
     ## that registration of children in childsites works OK
     vTcl:status "Setting up bind tree"
-    vTcl:setup_bind_tree .;              vTcl:statbar 85
+    vTcl:setup_bind_tree .;	      vTcl:statbar 85
 
     vTcl:status "Registering widgets"
     vTcl:widget:register_all_widgets;	 vTcl:statbar 90
 
     vTcl:status "Updating proc list"
     if {$::vTcl::modules::main::procs != ""} {
-        vTcl:list add $::vTcl::modules::main::procs vTcl(procs)
+	vTcl:list add $::vTcl::modules::main::procs vTcl(procs)
     } else {
-        vTcl:list add "init main" vTcl(procs)
-        vTcl:list add $newprocs   vTcl(procs)
+	vTcl:list add "init main" vTcl(procs)
+	vTcl:list add $newprocs   vTcl(procs)
     }
-    vTcl:update_proc_list;               vTcl:statbar 95
-    vTcl:bind_tops;                      vTcl:statbar 98
+    vTcl:update_proc_list;	       vTcl:statbar 95
+    vTcl:bind_tops;		      vTcl:statbar 98
 
     ## The "single file" or "multiple files" option is now saved with each
     ## project, and defaults to the current preference if not saved into the
@@ -276,66 +308,66 @@ proc vTcl:open {{file ""}} {
 	    vTcl:init_wtree
 	    vTcl:image:refresh_manager
 	    vTcl:font:refresh_manager
-          vTcl:cmp_user_menu
+	  vTcl:cmp_user_menu
     }
 }
 
 proc vTcl:close {} {
     global vTcl
     if {$vTcl(change) > 0} {
-        set result [::vTcl::MessageBox -default yes -icon question -message \
-            "Your application has unsaved changes. Do you wish to save?" \
-            -title "Save Changes?" -type yesnocancel]
-        switch $result {
-            yes {
-                # @@ Nelson 20030409 if project is named just save it.
+	set result [::vTcl::MessageBox -default yes -icon question -message \
+	    "Your application has unsaved changes. Do you wish to save?" \
+	    -title "Save Changes?" -type yesnocancel]
+	switch $result {
+	    yes {
+		# @@ Nelson 20030409 if project is named just save it.
 		#if {[vTcl:save_as] == -1} { return -1 }
-                if {[vTcl:save] == -1} { return -1 }
-            }
-            cancel {
-                return -1
-            }
-        }
+		if {[vTcl:save] == -1} { return -1 }
+	    }
+	    cancel {
+		return -1
+	    }
+	}
     }
 
     set tops $vTcl(tops)
     foreach i $tops {
-        if {$i != ".vTcl" && $i != ".__tk_filedialog"} {
-            # list widget tree without including $i (it's why the "0" parameter)
-            foreach child [vTcl:widget_tree $i 0] {
-                vTcl:unset_alias $child
-                vTcl:setup_unbind $child
-            }
-            vTcl:unset_alias $i
-            destroy $i
+	if {$i != ".vTcl" && $i != ".__tk_filedialog"} {
+	    # list widget tree without including $i (it's why the "0" parameter)
+	    foreach child [vTcl:widget_tree $i 0] {
+		vTcl:unset_alias $child
+		vTcl:setup_unbind $child
+	    }
+	    vTcl:unset_alias $i
+	    destroy $i
 
-            # this is clean up for leftover widget commands
-            set _cmds [info commands $i.*]
-            foreach _cmd $_cmds {catch {rename $_cmd ""}}
-        }
+	    # this is clean up for leftover widget commands
+	    set _cmds [info commands $i.*]
+	    foreach _cmd $_cmds {catch {rename $_cmd ""}}
+	}
 
-        ## Destroy the widget namespace, as well as the namespaces of
-        ## all it's subwidgets
-        set namespaces [vTcl:namespace_tree ::widgets]
-        foreach namespace $namespaces {
-            if {[string match ::widgets::$i* $namespace]} {
-                catch {namespace delete $namespace} error
-            }
-        }
+	## Destroy the widget namespace, as well as the namespaces of
+	## all it's subwidgets
+	set namespaces [vTcl:namespace_tree ::widgets]
+	foreach namespace $namespaces {
+	    if {[string match ::widgets::$i* $namespace]} {
+		catch {namespace delete $namespace} error
+	    }
+	}
     }
 
     set vTcl(tops) ""
     set vTcl(newtops) 1
     vTcl:update_top_list
     foreach i $vTcl(vars) {
-        # don't erase aliases, they should be erased when
-        # closing the toplevels
-        if {$i == "widget"} continue
-        catch {global $i; unset $i}
+	# don't erase aliases, they should be erased when
+	# closing the toplevels
+	if {$i == "widget"} continue
+	catch {global $i; unset $i}
     }
     set vTcl(vars) ""
     foreach i $vTcl(procs) {
-        catch {rename $i {}}
+	catch {rename $i {}}
     }
     proc exit {args} {}
     proc init {argc argv} {}
@@ -373,10 +405,10 @@ proc vTcl:save {} {
     set vTcl(save) all
     set vTcl(w,save) $vTcl(w,widget)
     if {$vTcl(project,file) == ""} {
-        set file [vTcl:get_file save "Save Project"]
-        vTcl:save2 $file
+	set file [vTcl:get_file save "Save Project"]
+	vTcl:save2 $file
     } else {
-        vTcl:save2 $vTcl(project,file)
+	vTcl:save2 $vTcl(project,file)
     }
 }
 
@@ -391,13 +423,15 @@ proc vTcl:save_as {} {
 # @@change by Christian Gavin 3/27/00
 # added support for freewrap to generate executables
 # under Linux and Windows
+# ----------------------------
+# Fixed errors, 2016-02-26/hph
 
 proc vTcl:save_as_binary {} {
     global vTcl env tcl_platform
 
     set vTcl(save) all
     set vTcl(w,save) $vTcl(w,widget)
-    set file [vTcl:get_file save "Save Project With Binary"]
+    set file [vTcl:get_file save "Save Binary executable"]
 
     update
 
@@ -415,8 +449,8 @@ proc vTcl:save_as_binary {} {
     set listID [open $filelist w]
     puts $listID [join [vTcl:image:get_files_list] \n]
     puts $listID [join [vTcl:dump:get_files_list \
-                          [file dirname $file] \
-                          [file rootname $file] ] \n]
+			  [file dirname $file] \
+			  [file rootname $file] ] \n]
     close $listID
     
     ##
@@ -425,23 +459,42 @@ proc vTcl:save_as_binary {} {
     if {[string tolower $tcl_platform(platform)] == "windows"} {
 	set freewrap [file join $env(VTCL_HOME) Freewrap Windows bin freewrap.exe]
     } else {
-	set ostag [exec $env(VTCL_HOME)/Freewrap/config.guess]
-	set freewrap [file join $env(VTCL_HOME) Freewrap $ostag bin freewrap]
+    	#
+	# Find Freewrap along the search path ($PATH) on an unixoid system
+	# ... fail if not installed
+	#
+	# set ostag [exec $env(VTCL_HOME)/Freewrap/config.guess]
+	# set freewrap [file join $env(VTCL_HOME) Freewrap $ostag bin freewrap]
+	
+	# Assume we fail and find nothing
+	set poke_fail 1
+	set freewrap ''
+	catch {set poke_fail [regexp { no freewrap } [exec which freewrap]]}
+	
+	#
+	# poke_fail reset to 0 ?? Gotcha!
+	#
+	if !$poke_fail { set freewrap [lindex [exec whereis freewrap] 1] }
     }
 
     ## user installation required?
     if {![file exists $freewrap]} {
-        ::vTcl::MessageBox -title "Freewrap not installed" -message \
-"You have not yet installed freewrap in the vTcl distribution.
+	::vTcl::MessageBox -title "Freewrap not installed" -message \
+"You have not yet installed Freewrap on your system.
 
-Visual Tcl needs to find freewrap in the following location:
+Visual Tcl needs to find Freewrap along your search path (PATH)
+but it could not find one
 
-[file dirname $freewrap]
+Install Freewrap on your system or have it installed by your
+systems administrator
 
-Install a copy of the freewrap binary '[file tail $freewrap]' in the
-above location then try again." \
+You can get Freewrap for free on the InterNet
+     http://freewrap.sourceforge.net 
+
+For installation instruction see the file INSTALL-Freewrap     
+" \
 -icon error -type ok
-        return
+	return
     }
 
     exec $freewrap $file -f $filelist
@@ -450,7 +503,6 @@ above location then try again." \
 
     vTcl:status "Binary Done"
 }
-
 # @@end_change
 
 proc vTcl:save2 {file} {
@@ -458,7 +510,7 @@ proc vTcl:save2 {file} {
     global tcl_platform
     
     if {$file == ""} {
-        return -1
+	return -1
     }
     vTcl:destroy_handles
     vTcl:setup_bind_tree .
@@ -468,185 +520,185 @@ proc vTcl:save2 {file} {
     
     # @@change 20030409 Nelson bug 415090
     if {[file exists $file] && (![file exists $file.tmp]) } {
-        # If we are here then the original file exists and no ${file}.tmp exists
-        # We will move the original file to ${file}.tmp . 
-        # If all goes well during the save process then we can move 
-        # the ${file}.tmp to ${file}.bak . 
-        file rename -force ${file} ${file}.tmp
+	# If we are here then the original file exists and no ${file}.tmp exists
+	# We will move the original file to ${file}.tmp . 
+	# If all goes well during the save process then we can move 
+	# the ${file}.tmp to ${file}.bak . 
+	file rename -force ${file} ${file}.tmp
     } elseif {![file exists $file]} {
-        # Do nothing here since implies we were called from a save as operation!
+	# Do nothing here since implies we were called from a save as operation!
     } else {
-        # Give feedback here if things went wrong.
+	# Give feedback here if things went wrong.
 	  ::vTcl::MessageBox -icon error -message \
-            "$file.tmp already exists! This means for some reason a prior save attempt has failed!" \
-            -title "Save Error!" -type ok	  
+	    "$file.tmp already exists! This means for some reason a prior save attempt has failed!" \
+	    -title "Save Error!" -type ok	  
 	  ::vTcl::MessageBox -icon info -message \
-            "To work around the $file.tmp error: Perform a perform a \"Save As\" operation with a different file name.\nThis will protect the data in the $file.tmp and save your current work." \
+	    "To work around the $file.tmp error: Perform a perform a \"Save As\" operation with a different file name.\nThis will protect the data in the $file.tmp and save your current work." \
 	     -title "Save Information!" -type ok	   
-         	  
+	 	  
 	  return -1
     }
    
     # Catch for errors during the saving operations.
     set output ""
     if {[catch {
-        set output [open $file w]
-        if {$vTcl(pr,saveasexecutable)} {
-            puts $output "\#!/bin/sh"
-            puts $output "\# the next line restarts using wish\\"
-            puts $output {exec wish "$0" "$@" }
-        }
+	set output [open $file w]
+	if {$vTcl(pr,saveasexecutable)} {
+	    puts $output "\#!/bin/sh"
+	    puts $output "\# the next line restarts using wish\\"
+	    puts $output {exec wish "$0" "$@" }
+	}
        
-        ## Gather information about the widgets.
-        vTcl:dump:gather_widget_info
-        
-        ## Find out what libraries are being used by the compounds
-        set vTcl(dump,libraries) [concat $vTcl(dump,libraries) [vTcl::project::requiredLibraries main]]
-        set vTcl(dump,libraries) [lsort -unique $vTcl(dump,libraries)]
-        
+	## Gather information about the widgets.
+	vTcl:dump:gather_widget_info
+	
+	## Find out what libraries are being used by the compounds
+	set vTcl(dump,libraries) [concat $vTcl(dump,libraries) [vTcl::project::requiredLibraries main]]
+	set vTcl(dump,libraries) [lsort -unique $vTcl(dump,libraries)]
+	
 	  ## Header to import libraries
-        ## If any of the widgets use an external library, we need to dump the
-        ## importheader for each library.  If all the widgets are core or don't
-        ## use an external library, don't dump anything.
-        if {![lempty $vTcl(dump,libraries)]} {
+	## If any of the widgets use an external library, we need to dump the
+	## importheader for each library.  If all the widgets are core or don't
+	## use an external library, don't dump anything.
+	if {![lempty $vTcl(dump,libraries)]} {
     	    
-            ## If we have any library other than the core libraries, invoke
+	    ## If we have any library other than the core libraries, invoke
     	      ## a package name search in the headers.
     	      set namesearch 0
     	      foreach lib $vTcl(dump,libraries) {
-                if {[vTcl:streq $lib "core"] \
-                   || [vTcl:streq $lib "vtcl"] \
-                   || [vTcl:streq $lib "user"]} { continue }
-	          set namesearch 1
+		if {[vTcl:streq $lib "core"] \
+		   || [vTcl:streq $lib "vtcl"] \
+		   || [vTcl:streq $lib "user"]} { continue }
+		  set namesearch 1
 	      }
    	      vTcl:dump:not_sourcing_header out
 	    
-            if {$namesearch} {
-	          append out "\n$vTcl(tab)# Provoke name search\n"
-	          append out "$vTcl(tab)catch {package require bogus-package-name}\n"
-	          append out "$vTcl(tab)set packageNames \[package names\]\n"
-            }
+	    if {$namesearch} {
+		  append out "\n$vTcl(tab)# Provoke name search\n"
+		  append out "$vTcl(tab)catch {package require bogus-package-name}\n"
+		  append out "$vTcl(tab)set packageNames \[package names\]\n"
+	    }
 	    
-            foreach lib $vTcl(dump,libraries) {
-                if {![info exists vTcl(head,$lib,importheader)]} { continue }
-                append out $vTcl(head,$lib,importheader)
+	    foreach lib $vTcl(dump,libraries) {
+		if {![info exists vTcl(head,$lib,importheader)]} { continue }
+		append out $vTcl(head,$lib,importheader)
 	      }
 	    
 	      vTcl:dump:sourcing_footer out
 	      puts $output $out
 	    
-        }
-        
-        ## Project header
-        puts $output "[subst $vTcl(head,proj)]\n"
-        
-        ## Save compounds (if any)
-        puts $output [vTcl::project::saveCompounds main]
-        
-        ## Code to load images
-        vTcl:image:generate_image_stock $output
-        vTcl:image:generate_image_user  $output
-        
-        ## Code to load fonts
-        vTcl:font:generate_font_stock   $output
-        vTcl:font:generate_font_user    $output
-        
-        # moved init proc after user procs so that the init
-        # proc can call any user proc
-        ::vTcl:::tops::handleRunvisible withdraw
-        if {$vTcl(save) == "all"} {
-            puts $output $vTcl(head,exports)
-            puts $output [vTcl:export_procs]
-            puts $output [vTcl:dump:project_info \
-                [file dirname $file] $vTcl(project,name)]
-            puts $output $vTcl(head,procs)
-            puts $output [vTcl:save_procs]
-            puts $output [vTcl:dump_proc init "Initialization "]
-            puts $output "init \$argc \$argv\n"
-            puts $output $vTcl(head,gui)
-            puts $output [vTcl:save_tree . [file dirname $file] $vTcl(project,name)]
-            puts $output "main \$argc \$argv"
-        } else {
-            puts $output [vTcl:save_tree $vTcl(w,widget)]
-        }
-        
-        ::vTcl:::tops::handleRunvisible deiconify
-        vTcl:addRcFile $file
-        
-        close $output
-        
-	  vTcl:status "Done Saving"
-        
-	  set vTcl(file,mode) ""
-        
-	  if {$vTcl(w,save) != ""} {
-            if {$vTcl(w,widget) != $vTcl(w,save)} {
-                vTcl:active_widget $vTcl(w,save)
-            }
-            vTcl:create_handles $vTcl(w,save)
-        }
+	}
 	
-        # it really annoyed me when I had to set the file as
-        # executable under Linux to be able to run it, so here
-        # we go
-        if {$vTcl(pr,saveasexecutable) &&
-            $tcl_platform(platform) == "unix"} {
-            file attributes $file -permissions [expr 0755]
-        }
-        # The catch ends below.	
+	## Project header
+	puts $output "[subst $vTcl(head,proj)]\n"
+	
+	## Save compounds (if any)
+	puts $output [vTcl::project::saveCompounds main]
+	
+	## Code to load images
+	vTcl:image:generate_image_stock $output
+	vTcl:image:generate_image_user  $output
+	
+	## Code to load fonts
+	vTcl:font:generate_font_stock   $output
+	vTcl:font:generate_font_user    $output
+	
+	# moved init proc after user procs so that the init
+	# proc can call any user proc
+	::vTcl:::tops::handleRunvisible withdraw
+	if {$vTcl(save) == "all"} {
+	    puts $output $vTcl(head,exports)
+	    puts $output [vTcl:export_procs]
+	    puts $output [vTcl:dump:project_info \
+		[file dirname $file] $vTcl(project,name)]
+	    puts $output $vTcl(head,procs)
+	    puts $output [vTcl:save_procs]
+	    puts $output [vTcl:dump_proc init "Initialization "]
+	    puts $output "init \$argc \$argv\n"
+	    puts $output $vTcl(head,gui)
+	    puts $output [vTcl:save_tree . [file dirname $file] $vTcl(project,name)]
+	    puts $output "main \$argc \$argv"
+	} else {
+	    puts $output [vTcl:save_tree $vTcl(w,widget)]
+	}
+	
+	::vTcl:::tops::handleRunvisible deiconify
+	vTcl:addRcFile $file
+	
+	close $output
+	
+	  vTcl:status "Done Saving"
+	
+	  set vTcl(file,mode) ""
+	
+	  if {$vTcl(w,save) != ""} {
+	    if {$vTcl(w,widget) != $vTcl(w,save)} {
+		vTcl:active_widget $vTcl(w,save)
+	    }
+	    vTcl:create_handles $vTcl(w,save)
+	}
+	
+	# it really annoyed me when I had to set the file as
+	# executable under Linux to be able to run it, so here
+	# we go
+	if {$vTcl(pr,saveasexecutable) &&
+	    $tcl_platform(platform) == "unix"} {
+	    file attributes $file -permissions [expr 0755]
+	}
+	# The catch ends below.	
     } errResult]} {
-        # End the catch and give feedback here if things went wrong.
+	# End the catch and give feedback here if things went wrong.
 	  ::vTcl::MessageBox -icon error -message \
-            "An error occured during the save operation:\n\n$errResult" \
-            -title "Save Error!" -type ok	
+	    "An error occured during the save operation:\n\n$errResult" \
+	    -title "Save Error!" -type ok	
 
 	  # Move the original file back and do not mess with the .bak file.  
-        # First of all, close the messed up and uncompletely saved file.
-        if {$output != ""} {
-            close $output
-        }
+	# First of all, close the messed up and uncompletely saved file.
+	if {$output != ""} {
+	    close $output
+	}
 	if {[file exists ${file}.tmp]} {
-            file rename -force ${file}.tmp ${file}
-        }
+	    file rename -force ${file}.tmp ${file}
+	}
     } else {
-        if {[vTcl::project::isMultipleFileProject]} {
-            ## If we get here then we are testing to see that the files associated with the 
-            ## multifile project all dumped to .bak files ok. If any ${file}.tmp files with
-            ## the project exist then we do not want to finish the dump with the project file.
-            set tops ". $vTcl(tops)"
-            ## The tmpSentry will come out 0 still if all the .tmp files for the project are gone.
-            set tmpSentry 0
-            foreach i $tops {
-                if {[file exists [file join [file dirname $file] [vTcl:dump:get_multifile_project_dir $vTcl(project,name)] f$i.tcl.tmp]]} {
-                    set tmpSentry 1
-                }
-            }
-            if {!$tmpSentry} {
-                ## All well if we get here and we need to move the ${file}.tmp to ${fiel}.bak
-                if {[file exists ${file}.tmp]} {
-                    file rename -force ${file}.tmp ${file}.bak
-                }
-                set vTcl(change) 0
-                wm title $vTcl(gui,main) "Visual Tcl - $vTcl(project,name)"
-            } else {
-                ## The backup has failed to move the original main file back.
-                if {[file exists ${file}.tmp]} {
-                    file rename -force ${file}.tmp ${file}
-                }
-                ## Let the user know that all the associated files for the project did not backup correct.
-                ## Advise them to choose save as.
-                ::vTcl::MessageBox -icon error -message \
-                 "An error occured during the multifile backup operation:\n\nPlease choose Save As and save in a new location!" \
-                 -title "Save Error!" -type ok	
-            }
-        } else {
-            ## All well if we get here and we need to move the ${file}.tmp to ${fiel}.bak
-            if {[file exists ${file}.tmp]} {
-               file rename -force ${file}.tmp ${file}.bak
-            }
-            set vTcl(change) 0
-            wm title $vTcl(gui,main) "Visual Tcl - $vTcl(project,name)"
-        }
+	if {[vTcl::project::isMultipleFileProject]} {
+	    ## If we get here then we are testing to see that the files associated with the 
+	    ## multifile project all dumped to .bak files ok. If any ${file}.tmp files with
+	    ## the project exist then we do not want to finish the dump with the project file.
+	    set tops ". $vTcl(tops)"
+	    ## The tmpSentry will come out 0 still if all the .tmp files for the project are gone.
+	    set tmpSentry 0
+	    foreach i $tops {
+		if {[file exists [file join [file dirname $file] [vTcl:dump:get_multifile_project_dir $vTcl(project,name)] f$i.tcl.tmp]]} {
+		    set tmpSentry 1
+		}
+	    }
+	    if {!$tmpSentry} {
+		## All well if we get here and we need to move the ${file}.tmp to ${fiel}.bak
+		if {[file exists ${file}.tmp]} {
+		    file rename -force ${file}.tmp ${file}.bak
+		}
+		set vTcl(change) 0
+		wm title $vTcl(gui,main) "Visual Tcl - $vTcl(project,name)"
+	    } else {
+		## The backup has failed to move the original main file back.
+		if {[file exists ${file}.tmp]} {
+		    file rename -force ${file}.tmp ${file}
+		}
+		## Let the user know that all the associated files for the project did not backup correct.
+		## Advise them to choose save as.
+		::vTcl::MessageBox -icon error -message \
+		 "An error occured during the multifile backup operation:\n\nPlease choose Save As and save in a new location!" \
+		 -title "Save Error!" -type ok	
+	    }
+	} else {
+	    ## All well if we get here and we need to move the ${file}.tmp to ${fiel}.bak
+	    if {[file exists ${file}.tmp]} {
+	       file rename -force ${file}.tmp ${file}.bak
+	    }
+	    set vTcl(change) 0
+	    wm title $vTcl(gui,main) "Visual Tcl - $vTcl(project,name)"
+	}
     }
     # @@end_change 20030409 Nelson bug 415090
 }
@@ -678,26 +730,26 @@ proc vTcl:save_prefs {} {
     ## If the window exists but is not visible, we still want to save its
     ## geometry, just not add it to the showlist.
     foreach i $vTcl(windows) {
-        if {[winfo exists $i]} {
+	if {[winfo exists $i]} {
 	    append output "set vTcl(geometry,${i}) [wm geometry $i]\n"
 	    if {[vTcl:streq [wm state $i] "normal"]} { lappend showlist $i }
-        } else {
-            catch {
-                append output "set vTcl(geometry,${i}) $vTcl(geometry,${i})\n"
-            }
-        }
+	} else {
+	    catch {
+		append output "set vTcl(geometry,${i}) $vTcl(geometry,${i})\n"
+	    }
+	}
     }
     append output "set vTcl(gui,showlist) \"$showlist\"\n"
     foreach i [array names vTcl pr,*] {
-        append output "set vTcl($i) [list $vTcl($i)]\n"
+	append output "set vTcl($i) [list $vTcl($i)]\n"
     }
 
     if {![info exists vTcl(rcFiles)]} { set vTcl(rcFiles) {} }
     append output "set vTcl(rcFiles) \[list $vTcl(rcFiles)\]\n"
     catch {
-        set file [open $vTcl(CONF_FILE) w]
-        puts $file $output
-        close $file
+	set file [open $vTcl(CONF_FILE) w]
+	puts $file $output
+	close $file
     }
 }
 
@@ -708,11 +760,11 @@ proc vTcl:find_files {base pattern} {
     set files [lsort [glob -nocomplain [file join $base *]]]
     if {$pattern == ""} {set pattern "*"}
     foreach i $files {
-        if {[file isdir $i]} {
-            lappend dirs $i
-        } elseif {[string match $pattern $i]} {
-            lappend match $i
-        }
+	if {[file isdir $i]} {
+	    lappend dirs $i
+	} elseif {[string match $pattern $i]} {
+	    lappend match $i
+	}
     }
     return "$dirs $match"
 }
@@ -720,39 +772,39 @@ proc vTcl:find_files {base pattern} {
 proc vTcl:get_file {mode {title File} {ext .tcl}} {
     global vTcl tk_version tcl_platform tcl_version tk_strictMotif
     if {![info exists vTcl(pr,initialdir)]} {
-        set vTcl(pr,initialdir) [pwd]
+	set vTcl(pr,initialdir) [pwd]
     }
     if {[string tolower $mode] == "open"} {
-        set vTcl(file,mode) "Open"
+	set vTcl(file,mode) "Open"
     } else {
-        set vTcl(file,mode) "Save"
+	set vTcl(file,mode) "Save"
     }
     set types { {{Tcl Files} {*.tcl}}
-                {{All}       {*}} }
+		{{All}       {*}} }
     set tk_strictMotif 0
     switch $mode {
-        open {
-            set file [tk_getOpenFile -defaultextension $ext -title $title \
-                -initialdir $vTcl(pr,initialdir) -filetypes $types]
-        }
-        save {
-            set initname [file tail $vTcl(project,file)]
-            if {$initname == ""} {
-                set initname "unknown.tcl"
-            }
-            if {$tcl_platform(platform) == "macintosh"} then {
-                set file [tk_getSaveFile -defaultextension $ext -title $title \
-                    -initialdir $vTcl(pr,initialdir) -initialfile $initname]
-            } else {
-                set file [tk_getSaveFile -defaultextension $ext -title $title \
-                    -initialdir $vTcl(pr,initialdir) -filetypes $types \
-                    -initialfile $initname]
-            }
-        }
+	open {
+	    set file [tk_getOpenFile -defaultextension $ext -title $title \
+		-initialdir $vTcl(pr,initialdir) -filetypes $types]
+	}
+	save {
+	    set initname [file tail $vTcl(project,file)]
+	    if {$initname == ""} {
+		set initname "unknown.tcl"
+	    }
+	    if {$tcl_platform(platform) == "macintosh"} then {
+		set file [tk_getSaveFile -defaultextension $ext -title $title \
+		    -initialdir $vTcl(pr,initialdir) -initialfile $initname]
+	    } else {
+		set file [tk_getSaveFile -defaultextension $ext -title $title \
+		    -initialdir $vTcl(pr,initialdir) -filetypes $types \
+		    -initialfile $initname]
+	    }
+	}
     }
     set tk_strictMotif 1
     if {$file != ""} {
-        set vTcl(pr,initialdir) [file dirname $file]
+	set vTcl(pr,initialdir) [file dirname $file]
     }
     catch {cd [file dirname $file]}
     return $file
@@ -766,139 +818,139 @@ proc vTcl:restore {} {
     if {[lempty $file]} { return }
     set bakFile $file.bak
     if {![file exists $bakFile]} {
-        ## change by Nelson 20030227
-        ## Provides the user feedback about no $file.bak existance
-        ## and potential reason why one might not exist.
+	## change by Nelson 20030227
+	## Provides the user feedback about no $file.bak existance
+	## and potential reason why one might not exist.
 
-        ::vTcl::MessageBox -icon error -message \
-         "A backup file $bakFile does not exist! Backup files are only created upon save operations beyond the original creation of the file." \
-         -title "Restore Error!" -type ok
-          
+	::vTcl::MessageBox -icon error -message \
+	 "A backup file $bakFile does not exist! Backup files are only created upon save operations beyond the original creation of the file." \
+	 -title "Restore Error!" -type ok
+	  
 	return
     }
     
     if {[vTcl::project::isMultipleFileProject]} {
-        ## If we get here then it is a multi file project. So lets try to restore from each backup file.
-        set restoreProject $vTcl(project,name)
-        set tops ". $vTcl(tops)"
-        vTcl:close
-        foreach i $tops {
-            set multiFile [file join [file dirname $file] [vTcl:dump:get_multifile_project_dir $restoreProject] f$i.tcl]
-            set bakMultiFile [file join [file dirname $file] [vTcl:dump:get_multifile_project_dir $restoreProject] $multiFile.bak]
-            if {[file exists $bakMultiFile ]} {
-                file copy -force -- $bakMultiFile $multiFile
-            } else {
-                ::vTcl::MessageBox -icon error -message \
-                 "A backup file $bakMultiFile does not exist!\n $tops \n Backup files are only created upon save operations beyond the original creation of the file." \
-                 -title "Restore Error!" -type ok
-            }
-        }
-        file copy -force -- $bakFile $file
-        update idletasks
-        vTcl:open $file
+	## If we get here then it is a multi file project. So lets try to restore from each backup file.
+	set restoreProject $vTcl(project,name)
+	set tops ". $vTcl(tops)"
+	vTcl:close
+	foreach i $tops {
+	    set multiFile [file join [file dirname $file] [vTcl:dump:get_multifile_project_dir $restoreProject] f$i.tcl]
+	    set bakMultiFile [file join [file dirname $file] [vTcl:dump:get_multifile_project_dir $restoreProject] $multiFile.bak]
+	    if {[file exists $bakMultiFile ]} {
+		file copy -force -- $bakMultiFile $multiFile
+	    } else {
+		::vTcl::MessageBox -icon error -message \
+		 "A backup file $bakMultiFile does not exist!\n $tops \n Backup files are only created upon save operations beyond the original creation of the file." \
+		 -title "Restore Error!" -type ok
+	    }
+	}
+	file copy -force -- $bakFile $file
+	update idletasks
+	vTcl:open $file
 
     } else {
-        ## If we are here then it is a single file backup.
-        vTcl:close
-        file copy -force -- $bakFile $file
-        vTcl:open $file
+	## If we are here then it is a single file backup.
+	vTcl:close
+	file copy -force -- $bakFile $file
+	vTcl:open $file
     }    
 }
 
 namespace eval vTcl::project {
 
     proc isMultipleFileProject {} {
-        return [expr {$::vTcl(pr,projecttype) == "multiple"}]
+	return [expr {$::vTcl(pr,projecttype) == "multiple"}]
     }
 
     proc initModule {moduleName} {
-        namespace eval ::vTcl::modules::${moduleName} {
-            variable procs
-            set procs ""
-            variable compounds
-            set compounds ""
-            ## TODO: this will probably be discarded once we have real modules
-            ##       where any object (toplevel, procedure, image, font, ...) can
-            ##       be contained and saved into a particular module
-            variable projectType
-            set projectType $::vTcl(pr,projecttype)
-        }
+	namespace eval ::vTcl::modules::${moduleName} {
+	    variable procs
+	    set procs ""
+	    variable compounds
+	    set compounds ""
+	    ## TODO: this will probably be discarded once we have real modules
+	    ##       where any object (toplevel, procedure, image, font, ...) can
+	    ##       be contained and saved into a particular module
+	    variable projectType
+	    set projectType $::vTcl(pr,projecttype)
+	}
     }
 
     proc addCompound {moduleName type compoundName} {
-        upvar ::vTcl::modules::${moduleName}::compounds compounds
-        set compound $type
-        lappend compounds [list $type $compoundName]
-        set compounds [lsort -unique $compounds]
+	upvar ::vTcl::modules::${moduleName}::compounds compounds
+	set compound $type
+	lappend compounds [list $type $compoundName]
+	set compounds [lsort -unique $compounds]
     }
 
     proc saveCompounds {moduleName} {
-        upvar ::vTcl::modules::${moduleName}::compounds compounds
+	upvar ::vTcl::modules::${moduleName}::compounds compounds
 
-        set output ""
-        foreach compound $compounds {
-            set type         [lindex $compound 0]
-            set compoundName [lindex $compound 1]
-            append output {#############################################################################}
-            append output \n
-            append output {## Compound: }
-            append output "$type / $compoundName\n"
-            append output [vTcl:dump_namespace vTcl::compounds::${type}::[list $compoundName]]
-        }
+	set output ""
+	foreach compound $compounds {
+	    set type	 [lindex $compound 0]
+	    set compoundName [lindex $compound 1]
+	    append output {#############################################################################}
+	    append output \n
+	    append output {## Compound: }
+	    append output "$type / $compoundName\n"
+	    append output [vTcl:dump_namespace vTcl::compounds::${type}::[list $compoundName]]
+	}
 
-        return $output
+	return $output
     }
 
     proc getCompounds {moduleName} {
-        return [vTcl:at ::vTcl::modules::${moduleName}::compounds]
+	return [vTcl:at ::vTcl::modules::${moduleName}::compounds]
     }
 
     proc closeCompounds {moduleName} {
-        upvar ::vTcl::modules::${moduleName}::compounds compounds
+	upvar ::vTcl::modules::${moduleName}::compounds compounds
 
-        foreach compound $compounds {
-            closeCompound $compound
-        }
-        set compounds ""
+	foreach compound $compounds {
+	    closeCompound $compound
+	}
+	set compounds ""
     }
 
     proc closeCompound {compound} {
-        set type         [lindex $compound 0]
-        set compoundName [lindex $compound 1]
-        vTcl::compounds::deleteCompound $type $compoundName
+	set type	 [lindex $compound 0]
+	set compoundName [lindex $compound 1]
+	vTcl::compounds::deleteCompound $type $compoundName
     }
 
     ## returns the required libraries for the inserted compounds
     proc requiredLibraries {moduleName} {
-        upvar ::vTcl::modules::${moduleName}::compounds compounds
+	upvar ::vTcl::modules::${moduleName}::compounds compounds
 
-        set result "core"
-        foreach compound $compounds {
-            set type         [lindex $compound 0]
-            set compoundName [lindex $compound 1]
-            set result [concat $result [vTcl::compounds::getLibraries $type $compoundName]]
-        }
+	set result "core"
+	foreach compound $compounds {
+	    set type	 [lindex $compound 0]
+	    set compoundName [lindex $compound 1]
+	    set result [concat $result [vTcl::compounds::getLibraries $type $compoundName]]
+	}
 
-        return [lsort -unique $result]
+	return [lsort -unique $result]
     }
 
     ## returns the list of requested libraries
     proc getLibrariesToLoad {} {
     	  set ::vTcl::toload ""
-        if {[info exists ::vTcl(pr,loadlibs)]} {
-            foreach lib $::vTcl(pr,loadlibs) {
-                lappend ::vTcl::toload [file join $::vTcl(LIB_DIR) $lib]
-            }
-        } else {
-            set ::vTcl::toload $::vTcl(LIB_WIDG)
-        }
+	if {[info exists ::vTcl(pr,loadlibs)]} {
+	    foreach lib $::vTcl(pr,loadlibs) {
+		lappend ::vTcl::toload [file join $::vTcl(LIB_DIR) $lib]
+	    }
+	} else {
+	    set ::vTcl::toload $::vTcl(LIB_WIDG)
+	}
 
-        return $::vTcl::toload
+	return $::vTcl::toload
     }
 
     ## sets the list of request libraries (each lib is filename without path)
     proc setLibrariesToLoad {libs} {
-        set ::vTcl(pr,loadlibs) $libs
+	set ::vTcl(pr,loadlibs) $libs
     }
 }
 
