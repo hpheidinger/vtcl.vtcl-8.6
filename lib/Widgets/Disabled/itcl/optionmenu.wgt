@@ -1,0 +1,113 @@
+# $Id: optionmenu.wgt,v 1.10 2002/10/10 06:36:32 cgavin Exp $
+
+##############################################################################
+#
+# Visual TCL - A cross-platform application development environment
+#
+# Copyright (C) 2001 Christian Gavin
+#
+# Description file for [Incr Widgets]
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+##############################################################################
+#
+
+Class		Optionmenu
+Lib		itcl
+
+CreateCmd	::iwidgets::optionmenu
+InsertCmd       vTcl::widgets::iwidgets::optionmenu::insertCmd
+Icon		icon_optionmenu.gif
+DumpChildren	no
+DumpCmd         vTcl::widgets::iwidgets::optionmenu::dumpCmd
+MegaWidget	yes
+TagsCmd         vTcl:lib_itcl:tagscmd
+Function        "Edit Option Menu..." vTcl::widgets::iwidgets::optionmenu::editMenu
+
+namespace eval vTcl::widgets::iwidgets::optionmenu {
+
+    proc editMenu {} {
+         set target $::vTcl(w,widget)
+        ::vTcl::itemEdit::edit $target vTcl::widgets::iwidgets::optionmenu::edit
+    }
+
+    proc insertCmd {target} {
+        $target insert 0 {Choice 1} {Choice 2} {Choice 3}
+    }
+
+    proc dumpCmd {target basename} {
+        global vTcl
+        set result [vTcl:dump_widget_opt $target $basename]
+        set last -1
+        catch {set last [$target index end]}
+
+        for {set i 0} {$i <= $last} {incr i} {
+            set item [$target get $i]
+            append result "$vTcl(tab)$basename insert [expr $i+1] \{$item\}\n"
+        }
+
+        return $result
+    }
+}
+
+namespace eval vTcl::widgets::iwidgets::optionmenu::edit {
+
+    proc getTitle {target} {
+        return "Edit option menu for $target"
+    }
+
+    proc getLabelOption {} {
+        return -label
+    }
+
+    proc getItems {target} {
+        ## first item in the list is the current index
+        set values 0
+        set index 0
+        for {set i 0} {$i <= [$target index end]} {incr i} {
+            lappend values [$target get $i]
+        }
+        return $values
+    }
+
+    proc addItem {target} {
+        set where [expr [$target index end] + 1]
+        $target insert $where "New choice"
+        return "New choice"
+    }
+
+    proc removeItem {target index} {
+        $target delete $index
+    }
+
+    proc itemConfigure {target index args} {
+        if {$args == ""} {
+            set value [$target get $index]
+            return [list [list -label Label Label {} $value]]
+        } else {
+            set label [lindex $args 1]
+            set current [$target index select]
+            $target delete $index
+            $target insert $index $label
+            $target select $current
+        }
+    }
+
+    proc moveUpOrDown {target index direction} {
+        error "Not implemented yet!"
+    }
+}
+

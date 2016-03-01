@@ -1,0 +1,19 @@
+NewOption -closecommand {Closecmd} command
+NewOption -closerelief {closerelief} choice {raised sunken}
+NewOption -dashes {dashes} type
+NewOption -halo {halo} type
+NewOption -invertxy {invertxy} type
+NewOption -justify {justify} choice {left right center}
+NewOption -leftmargin {LeftMar} type
+NewOption -opencommand {Opencmd} command {}
+NewOption -openrelief {openrelief} choice {raised sunken}
+NewOption -plotbackground {plot BgColor} color {} Colors
+NewOption -plotborderwidth {plot Width} type
+NewOption -plotpadx {plot PadX}  type
+NewOption -plotpady {plot PadY}  type
+NewOption -plotrelief {plot Relief}   relief
+NewOption -rightmargin {RightMar} type
+NewOption -tile tile type
+NewOption -title Title type
+NewOption -topmargin {TopMar} type
+

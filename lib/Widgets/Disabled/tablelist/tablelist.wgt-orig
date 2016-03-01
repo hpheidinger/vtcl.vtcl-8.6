@@ -1,0 +1,162 @@
+##############################################################################
+# $Id: tablelist.wgt,v 1.4 2002/05/14 05:37:17 cgavin Exp $
+#
+# tablelist.wgt widget description file
+#
+# Copyright (C) 2002 Christian Gavin
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+#
+##############################################################################
+
+Class		Tablelist
+Lib			tablelist
+
+Icon		../lib/Widgets/tablelist/tablelist.gif
+TreeLabel	table list
+
+DefaultValues   -background -foreground
+DumpChildren	no
+MegaWidget   	yes
+CreateCmd       ::tablelist::tablelist
+InsertCmd       vTcl::widgets::tablelist::tablelist::insertCmd
+DumpCmd         vTcl::widgets::tablelist::tablelist::dumpCmd
+EditableTagsCmd vTcl::widgets::tablelist::tablelist::editableTagsCmd
+
+## Procs to ignore when saving
+#IgnoreProc      ::tablelist::*
+IgnoreProc      ::mwutil::*
+
+## Right-click menu
+Function        "Edit columns..."   vTcl::widgets::tablelist::tablelist::editCmd
+
+NewOption -activestyle   "active style"       choice {underline frame}
+NewOption -arrowcolor         "arrow col"     color {} Colors
+NewOption -arrowdisabledcolor "arrow dis col" color {} Colors
+NewOption -align         "align"              choice {left right center}
+NewOption -formatcommand "format cmd"         command
+NewOption -hide          "hide"               boolean {0 1}
+NewOption -incrarrowtype "incr arr type"      choice {up down}
+NewOption -labelalign    "label align"        choice {left right center}
+NewOption -labelcommand  "label cmd"          command
+NewOption -labelpady     "label pady"         type
+NewOption -showlabels    "show labels"        boolean {0 1}
+NewOption -showarrow     "show arrow"         boolean {0 1}
+NewOption -sortcommand   "sort command"       command
+NewOption -sortmode      "sort mode"          choice {ascii command dictionary integer real}
+NewOption -showseparators   "show separators" boolean {0 1}
+NewOption -stretch          "stretch"         type
+NewOption -stripebackground "strip backgnd"   color {} Colors
+NewOption -stripeforeground "strip foregnd"   color {} Colors
+
+## Namespace name is made of lib name and widget name (here there are same)
+##
+namespace eval vTcl::widgets::tablelist::tablelist {
+
+    proc editCmd {} {
+        vTcl::itemEdit::edit $::vTcl(w,widget) \
+	    vTcl::widgets::tablelist::tablelist::edit
+    }
+
+
+    proc insertCmd {target} {
+        $target configure -columns {
+	        0 "Column 1" left
+		0 "Column 2" left
+		0 "Column 3" left
+        }
+    }
+
+    proc dumpCmd {target basename} {
+        set result [vTcl:dump_widget_opt $target $basename]
+	set size [$target columncount]
+	for {set i 0} {$i < $size} {incr i} {
+            set conf [$target columnconfigure $i]
+            set pairs [vTcl:get_subopts_special $conf $target]
+            append result "$::vTcl(tab)$basename columnconfigure $i \\\n"
+            append result "[vTcl:clean_pairs $pairs]\n"
+        }
+	global basenames
+	set body [$target bodypath]
+	set basenames($body) "\[$basename bodypath\]"
+	append result [vTcl:dump_widget_bind $body [vTcl:base_name $body] 0]
+        return $result
+    }
+
+    proc editableTagsCmd {target} {
+        set result [$target bodypath]
+        set result [concat $result [$target separators]]
+	set result [concat $result [$target labels]]
+	return $result
+    }
+}
+
+namespace eval vTcl::widgets::tablelist::tablelist::edit {
+
+    proc getTitle {target} {
+        return "Edit columns for $target"
+    }
+
+    proc getLabelOption {} {
+        return -title
+    }
+
+    proc getItems {target} {
+        ## first item in the list is the current index
+        set values 0
+	set size [$target columncount]
+	for {set i 0} {$i < $size} {incr i} {
+	    set column [$target columnconfigure $i -title]
+	    lappend values [lindex $column 4]
+	}
+        return $values
+    }
+
+    proc addItem {target} {
+        set columns [$target cget -columns]
+	lappend columns 0 "New column" left
+	$target configure -columns $columns
+	return "New column"
+    }
+
+    proc removeItem {target index} {
+	set confs [$target cget -columns]
+	set start [expr $index * 3]
+	set end   [expr ($index + 1) * 3 - 1]
+        set confs [lreplace $confs $start $end]
+	$target configure -columns $confs
+    }
+
+    proc itemConfigure {target index args} {
+        if {$args == ""} {
+            set options [$target columnconfigure $index]
+            set result ""
+            foreach option $options {
+                ## only return valid options
+                if {[llength $option] == 5} {
+                    lappend result $option
+                }
+            }
+            return $result
+        } else {
+            set result [eval $target columnconfigure $index $args]
+            return $result
+        }
+    }
+
+    proc moveUpOrDown {target index direction} {
+        error "Not implemented yet!"
+    }
+}

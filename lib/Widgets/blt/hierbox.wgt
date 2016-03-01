@@ -1,0 +1,5 @@
+Class		Hierbox
+Lib		blt
+
+CreateCmd	::blt::hierbox
+Icon		icon_hierbox.gif

@@ -1,0 +1,92 @@
+# $Id: labeledframe.wgt,v 1.8 2002/10/10 06:36:31 cgavin Exp $
+
+##############################################################################
+#
+# Visual TCL - A cross-platform application development environment
+#
+# Copyright (C) 2001 Christian Gavin
+#
+# Description file for [Incr Widgets]
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+##############################################################################
+#
+
+Class		Labeledframe
+Lib		itcl
+
+CreateCmd	::iwidgets::labeledframe
+Icon		icon_incrLabelFrame.gif
+DumpChildren	no
+MegaWidget	yes
+TagsCmd         vTcl:lib_itcl:tagscmd
+TreeChildrenCmd	{
+		vTcl::widgets::iwidgets::labeledframe::treeChildrenCmd
+		vTcl::widgets::iwidgets::labeledframe::treeChildrenChildsite
+		}
+DumpCmd		vTcl::widgets::iwidgets::labeledframe::dumpCmd
+DumpInfoCmd	vTcl::widgets::iwidgets::labeledframe::dumpInfoCmd
+DefaultOptions	-labeltext "Labeled frame"
+
+########################################
+## for compatibility with 1.5 and 1.60a1
+##
+proc vTcl:widget:labeledframe:treeChildrenChildsite {target} {
+    return [vTcl::widgets::iwidgets::labeledframe::treeChildrenChildsite $target]
+}
+
+namespace eval vTcl::widgets::iwidgets::labeledframe {
+
+    proc treeChildrenCmd {target {diff ""}} {
+        set children ""
+        set wantsdiff [expr {$diff != ""}]
+
+        foreach child [vTcl:complete_widget_tree [$target childsite] $wantsdiff] {
+            lappend children $child$diff
+        }
+
+        return $children
+    }
+
+    proc treeChildrenChildsite {target} {
+        return [$target childsite]
+    }
+
+    proc dumpCmd {target basename} {
+        global vTcl
+        set result [vTcl:dump_widget_opt $target $basename]
+        set page   [$target childsite]
+        set sitevariable "site_[llength [split $page .]]_0"
+        append result "$vTcl(tab)set $sitevariable "
+        append result "\[$basename childsite\]\n"
+        append result [vTcl:lib_itcl:dump_subwidgets $page \$$sitevariable]
+
+        return $result
+    }
+
+    proc dumpInfoCmd {target basename} {
+        global vTcl classes
+        set result [vTcl:dump:widget_info $target $basename]
+        set page   [$target childsite]
+        set sitevariable "site_[llength [split $page .]]_0"
+        append result "$vTcl(tab)set $sitevariable "
+        append result "\[$basename childsite\]\n"
+        append result [$classes(Frame,dumpInfoCmd) $page \$$sitevariable]
+
+        return $result
+    }
+}
+

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+GenericName=Visual Tcl (vTcl) GUI builder for TCL/TK 
+Name=vtcl
+Exec=/usr/local/bin/vtcl
+Icon=/usr/local/share/pixmaps/vTcl-icon.png
+Terminal=false
+Type=Application
+Categories=Development;

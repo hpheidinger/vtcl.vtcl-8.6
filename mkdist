@@ -1,0 +1,82 @@
+#!/bin/sh
+
+WHERE=`pwd`
+#echo $WHERE
+
+RPMSOURCES=`echo ~/rpmbuild/SOURCES`
+
+VTCL_VERSION=`grep -e '^[ \t]*set vTcl(version)' vtcl.tcl | cut -f2 -d")"`
+#echo $VTCL_VERSION
+
+MASTER=`echo $VTCL_VERSION | cut -f1 -d.`
+RELEASE=`echo $VTCL_VERSION | cut -f2 -d.`
+MAINTR=`echo $VTCL_VERSION | cut -f3 -d.`
+PATCHL=`echo $VTCL_VERSION | cut -f4 -d.`
+VERSION="$MASTER.$RELEASE"
+
+cat vtcl.spec |\
+awk 	-v version=$VERSION 	\
+	-v maintr=$MAINTR	\
+	-v patchl=$PATCHL	\
+'	/^%define version/	{ print "%define version\t" 	version;	next}
+     	/^%define maintr/	{ print "%define maintr\t"	maintr;		next} 
+     	/^%define patchl/	{ print "%define patchl\t" 	patchl;		next}
+     	/^Source:/		{ print "Source:\t\tvtcl-"version"."maintr".tar.gz";	next} 
+				{ print $0 }
+' - >vtcl.spec.new
+
+mv vtcl.spec.new vtcl.spec
+
+#echo $VTCL_VERSION $VERSION $MAINTR $PATCHL
+
+REVISION=vtcl-$VERSION.$MAINTR
+TARFILE=$REVISION.tar
+ZIPFILE=$REVISION.zip
+
+rm -f $RPMSOURCES/$TARFILE.gz
+rm -f $RPMSOURCES/$ZIPFILE
+if [ -d /var/tmp/$REVISION ]
+then
+	cd /var/tmp/ && rm -rf $REVISION
+	mkdir /var/tmp/$REVISION
+else
+	mkdir /var/tmp/$REVISION
+fi
+
+cd $WHERE
+cp vtcl.spec `dirname $RPMSOURCES`/SPECS
+tar 	--exclude='*.odt' \
+	--exclude='mkdist' \
+	--exclude='vtcl.spec*' \
+	--exclude-vcs -cf - .| (cd /var/tmp/$REVISION && tar xf -)
+
+cd /var/tmp 
+tar cf $TARFILE $REVISION && gzip $TARFILE
+zip -r $ZIPFILE $REVISION
+mv $TARFILE.gz	$RPMSOURCES/
+mv $ZIPFILE	$RPMSOURCES/
+rm -rf $REVISION
+
+BUILDBASE=`dirname $RPMSOURCES`
+cd $BUILDBASE
+rpmbuild -ba SPECS/vtcl.spec
+
+cd $WHERE
+if [ ! -d ../$REVISION-dist ]
+then
+	mkdir ../$REVISION-dist
+fi
+
+cp -p $RPMSOURCES/$TARFILE.gz	../$REVISION-dist
+cp -p $RPMSOURCES/$ZIPFILE	../$REVISION-dist
+RPMS=`find $BUILDBASE -name "$REVISION*.rpm"`
+
+for r in `echo $RPMS`
+do
+	cp -p $r ../$REVISION-dist
+done
+
+echo "
+Distribution files in ../$REVISION-dist ...
+___________________________________________"
+ls -l ../$REVISION-dist
