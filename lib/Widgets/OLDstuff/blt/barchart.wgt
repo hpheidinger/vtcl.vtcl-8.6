@@ -1,5 +1,0 @@
-Class		Barchart
-Lib		blt
-
-CreateCmd	::blt::barchart
-Icon		../lib/Widgets/blt/barchart.gif

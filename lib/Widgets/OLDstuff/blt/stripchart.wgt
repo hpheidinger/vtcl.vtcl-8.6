@@ -1,5 +1,0 @@
-Class		Stripchart
-Lib		blt
-
-CreateCmd	::blt::stripchart
-Icon		icon_stripchart.gif

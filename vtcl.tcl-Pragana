@@ -2,8 +2,6 @@
 # the next line restarts using wish\
 exec wish "$0" "$@"
 
-# $Id: vtcl.tcl,v 1.49 2006/07/28 13:43:55 unixabg Exp $
-
 ##############################################################################
 #
 # Visual TCL - A cross-platform application development environment

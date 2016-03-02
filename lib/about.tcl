@@ -23,6 +23,7 @@
 #
 
 proc vTclWindow.vTcl.about {args} {
+variable vTcl
 
     set base .vTcl.about
 
@@ -59,7 +60,7 @@ proc vTclWindow.vTcl.about {args} {
 	-borderwidth 1 -font [vTcl:font:get_font "vTcl:font5"]
     label $base.lab21 \
 	-borderwidth 1 -font [vTcl:font:get_font "vTcl:font5"] \
-	-text {Version 1.6.x-development} -foreground white -background black
+	-text "vTcl version $vTcl(version)" -foreground white -background black
 
 
     ###################
