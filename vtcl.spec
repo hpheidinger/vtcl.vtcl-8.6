@@ -10,7 +10,7 @@ Summary:	The 'Visual Tcl' (vTcl) GUI builder for TCL/TK
 URL:		http://vtcl.sourceforge.net/
 Name:		vtcl
 Version:	%{version}.%{maintr}
-Release:	1
+Release:	2
 Provides:	vtcl
 PreReq:		tcl >= 8.5, tk >= 8.5
 Group:		Development
