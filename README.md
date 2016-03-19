@@ -18,5 +18,7 @@ The supplied release 1.6.1a1 only works up to TCL/TK-8.4
 
 Here is a vTcl version prepared to work with the recent TCL/TK release 8.6
 
+See the wiki (tab above) for preliminary download packages.
+
 --------------
 2016-02-20/hph
